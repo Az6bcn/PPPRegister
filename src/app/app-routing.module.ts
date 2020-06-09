@@ -5,10 +5,10 @@ import { CheckedinListComponent } from './list/checkedin-list/checkedin-list.com
 
 
 const routes: Routes = [
-  {path: '', component: CheckedinListComponent },
+  {path: '', component: CheckInComponent },
   {path: 'check-in', component: CheckInComponent },
   {path: 'checkedin-members', component: CheckedinListComponent},
-  {path: '**', component: CheckedinListComponent}
+  {path: '**', component: CheckInComponent}
 ];
 
 @NgModule({
