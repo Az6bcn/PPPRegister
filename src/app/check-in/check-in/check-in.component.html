@@ -1,7 +1,7 @@
 
 <div class="container mt-5" style="border: 2px solid red;">
-  <div class="row">
-    <form class="col" [formGroup]="checkInFG">
+  <div class="row d-flex justify-content-center">
+    <form class="col-sm-12 col-md-12" [formGroup]="checkInFG">
       <div class="card" >
         <div class="card-body">
           <h5 class="card-title">Check-in </h5>
@@ -31,14 +31,17 @@
             <input formControlName="mobile" type="text" class="form-control" id="mobile">
              <!-- Control Errors -->
              <div *ngIf="(_mobile.touched || _mobile.dirty) && _mobile.invalid" class="alert alert-danger">
+               <div *ngIf='_mobile.errors.minlength'>Please enter a valid mobile number</div>
+               <div *ngIf='_mobile.errors.maxlength'>Please enter a valid mobile number</div>
+
               <!-- Control Required Errors -->
               <div *ngIf='_mobile.errors.required'> This field is required </div>
             </div>
           </div>
 
-          <div class="row form-group">
-            <div class="col">
-              <button type="submit" class="btn btn-primary mx-5" (click)='checkin(checkInFG.value)' [disabled]='isValid()'>Submit</button>
+          <div class="row form-group d-flex justify-content-center">
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3">
+              <button type="submit" class="btn btn-primary mx-4" (click)='checkin(checkInFG.value)' [disabled]='isValid()'>Submit</button>
               <button type="submit" class="btn btn-secondary" (click)='cancel()'>Cancel</button>
             </div>
           </div>

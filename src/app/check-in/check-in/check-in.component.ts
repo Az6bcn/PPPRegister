@@ -29,7 +29,7 @@ export class CheckInComponent implements OnInit, OnDestroy {
     return fb.group({
       name: ['', Validators.required],
       surname: ['', Validators.required],
-      mobile: ['', Validators.required]
+      mobile: ['', [Validators.required, Validators.minLength(11), Validators.maxLength(11)]]
     });
   }
 
@@ -37,6 +37,7 @@ export class CheckInComponent implements OnInit, OnDestroy {
     console.log('data', data);
     const checkInSub = this.checkinService.createCheckIn(data)
       .subscribe(response => {
+        this.checkInFG.reset();
         console.log(response);
         this.notifierService.notify('success', 'Checked in successfully');
       },
