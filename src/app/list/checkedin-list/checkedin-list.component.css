@@ -1,0 +1,5 @@
+
+.maxHeight{
+  max-height: 600px;
+  overflow-x: scroll;
+}

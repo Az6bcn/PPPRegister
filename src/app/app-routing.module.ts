@@ -7,7 +7,8 @@ import { CheckedinListComponent } from './list/checkedin-list/checkedin-list.com
 const routes: Routes = [
   {path: '', component: CheckInComponent },
   {path: 'check-in', component: CheckInComponent },
-  {path: 'checkedin-members', component: CheckedinListComponent},
+  {path: 'checkedin-members/live', component: CheckedinListComponent},
+  {path: 'checkedin-members/:date', component: CheckedinListComponent},
   {path: '**', component: CheckInComponent}
 ];
 

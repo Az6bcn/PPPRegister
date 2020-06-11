@@ -34,11 +34,9 @@ export class CheckInComponent implements OnInit, OnDestroy {
   }
 
   checkin(data: CheckIn) {
-    console.log('data', data);
     const checkInSub = this.checkinService.createCheckIn(data)
       .subscribe(response => {
         this.checkInFG.reset();
-        console.log(response);
         this.notifierService.notify('success', 'Checked in successfully');
       },
       error => this.notifierService.notify('error', error));
@@ -52,7 +50,6 @@ export class CheckInComponent implements OnInit, OnDestroy {
   }
 
   isValid() {
-    console.log(this.checkInFG);
     return this.checkInFG.invalid;
   }
 
