@@ -1,0 +1,28 @@
+<div class="container-fluid mt-5">
+  <div class="row">
+    <div class="col-12">
+      <div class="card maxHeight">
+        <div class="card-body">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Member</th>
+                <th scope="col">Mobile</th>
+                <th scope="col">Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngIf='checkedInMembers && checkedInMembers.length > 0'>
+                <tr *ngFor="let member of checkedInMembers">
+                  <td>{{member.name}} {{member.surname}}</td>
+                  <td>{{member.mobile}}</td>
+                  <td>{{member.checkedInAt |  date:'d MMM y, h:mm:ss aaa'}}</td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

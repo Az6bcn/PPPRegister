@@ -1,0 +1,53 @@
+<div class="container-fluid mt-5">
+  <div class="row">
+    <div class="col-12">
+      <form [formGroup]="dateForm">
+        <div class="row">
+          <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
+            <input type="text" class="form-control mb-3" placeholder="Datepicker" bsDatepicker formControlName="date"
+              (bsValueChange)='dateChanged($event)' />
+            <pre *ngIf="dateForm.value.date" class="code-preview">{{dateForm.value.date | date}}</pre>
+          </div>
+          <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
+            <input type="text" class="form-control mb-3" placeholder="Daterangepicker" bsDaterangepicker
+              formControlName="range" (bsValueChange)='dateRangeChanged($event)' />
+            <pre *ngIf="dateForm.value.range"
+              class="code-preview">from {{dateForm.value.range[0] | date}} to {{dateForm.value.range[1] | date}}</pre>
+          </div>
+          <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
+            <button type="button" class="btn btn-primary" (click)='allRecords()'>All Records</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <app-loader [isLoading$]='isLoading$'></app-loader>
+
+  <div class="row" *ngIf="!(isLoading$ | async) && checkedInMembers.length > 0">
+    <div class="col-12">
+      <div class="card maxHeight">
+        <div class="card-body">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Member</th>
+                <th scope="col">Mobile</th>
+                <th scope="col">Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngIf='checkedInMembers && checkedInMembers.length > 0'>
+                <tr *ngFor="let member of checkedInMembers">
+                  <td>{{member.name}} {{member.surname}}</td>
+                  <td>{{member.mobile}}</td>
+                  <td>{{member.checkedInAt |  date:'d MMM y, h:mm:ss aaa'}}</td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
