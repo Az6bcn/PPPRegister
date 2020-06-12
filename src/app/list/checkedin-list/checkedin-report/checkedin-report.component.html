@@ -5,14 +5,11 @@
         <div class="row">
           <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
             <input type="text" class="form-control mb-3" placeholder="Datepicker" bsDatepicker formControlName="date"
-              (bsValueChange)='dateChanged($event)' />
-            <pre *ngIf="dateForm.value.date" class="code-preview">{{dateForm.value.date | date}}</pre>
+              (bsValueChange)='dateChanged($event)' [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD/MM/YYYY' }"/>
           </div>
           <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
             <input type="text" class="form-control mb-3" placeholder="Daterangepicker" bsDaterangepicker
-              formControlName="range" (bsValueChange)='dateRangeChanged($event)' />
-            <pre *ngIf="dateForm.value.range"
-              class="code-preview">from {{dateForm.value.range[0] | date}} to {{dateForm.value.range[1] | date}}</pre>
+              formControlName="range" (bsValueChange)='dateRangeChanged($event)' [bsConfig]="{ isAnimated: true, rangeInputFormat: 'DD/MM/YYYY'}"/>
           </div>
           <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
             <button type="button" class="btn btn-primary" (click)='allRecords()'>All Records</button>
@@ -47,6 +44,11 @@
             </tbody>
           </table>
         </div>
+      </div>
+    </div>
+    <div class="row ml-2">
+      <div class="col ">
+        Total: {{checkedInMembers.length}}
       </div>
     </div>
   </div>

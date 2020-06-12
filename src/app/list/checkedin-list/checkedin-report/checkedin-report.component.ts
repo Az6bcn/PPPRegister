@@ -25,14 +25,8 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
     this.dateForm = this.buildDateForm(this.formBuilder);
   }
 
-  buildDateForm(formBuilder: FormBuilder) {
-    return formBuilder.group({
-      date: null,
-      range: null
-    });
-  }
-
   dateChanged(date: Date) {
+    this._range.reset();
     this.checkedInMembers = [];
     if (date) {
       this.isLoading$.next(true);
@@ -41,7 +35,7 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
         .subscribe(response => {
           this.isLoading$.next(false);
           this.checkedInMembers = response;
-          //this.dateForm.reset();
+          // this.dateForm.reset();
         },
           error => {
             this.notifierService.notify('error', error);
@@ -52,6 +46,7 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
   }
 
   dateRangeChanged(date: Array<Date>) {
+
     this.checkedInMembers = [];
     if (date) {
       this.isLoading$.next(true);
@@ -71,6 +66,7 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
   }
 
   allRecords() {
+    this.dateForm.reset();
     this.isLoading$.next(true);
 
     this.checkedInMembers = [];
@@ -87,8 +83,18 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
     this.subscriptions.push(allRecordsSub);
   }
 
+  buildDateForm(formBuilder: FormBuilder) {
+    return formBuilder.group({
+      date: null,
+      range: null
+    });
+  }
 
-  ngOnDestroy() {
+  get _date() {return this.dateForm.get('date'); }
+  get _range() {return this.dateForm.get('range'); }
+
+
+ngOnDestroy() {
     this.subscriptions.forEach(x => x.unsubscribe());
   }
 }
