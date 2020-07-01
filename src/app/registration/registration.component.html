@@ -1,0 +1,125 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-7 mx-auto mt-5 p-5 border border-dark text-dark rounded">
+            <form [formGroup]="registrationFG" (ngSubmit)="onSubmit(registrationFG.value)" >
+                <h3>Registration</h3>
+                <hr>
+                <br>
+                <br>
+                <p>Please select the service for Sunday 5/06/2020</p>
+                <div class="row d-flex justify-content-between service-radio">
+                    <div class="col-3 pl-0 form-group">
+                        <input type="radio" value="08:30" id="service1" formControlName="service">
+                        <label for="service1">08:30</label>
+                    </div>
+                    <div class="col-3 d-flex justify-content-center form-group">
+                        <input class="service-radio" type="radio" value="10:00" id="service2" formControlName="service">
+                        <label for="service2">10:00</label>
+                    </div>
+                    <div class="col-3 d-flex justify-content-end form-group">
+                        <input class="service-radio" type="radio" value="11:30" id="service3" formControlName="service">
+                        <label for="service3">11:30</label>
+                    </div>
+                </div>
+                <!-- Control Errors -->
+                <span *ngIf="(_service.touched || _service.dirty) && _service.invalid"
+                    class="text-danger ml-5">
+                    <!-- Control Required Errors -->
+                    <span *ngIf='_service.errors.required'><i><small>*Please select a service time to attend</small></i></span>
+                </span>
+                <button type="button" class="col-4 form-control btn-dark mb-4" (click)="addRegistrant()">Add Registrant</button>
+                <section formArrayName="registrants" *ngFor="let registrant of registrantControl, let i = index">
+                    <div [formGroupName]="i">
+                        <div class="row details justify-content-between">
+                            <div class="col-6 form-group">
+                                <label for="firstName">First Name
+                                    <!-- Control Errors -->
+                                    <span
+                                        *ngIf="(registrantsDet.controls[i].get('firstName').touched || registrantsDet.controls[i].get('firstName').dirty) && registrantsDet.controls[i].get('firstName').invalid"
+                                        class="text-danger ml-5">
+                                        <!-- Control Required Errors -->
+                                        <span *ngIf="registrantsDet.controls[i].get('firstName').errors?.required"><i><small>*This
+                                                    field is
+                                                    required</small></i></span>
+                                    </span>
+                                </label>
+                                <input type="text" class="form-control" formControlName="firstName">
+                            </div>
+                            <div class="col-6 form-group">
+                                <label for="lastName">Last Name
+                                    <!-- Control Errors -->
+                                    <span
+                                        *ngIf="(registrantsDet.controls[i].get('lastName').touched || registrantsDet.controls[i].get('lastName').dirty) && registrantsDet.controls[i].get('lastName').invalid"
+                                        class="text-danger ml-5">
+                                        <!-- Control Required Errors -->
+                                        <span *ngIf="registrantsDet.controls[i].get('lastName').errors?.required"><i><small>*This
+                                                    field is
+                                                    required</small></i></span>
+                                    </span>
+                                </label>
+                                <input type="text" class="form-control" formControlName="lastName">
+                            </div>
+                        </div>
+                        <div class="row d-flex gender-radio justify-content-between">
+                            <p>Gender:</p>
+                            <div class="col-4 form-group">
+                                <input type="radio" value="female" id="female {{i}}" formControlName="gender">
+                                <label for="female {{i}}">Female</label>
+                            </div>
+                            <div class="col-4 form-group">
+                                <input type="radio" value="male" id="male {{i}}" formControlName="gender">
+                                <label for="male {{i}}">Male</label>
+                            </div>
+                            <button class="col-2 form-control btn-danger" (click)="removeRegistrant(i)">Delete
+                                Entry</button>
+                        </div>
+                        <!-- Control Errors -->
+                        <span
+                            *ngIf="(registrantsDet.controls[i].get('gender').touched || registrantsDet.controls[i].get('gender').dirty) && registrantsDet.controls[i].get('gender').invalid"
+                            class="text-danger ml-5">
+                            <!-- Control Required Errors -->
+                            <span *ngIf="registrantsDet.controls[i].get('gender').errors?.required"><i><small>*This
+                                        field is
+                                        required</small></i></span>
+                        </span>
+                    </div>
+                </section>
+                <br>
+                <br>
+                <br>
+                <div class="row details">
+                    <div class=" col-6 form-group">
+                        <label class="mb-2" for="emailAddress">Email Address
+                            <!-- Control Errors -->
+                            <span *ngIf="(_emailAddress.touched || _emailAddress.dirty) && _emailAddress.invalid"
+                                class="text-danger ml-5">
+                                <!-- Control Required Errors -->
+                                <span *ngIf='_emailAddress.errors.required'><i><small>*This field is
+                                            required</small></i></span>
+                            </span>
+                        </label>
+                        <input type="text" class="form-control mb-3" formControlName="emailAddress">
+                    </div>
+                    <div class="col-6 form-group">
+                        <label class="mb-2" for="phoneNumber">Phone Number
+                            <!-- Control Errors -->
+                            <span *ngIf="(_phoneNumber.touched || _phoneNumber.dirty) && _phoneNumber.invalid"
+                                class="text-danger ml-5">
+                                <!-- Control Required Errors -->
+                                <span *ngIf='_phoneNumber.errors.required'><i><small>*This field is
+                                            required</small></i></span>
+                            </span>
+                        </label>
+                        <input type="number" class="form-control mb-3" formControlName="phoneNumber">
+                    </div>
+                </div>
+                <div class="row justify-content-end mt-5">
+                    <button type="button" class="col-3 btn btn-light" ng-click="cancel()">Cancel</button>
+                    <button type="submit" class="ml-3 col-3 btn btn-dark"
+                    [disabled]="isValid()">Submit</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
