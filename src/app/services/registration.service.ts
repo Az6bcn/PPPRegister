@@ -20,7 +20,7 @@ export class RegistrationService {
    * @param data
    */
   createRegistration(data: IRegistrant) {
-    const url = `${this.baseUrl}/registration`;
+    const url = `${this.baseUrl}/booking`;
     return this.http.post<any>(url, data)
       .pipe(
         catchError(this.handleError)

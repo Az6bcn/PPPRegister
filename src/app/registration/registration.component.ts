@@ -14,7 +14,7 @@ import { RegistrationService } from '../services/registration.service';
 export class RegistrationComponent implements OnInit {
 
   registrationFG: FormGroup;
-  registrants: FormArray;
+  members: FormArray;
   subscriptions = new Array<Subscription>();
   isLoading$ = new BehaviorSubject<boolean>(false);
   registrant: IRegistrant;
@@ -26,16 +26,16 @@ export class RegistrationComponent implements OnInit {
 
   ngOnInit() {
     this.registrationFG = this.buildRegistrationForm(this.fb);
-    console.log(this.registrationFG.get('registrants')['controls'])
+    console.log(this._emailAddress.errors)
   }
 
   buildRegistrationForm(fb: FormBuilder) {
 
     return fb.group({
-      service: ['', Validators.required],
-      registrants: this.fb.array([this.createRegistrant()]),
+      time: ['', Validators.required],
+      members: this.fb.array([this.createRegistrant()]),
       emailAddress: ['', [Validators.required, Validators.email]],
-      phoneNumber: ['', [Validators.required, Validators.minLength(11), Validators.maxLength(11)]]
+      mobile: ['', [Validators.required, Validators.pattern('[0-9]{11}')]],
     })
   }
 
@@ -53,14 +53,18 @@ export class RegistrationComponent implements OnInit {
     //   this.register(this.registrant)
     // }
     console.log(any);
-    this.registrationFG.reset();
+    
   }
 
   register(data: IRegistrant) {
+    data.date = 'July 5, 2020';
+    if(data.members.length > 1){ data.isGroupBooking = true }
+    else{ data.member = data.members[0]}
     this.isLoading$.next(true);
     const registrationSub = this.registrationService.createRegistration(data)
       .subscribe(response => {
         this.isLoading$.next(false);
+        this.registrationFG.reset();
         this.notifierService.notify('success', 'Checked in successfully');
       },
         error => {
@@ -74,28 +78,28 @@ export class RegistrationComponent implements OnInit {
 
   createRegistrant(): FormGroup {
     return this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      name: ['', Validators.required],
+      surname: ['', Validators.required],
       gender: ['', Validators.required]
     })
   }
 
   addRegistrant(): void {
-    this.registrants = this.registrationFG.get('registrants') as FormArray;
-    this.registrants.push(this.createRegistrant());
+    this.members = this.registrationFG.get('members') as FormArray;
+    this.members.push(this.createRegistrant());
   }
 
-  get registrantControl() {
-    return this.registrationFG.get('registrants')['controls'];
+  get memberControl() {
+    return this.registrationFG.get('members')['controls'];
   }
 
-  get registrantsDet(): FormArray {
-    return this.registrationFG.get('registrants') as FormArray;
+  get membersDet(): FormArray {
+    return this.registrationFG.get('members') as FormArray;
   }
 
   removeRegistrant(i: number) {
-    this.registrants.removeAt(i);
-    console.log(this._registrants.value)
+    this.members.removeAt(i);
+    console.log(this._members.value)
   }
 
   isValid() {
@@ -111,10 +115,10 @@ export class RegistrationComponent implements OnInit {
     this.notifierService.notify('success', 'Canceled');
   }
 
-  get _service(): AbstractControl { return this.registrationFG.get('service'); }
+  get _time(): AbstractControl { return this.registrationFG.get('time'); }
   get _emailAddress(): AbstractControl { return this.registrationFG.get('emailAddress'); }
-  get _phoneNumber(): AbstractControl { return this.registrationFG.get('phoneNumber'); }
-  get _registrants(): AbstractControl { return this.registrationFG.get('registrants'); }
+  get _mobile(): AbstractControl { return this.registrationFG.get('mobile'); }
+  get _members(): AbstractControl { return this.registrationFG.get('members'); }
 }
 
 

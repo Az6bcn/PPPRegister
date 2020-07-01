@@ -1,9 +1,11 @@
 export interface IRegistrant {
     date: string;
-    service: string;
-    firstName: string;
-    lastName: string;
-    gender: string;
+    time: string;
+    name: string;
+    surname: string;
+    member: object;
+    members: Array<object>;
     emailAddress: string;
-    phoneNumber: number;
+    mobile: number;
+    isGroupBooking: boolean
   }
