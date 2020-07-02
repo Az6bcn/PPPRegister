@@ -6,19 +6,13 @@
                 <hr>
                 <br>
                 <br>
-                <p>Please select the service for Sunday 5/06/2020</p>
+                <p>Please select the service for Sunday 5/07/2020</p>
                 <div class="row d-flex justify-content-between service-radio">
-                    <div class="col-3 pl-0 form-group">
-                        <input type="radio" value="08:30" id="service1" formControlName="time">
-                        <label for="service1">08:30</label>
-                    </div>
-                    <div class="col-3 d-flex justify-content-center form-group">
-                        <input class="service-radio" type="radio" value="10:10" id="service2" formControlName="time">
-                        <label for="service2">10:10</label>
-                    </div>
-                    <div class="col-3 d-flex justify-content-end form-group">
-                        <input class="service-radio" type="radio" value="11:50" id="service3" formControlName="time">
-                        <label for="service3">11:50</label>
+                    <div *ngFor="let slot of slots, let i = index" class="col-3 form-group">
+                        <input type="radio" value="{{slot.time}}" id="service{{i}}" formControlName="time">
+                        <label for="service{{i}}">{{slot.time}}</label>
+                        <br>
+                        <small class="text-danger"><i>{{slot.availableSlots}} slots available</i></small>
                     </div>
                     <div class="row col-12 mb-3 justify-content-center">
                         <!-- Control Errors -->

@@ -4,6 +4,8 @@ import { Subscription, BehaviorSubject } from 'rxjs';
 import { NotifierService } from 'angular-notifier';
 import { IRegistrant } from 'src/app/model/registrant';
 import { RegistrationService } from '../services/registration.service';
+import { SignalRService } from '../services/SignalR.service';
+import { Slots } from '../model/slots-available';
 
 
 @Component({
@@ -15,18 +17,38 @@ export class RegistrationComponent implements OnInit {
 
   registrationFG: FormGroup;
   members: FormArray;
+  slots = new Array<Slots>();
   subscriptions = new Array<Subscription>();
   isLoading$ = new BehaviorSubject<boolean>(false);
   registrant: IRegistrant;
   constructor(
     private fb: FormBuilder,
     private registrationService: RegistrationService,
+    private signalRService: SignalRService,
     private notifierService: NotifierService
   ) { }
 
   ngOnInit() {
     this.registrationFG = this.buildRegistrationForm(this.fb);
-    console.log(this._emailAddress.errors)
+    console.log(this._emailAddress.errors);
+    this.isLoading$.next(true);
+    const slotsSub = this.registrationService.getSlotsAvailable("2020-07-05")
+      .subscribe(response => {
+        this.isLoading$.next(false);
+        this.slots = response
+      },
+        error => {
+          this.isLoading$.next(false);
+          console.log("error loading slots available")
+        }
+      );
+
+    this.subscriptions.push(slotsSub);
+
+    console.log(this.slots)
+    this.signalRService.buildSignalRConnection();
+    this.signalRService.UpdateSlotsAvailable();
+    this.signalRService.connectSignalR();
   }
 
   buildRegistrationForm(fb: FormBuilder) {
@@ -37,23 +59,6 @@ export class RegistrationComponent implements OnInit {
       emailAddress: ['', [Validators.required, Validators.email]],
       mobile: ['', [Validators.required, Validators.pattern('[0-9]{11}')]],
     })
-  }
-
-  onSubmit(any) {
-    // for (let control of this.registrationFG.get('registrants')['controls']) {
-    //   this.registrant = {
-    //     date: Date.now().toString(),
-    //     service: this.registrationFG.get('service').value,
-    //     emailAddress: this.registrationFG.get('emailAddress').value,
-    //     phoneNumber: this.registrationFG.get('phoneNumber').value,
-    //     firstName: control.get('firstName').value,
-    //     lastName: control.get('lastName').value,
-    //     gender: control.get('gender').value
-    //   }
-    //   this.register(this.registrant)
-    // }
-    console.log(any);
-    
   }
 
   register(data: IRegistrant) {

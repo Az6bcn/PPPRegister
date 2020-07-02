@@ -1,4 +1,4 @@
 export interface Slots {
-    service: string;
-    slots: number;
+    time: string;
+    availableslots: number;
   }

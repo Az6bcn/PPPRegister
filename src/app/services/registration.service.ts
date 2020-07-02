@@ -32,7 +32,7 @@ export class RegistrationService {
    * @param date
    */
   getSlotsAvailable(date: string): Observable<Array<Slots>> {
-    const url = `${this.baseUrl}/slotsavailable/${date}`;
+    const url = `${this.baseUrl}/booking/${date}`;
     return this.http.get<Array<Slots>>(url)
       .pipe(
         catchError(this.handleError)

@@ -8,32 +8,33 @@ import { BehaviorSubject, Subject, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class SignalRService {
-private hubConnection: signalR.HubConnection;
-private signalRUrl = environment.signalRUrl;
+  private hubConnection: signalR.HubConnection;
+  private signalRUrl = environment.signalRUrl;
+  private 
 
-connectionStatus$ = new BehaviorSubject<string>(null);
-connectionError$ = new BehaviorSubject<string>(null);
-private checkedInUserSub$ = new Subject<CheckedinMember>();
-constructor() { }
+  connectionStatus$ = new BehaviorSubject<string>(null);
+  connectionError$ = new BehaviorSubject<string>(null);
+  private checkedInUserSub$ = new Subject<CheckedinMember>();
+  constructor() { }
 
   buildSignalRConnection() {
     this.connectionStatus$.next('Building components for connection....');
     this.hubConnection = new signalR.HubConnectionBuilder()
-    .withUrl(`${this.signalRUrl}`)
-    .withAutomaticReconnect({
-      nextRetryDelayInMilliseconds: retryContext => {
-      if (retryContext.elapsedMilliseconds < 60000) {
-          // If we've been reconnecting for less than 60 seconds so far,
-          // wait between 0 and 10 seconds before the next reconnect attempt.
-          return Math.random() * 10000;
-      } else {
-          // If we've been reconnecting for more than 60 seconds so far, stop reconnecting.
-          return null;
-      }
-    }
-  })
-    .configureLogging(signalR.LogLevel.Information)
-    .build();
+      .withUrl(`${this.signalRUrl}`)
+      .withAutomaticReconnect({
+        nextRetryDelayInMilliseconds: retryContext => {
+          if (retryContext.elapsedMilliseconds < 60000) {
+            // If we've been reconnecting for less than 60 seconds so far,
+            // wait between 0 and 10 seconds before the next reconnect attempt.
+            return Math.random() * 10000;
+          } else {
+            // If we've been reconnecting for more than 60 seconds so far, stop reconnecting.
+            return null;
+          }
+        }
+      })
+      .configureLogging(signalR.LogLevel.Information)
+      .build();
     this.connectionStatus$.next('Finished building');
 
     this.hubConnection.onreconnecting(error => {
@@ -58,10 +59,10 @@ constructor() { }
 
   }
 
-/**
- * Client method called from hub, i.e receives updates from hub
- */
-UpdateCheckedInMembers() {
+  /**
+   * Client method called from hub, i.e receives updates from hub
+   */
+  UpdateCheckedInMembers() {
     this.hubConnection.on('UpdateCheckedInMembers', (checkedInMember) => {
       this.checkedInUserSub$.next(checkedInMember);
     });
@@ -70,5 +71,17 @@ UpdateCheckedInMembers() {
   ReadLiveCheckedInMember(): Observable<CheckedinMember> {
     return this.checkedInUserSub$.asObservable();
   }
+
+  /**
+   * Client method called from hub, i.e receives updates from hub
+   */
+  UpdateSlotsAvailable() {
+    this.hubConnection.on('ReceivedBookingsUpdateAsync', (checkedInMember) => {
+      console.log(checkedInMember);
+      this.checkedInUserSub$.next(checkedInMember);
+    });
+  }
+
+
 
 }
