@@ -10,7 +10,7 @@ import { BehaviorSubject, Subject, Observable } from 'rxjs';
 export class SignalRService {
   private hubConnection: signalR.HubConnection;
   private signalRUrl = environment.signalRUrl;
-  private 
+  private
 
   connectionStatus$ = new BehaviorSubject<string>(null);
   connectionError$ = new BehaviorSubject<string>(null);
@@ -64,6 +64,7 @@ export class SignalRService {
    */
   UpdateCheckedInMembers() {
     this.hubConnection.on('UpdateCheckedInMembers', (checkedInMember) => {
+    this.hubConnection.on('UpdateCheckedInMembersAsync', (checkedInMember) => {
       this.checkedInUserSub$.next(checkedInMember);
     });
   }

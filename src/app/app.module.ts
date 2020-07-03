@@ -12,6 +12,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoaderComponent } from './horizontal-loader/loader/loader.component';
 import { RegistrationComponent } from './registration/registration.component';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+
 
 
 
@@ -31,7 +33,8 @@ import { RegistrationComponent } from './registration/registration.component';
     HttpClientModule,
     NotifierModule,
     BsDatepickerModule.forRoot(),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    PaginationModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
