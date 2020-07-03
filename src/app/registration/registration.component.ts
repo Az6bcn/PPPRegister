@@ -20,6 +20,8 @@ export class RegistrationComponent implements OnInit {
   slots = new Array<Slots>();
   subscriptions = new Array<Subscription>();
   isLoading$ = new BehaviorSubject<boolean>(false);
+  canShowRegistrant$ = new BehaviorSubject<boolean>(false);
+  selectedSlot$ = new BehaviorSubject<Slots>(void 0);
   registrant: IRegistrant;
   constructor(
     private fb: FormBuilder,
@@ -32,23 +34,40 @@ export class RegistrationComponent implements OnInit {
     this.registrationFG = this.buildRegistrationForm(this.fb);
     console.log(this._emailAddress.errors);
     this.isLoading$.next(true);
-    const slotsSub = this.registrationService.getSlotsAvailable("2020-07-05")
+    const slotsSub = this.registrationService.getSlotsAvailable('2020-07-05')
       .subscribe(response => {
         this.isLoading$.next(false);
-        this.slots = response
+        this.slots = response;
       },
         error => {
           this.isLoading$.next(false);
-          console.log("error loading slots available")
+          console.log('error loading slots available');
         }
       );
 
     this.subscriptions.push(slotsSub);
 
-    console.log(this.slots)
+    console.log(this.slots);
     this.signalRService.buildSignalRConnection();
     this.signalRService.UpdateSlotsAvailable();
     this.signalRService.connectSignalR();
+
+    // live data
+    const liveDataSub = this.signalRService.ReadAvailableSlotUpdate()
+      .subscribe(response => {
+        console.log('response available slots update', response);
+        // use respone to update available slot: so that ayone on the page is aware of the updates
+        const slots = this.slots.filter(x => x.serviceId !== response.serviceId);
+        const mappedResponse = {
+          total: response.total,
+          availableSlots: response.availableBookings,
+          serviceId: response.serviceId,
+          time: response.time
+        } as unknown as Slots;
+        this.slots = [...slots, mappedResponse];
+      });
+    this.subscriptions.push(liveDataSub);
+
   }
 
   buildRegistrationForm(fb: FormBuilder) {
@@ -58,13 +77,17 @@ export class RegistrationComponent implements OnInit {
       members: this.fb.array([this.createRegistrant()]),
       emailAddress: ['', [Validators.required, Validators.email]],
       mobile: ['', [Validators.required, Validators.pattern('[0-9]{11}')]],
-    })
+    });
   }
-
+  onTimeChange(slot: Slots) {
+    console.log('slot selected', slot);
+    this.canShowRegistrant$.next(true);
+    this.selectedSlot$.next(slot);
+  }
   register(data: IRegistrant) {
+    data.serviceId = this.selectedSlot$.getValue().serviceId;
     data.date = 'July 5, 2020';
-    if(data.members.length > 1){ data.isGroupBooking = true }
-    else{ data.member = data.members[0]}
+    if (data.members.length > 1) { data.isGroupBooking = true; } else { data.member = data.members[0]; }
     this.isLoading$.next(true);
     const registrationSub = this.registrationService.createRegistration(data)
       .subscribe(response => {
@@ -77,7 +100,6 @@ export class RegistrationComponent implements OnInit {
           this.notifierService.notify('error', error);
         }
       );
-
     this.subscriptions.push(registrationSub);
   }
 
@@ -86,7 +108,7 @@ export class RegistrationComponent implements OnInit {
       name: ['', Validators.required],
       surname: ['', Validators.required],
       gender: ['', Validators.required]
-    })
+    });
   }
 
   addRegistrant(): void {
@@ -95,6 +117,7 @@ export class RegistrationComponent implements OnInit {
   }
 
   get memberControl() {
+    // tslint:disable-next-line:no-string-literal
     return this.registrationFG.get('members')['controls'];
   }
 
@@ -104,7 +127,7 @@ export class RegistrationComponent implements OnInit {
 
   removeRegistrant(i: number) {
     this.members.removeAt(i);
-    console.log(this._members.value)
+    console.log(this._members.value);
   }
 
   isValid() {

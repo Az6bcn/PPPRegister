@@ -3,6 +3,7 @@ import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
+import { BookingsUpdateSignalR } from '../model/bookings-update-signalR';
 
 @Injectable({
   providedIn: 'root'
@@ -10,11 +11,12 @@ import { BehaviorSubject, Subject, Observable } from 'rxjs';
 export class SignalRService {
   private hubConnection: signalR.HubConnection;
   private signalRUrl = environment.signalRUrl;
-  private
+
 
   connectionStatus$ = new BehaviorSubject<string>(null);
   connectionError$ = new BehaviorSubject<string>(null);
   private checkedInUserSub$ = new Subject<CheckedinMember>();
+  private availableSlotsSub$ = new Subject<BookingsUpdateSignalR>();
   constructor() { }
 
   buildSignalRConnection() {
@@ -64,10 +66,12 @@ export class SignalRService {
    */
   UpdateCheckedInMembers() {
     this.hubConnection.on('UpdateCheckedInMembers', (checkedInMember) => {
-    this.hubConnection.on('UpdateCheckedInMembersAsync', (checkedInMember) => {
-      this.checkedInUserSub$.next(checkedInMember);
+      this.hubConnection.on('UpdateCheckedInMembersAsync', (checkedInMember) => {
+        this.checkedInUserSub$.next(checkedInMember);
+      });
     });
   }
+
 
   ReadLiveCheckedInMember(): Observable<CheckedinMember> {
     return this.checkedInUserSub$.asObservable();
@@ -77,12 +81,14 @@ export class SignalRService {
    * Client method called from hub, i.e receives updates from hub
    */
   UpdateSlotsAvailable() {
-    this.hubConnection.on('ReceivedBookingsUpdateAsync', (checkedInMember) => {
-      console.log(checkedInMember);
-      this.checkedInUserSub$.next(checkedInMember);
+    this.hubConnection.on('ReceivedBookingsUpdateAsync', (availableSlotsUpdate) => {
+      console.log(availableSlotsUpdate);
+      this.availableSlotsSub$.next(availableSlotsUpdate);
     });
   }
 
-
+  ReadAvailableSlotUpdate(): Observable<BookingsUpdateSignalR> {
+    return this.availableSlotsSub$.asObservable();
+  }
 
 }
