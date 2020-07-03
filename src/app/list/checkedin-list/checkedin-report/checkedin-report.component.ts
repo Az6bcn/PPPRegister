@@ -1,9 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { SignInOut } from './../../../model/sigin-in-out';
+import { Component, OnInit, OnDestroy, ɵConsole } from '@angular/core';
 import { Subscription, BehaviorSubject } from 'rxjs';
 import { CheckedinMember } from 'src/app/model/checkedin-member';
 import { CheckInService } from 'src/app/services/check-in.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NotifierService } from 'angular-notifier';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-checkedin-report',
@@ -13,8 +15,12 @@ import { NotifierService } from 'angular-notifier';
 export class CheckedinReportComponent implements OnInit, OnDestroy {
   subscriptions = new Array<Subscription>();
   checkedInMembers = new Array<CheckedinMember>();
+  checkedInMembersPaginated = new Array<CheckedinMember>();
   dateForm: FormGroup;
   isLoading$ = new BehaviorSubject<boolean>(false);
+
+  totalItems$ = new BehaviorSubject<number>(0);
+  itemsPerPage = 10;
 
   constructor(
     private checkInService: CheckInService,
@@ -32,9 +38,19 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
       this.isLoading$.next(true);
       const isoDate = date.toISOString();
       const specifiedDateSub = this.checkInService.getCheckedInRecordsUpToSpecifiedDate(isoDate)
+        .pipe(
+          map(data => {
+            return data.map(d => {
+              d.serviceName = this.mapServiceName(d.serviceId);
+              return d;
+            });
+          })
+        )
         .subscribe(response => {
           this.isLoading$.next(false);
           this.checkedInMembers = response;
+          this.checkedInMembersPaginated = response.slice(0, 10);
+          this.totalItems$.next(response.length);
           // this.dateForm.reset();
         },
           error => {
@@ -56,6 +72,8 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
         .subscribe(response => {
           this.isLoading$.next(false);
           this.checkedInMembers = response;
+          this.checkedInMembersPaginated = response.slice(0, 10);
+          this.totalItems$.next(response.length);
         },
           error => {
             this.notifierService.notify('error', error);
@@ -75,12 +93,48 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
       .subscribe(response => {
         this.isLoading$.next(false);
         this.checkedInMembers = response;
+        this.checkedInMembersPaginated = response.slice(0, 10);
+        this.totalItems$.next(response.length);
       },
         error => {
           this.notifierService.notify('error', error);
           this.isLoading$.next(false);
         });
     this.subscriptions.push(allRecordsSub);
+  }
+
+  mapServiceName(serviceId: number) {
+    if (serviceId === 1) { return 'First Service'; }
+    if (serviceId === 2) { return 'Second Service'; }
+    return 'Workers Meeting';
+  }
+
+  signIn(data: CheckedinMember) {
+    const signInData = this.getSigInOut(data);
+    this.checkInService.siginIn(signInData)
+      .subscribe(response => {
+        const member = this.checkedInMembers.find(x => x.id === response.id);
+        member.signedIn = response.date;
+
+        this.checkedInMembers === [...this.checkedInMembers];
+
+        this.notifierService.notify('success', 'Signed-in successfully');
+      },
+        err => this.notifierService.notify('error', err));
+  }
+
+  signOut(data: CheckedinMember) {
+    const signOutData = this.getSigInOut(data);
+    this.checkInService.siginOut(signOutData)
+      .subscribe(response => {
+        const member = this.checkedInMembers.find(x => x.id === response.id);
+        member.signedOut = response.date;
+
+        this.checkedInMembers === [...this.checkedInMembers];
+
+        this.notifierService.notify('success', 'Signed-out successfully');
+      },
+        err => this.notifierService.notify('error', err));
   }
 
   buildDateForm(formBuilder: FormBuilder) {
@@ -90,11 +144,29 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
     });
   }
 
-  get _date() {return this.dateForm.get('date'); }
-  get _range() {return this.dateForm.get('range'); }
+  pageChanged(event: any) {
+    console.log('event', event);
+    const startItem = (event.page - 1) * event.itemsPerPage;
+    const endItem = event.page * event.itemsPerPage;
+    this.checkedInMembersPaginated = [...this.checkedInMembers.slice(startItem, endItem)];
+  }
+
+  getSigInOut(data: CheckedinMember) {
+    const signinData = {
+      id: data.id,
+      date: data.date,
+      serviceId: data.serviceId,
+      time: data.time
+    } as SignInOut;
+
+    return signinData;
+  }
+
+  get _date() { return this.dateForm.get('date'); }
+  get _range() { return this.dateForm.get('range'); }
 
 
-ngOnDestroy() {
+  ngOnDestroy() {
     this.subscriptions.forEach(x => x.unsubscribe());
   }
 }

@@ -1,3 +1,4 @@
+import { SignInOut, SignInOutResponse } from './../model/sigin-in-out';
 import { environment } from './../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -63,6 +64,21 @@ export class CheckInService {
       );
   }
 
+  siginIn(data: SignInOut): Observable<SignInOutResponse> {
+    const url = `${this.baseUrl}/checkedinmembers/signIn/${data.id}`;
+    return this.http.post<SignInOutResponse>(url, data)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  siginOut(data: SignInOut): Observable<SignInOutResponse> {
+    const url = `${this.baseUrl}/checkedinmembers/signOut/${data.id}`;
+    return this.http.post<SignInOutResponse>(url, data)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
 
 
   private handleError(error: HttpErrorResponse) {

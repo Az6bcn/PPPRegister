@@ -11,6 +11,7 @@ import { CheckedinReportComponent } from './list/checkedin-list/checkedin-report
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoaderComponent } from './horizontal-loader/loader/loader.component';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 
 
@@ -29,7 +30,8 @@ import { LoaderComponent } from './horizontal-loader/loader/loader.component';
     HttpClientModule,
     NotifierModule,
     BsDatepickerModule.forRoot(),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    PaginationModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
