@@ -11,7 +11,9 @@ import { CheckedinReportComponent } from './list/checkedin-list/checkedin-report
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoaderComponent } from './horizontal-loader/loader/loader.component';
+import { RegistrationComponent } from './registration/registration.component';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+
 
 
 
@@ -21,7 +23,8 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
     CheckInComponent,
     CheckedinListComponent,
     CheckedinReportComponent,
-    LoaderComponent
+    LoaderComponent,
+    RegistrationComponent
   ],
   imports: [
     ReactiveFormsModule,

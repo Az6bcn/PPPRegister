@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { CheckedinListComponent } from './list/checkedin-list-live/checkedin-list.component';
 import { CheckedinReportComponent } from './list/checkedin-list/checkedin-report/checkedin-report.component';
+import { RegistrationComponent } from './registration/registration.component';
 
 
 const routes: Routes = [
@@ -10,6 +11,7 @@ const routes: Routes = [
   { path: 'checkin-members/live', component: CheckedinListComponent },
   { path: 'checkedin-members', component: CheckedinReportComponent },
   { path: 'check-in', component: CheckInComponent },
+  { path: 'registration', component: RegistrationComponent},
   { path: '**', component: CheckInComponent }
 ];
 

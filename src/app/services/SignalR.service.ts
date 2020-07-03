@@ -10,6 +10,7 @@ import { BehaviorSubject, Subject, Observable } from 'rxjs';
 export class SignalRService {
   private hubConnection: signalR.HubConnection;
   private signalRUrl = environment.signalRUrl;
+  private
 
   connectionStatus$ = new BehaviorSubject<string>(null);
   connectionError$ = new BehaviorSubject<string>(null);
@@ -62,6 +63,7 @@ export class SignalRService {
    * Client method called from hub, i.e receives updates from hub
    */
   UpdateCheckedInMembers() {
+    this.hubConnection.on('UpdateCheckedInMembers', (checkedInMember) => {
     this.hubConnection.on('UpdateCheckedInMembersAsync', (checkedInMember) => {
       this.checkedInUserSub$.next(checkedInMember);
     });
@@ -70,5 +72,17 @@ export class SignalRService {
   ReadLiveCheckedInMember(): Observable<CheckedinMember> {
     return this.checkedInUserSub$.asObservable();
   }
+
+  /**
+   * Client method called from hub, i.e receives updates from hub
+   */
+  UpdateSlotsAvailable() {
+    this.hubConnection.on('ReceivedBookingsUpdateAsync', (checkedInMember) => {
+      console.log(checkedInMember);
+      this.checkedInUserSub$.next(checkedInMember);
+    });
+  }
+
+
 
 }
