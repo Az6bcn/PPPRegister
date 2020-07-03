@@ -6,6 +6,7 @@ import { CheckIn } from '../model/check-in';
 import { catchError } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
 import { CheckedinMember } from '../model/checkedin-member';
+import { Service } from '../model/service';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,17 @@ export class CheckInService {
   }
 
   /**
+ * Gets all services
+ */
+  getServices(): Observable<Array<Service>> {
+    const url = `${this.baseUrl}/checkedinmembers/services`;
+    return this.http.get<Array<Service>>(url)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  /**
    * Gets all checked-in users
    */
   getAllCheckedInRecords(): Observable<Array<CheckedinMember>> {
@@ -43,8 +55,8 @@ export class CheckInService {
    * Gets checked-in users up to the specified date
    * @param date
    */
-  getCheckedInRecordsUpToSpecifiedDate(date: string): Observable<Array<CheckedinMember>> {
-    const url = `${this.baseUrl}/checkedinmembers/${date}`;
+  getCheckedInRecordsUpToSpecifiedDate(date: string, selectedServiceId: number): Observable<Array<CheckedinMember>> {
+    const url = `${this.baseUrl}/checkedinmembers/${date}/${selectedServiceId}`;
     return this.http.get<Array<CheckedinMember>>(url)
       .pipe(
         catchError(this.handleError)
@@ -56,8 +68,8 @@ export class CheckInService {
    * @param dateFrom
    * @param dateTo
    */
-  getCheckedInRecordsForDateRange(dateFrom: string, dateTo: string): Observable<Array<CheckedinMember>> {
-    const url = `${this.baseUrl}/checkedinmembers/${dateFrom}/${dateTo}`;
+  getCheckedInRecordsForDateRange(dateFrom: string, dateTo: string, selectedServiceId: number): Observable<Array<CheckedinMember>> {
+    const url = `${this.baseUrl}/checkedinmembers/${dateFrom}/${dateTo}/${selectedServiceId}`;
     return this.http.get<Array<CheckedinMember>>(url)
       .pipe(
         catchError(this.handleError)

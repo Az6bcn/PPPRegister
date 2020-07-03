@@ -1,10 +1,22 @@
 <div class="container-fluid mt-5">
+  <div style="width: 300px; margin-bottom: 20px;">
+    <h3>Select a service</h3>
+    <ng-select
+      [items]="items"
+      (change)="selected($event)"
+      bindLabel="name"
+      placeholder="No service selected"
+    >
+    </ng-select>
+  </div>
+
   <div class="row">
     <div class="col-12">
       <form [formGroup]="dateForm">
         <div class="row">
           <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
             <input
+              [isDisabled]="canShowFilters$ | async"
               type="text"
               class="form-control mb-3"
               placeholder="Datepicker"
@@ -16,6 +28,7 @@
           </div>
           <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
             <input
+              [isDisabled]="canShowFilters$ | async"
               type="text"
               class="form-control mb-3"
               placeholder="Daterangepicker"
@@ -77,18 +90,6 @@
                     </ng-container>
                   </td>
                   <td>
-                    <!-- <ng-container *ngIf="member.signedOut">
-                      {{member.signedOut |  date:'d MMM y, h:mm:ss aaa'}}
-                    </ng-container>
-                    <ng-container *ngIf="member.signedOut === null">
-                      <button
-                        type="button"
-                        class="btn btn-primary"
-                        (click)='signOut(member)'
-                      >Sign Out</button>
-                    </ng-container>
-
-                  </td> -->
                 </tr>
               </ng-container>
             </tbody>

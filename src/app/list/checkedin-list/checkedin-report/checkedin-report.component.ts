@@ -6,6 +6,7 @@ import { CheckInService } from 'src/app/services/check-in.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NotifierService } from 'angular-notifier';
 import { map } from 'rxjs/operators';
+import { Service } from 'src/app/model/service';
 
 @Component({
   selector: 'app-checkedin-report',
@@ -13,6 +14,14 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./checkedin-report.component.css']
 })
 export class CheckedinReportComponent implements OnInit, OnDestroy {
+
+  constructor(
+    private checkInService: CheckInService,
+    private formBuilder: FormBuilder,
+    private notifierService: NotifierService) { }
+
+  get _date() { return this.dateForm.get('date'); }
+  get _range() { return this.dateForm.get('range'); }
   subscriptions = new Array<Subscription>();
   checkedInMembers = new Array<CheckedinMember>();
   checkedInMembersPaginated = new Array<CheckedinMember>();
@@ -21,14 +30,18 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
 
   totalItems$ = new BehaviorSubject<number>(0);
   itemsPerPage = 10;
-
-  constructor(
-    private checkInService: CheckInService,
-    private formBuilder: FormBuilder,
-    private notifierService: NotifierService) { }
+  canShowFilters$ = new BehaviorSubject<boolean>(true);
+  selectedService$ = new BehaviorSubject<number>(0);
+  items = new Array<Service>();
 
   ngOnInit(): void {
     this.dateForm = this.buildDateForm(this.formBuilder);
+
+    const serviceSub = this.checkInService.getServices()
+      .subscribe(response => {
+        this.items = response;
+      });
+    this.subscriptions.push(serviceSub);
   }
 
   dateChanged(date: Date) {
@@ -37,7 +50,8 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
     if (date) {
       this.isLoading$.next(true);
       const isoDate = date.toISOString();
-      const specifiedDateSub = this.checkInService.getCheckedInRecordsUpToSpecifiedDate(isoDate)
+      const selectedServiceId = this.selectedService$.getValue();
+      const specifiedDateSub = this.checkInService.getCheckedInRecordsUpToSpecifiedDate(isoDate, selectedServiceId)
         .pipe(
           map(data => {
             return data.map(d => {
@@ -62,13 +76,14 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
   }
 
   dateRangeChanged(date: Array<Date>) {
-
+    // this._date.setValue('');
     this.checkedInMembers = [];
     if (date) {
       this.isLoading$.next(true);
       const isoFromDate = date[0].toISOString();
       const isoToDate = date[1].toISOString();
-      const dateRangeSub = this.checkInService.getCheckedInRecordsForDateRange(isoFromDate, isoToDate)
+      const selectedServiceId = this.selectedService$.getValue();
+      const dateRangeSub = this.checkInService.getCheckedInRecordsForDateRange(isoFromDate, isoToDate, selectedServiceId)
         .subscribe(response => {
           this.isLoading$.next(false);
           this.checkedInMembers = response;
@@ -145,7 +160,6 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
   }
 
   pageChanged(event: any) {
-    console.log('event', event);
     const startItem = (event.page - 1) * event.itemsPerPage;
     const endItem = event.page * event.itemsPerPage;
     this.checkedInMembersPaginated = [...this.checkedInMembers.slice(startItem, endItem)];
@@ -162,8 +176,11 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
     return signinData;
   }
 
-  get _date() { return this.dateForm.get('date'); }
-  get _range() { return this.dateForm.get('range'); }
+  public selected(value: any): void {
+    this.canShowFilters$.next(false);
+    this.dateForm.reset();
+    this.selectedService$.next(value.id);
+  }
 
 
   ngOnDestroy() {

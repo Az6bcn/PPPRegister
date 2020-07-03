@@ -32,7 +32,6 @@ export class RegistrationComponent implements OnInit {
 
   ngOnInit() {
     this.registrationFG = this.buildRegistrationForm(this.fb);
-    console.log(this._emailAddress.errors);
     this.isLoading$.next(true);
     const slotsSub = this.registrationService.getSlotsAvailable('2020-07-05')
       .subscribe(response => {
@@ -41,13 +40,12 @@ export class RegistrationComponent implements OnInit {
       },
         error => {
           this.isLoading$.next(false);
-          console.log('error loading slots available');
+          this.notifierService.notify('error', 'error loading slots available');
         }
       );
 
     this.subscriptions.push(slotsSub);
 
-    console.log(this.slots);
     this.signalRService.buildSignalRConnection();
     this.signalRService.UpdateSlotsAvailable();
     this.signalRService.connectSignalR();
@@ -55,7 +53,6 @@ export class RegistrationComponent implements OnInit {
     // live data
     const liveDataSub = this.signalRService.ReadAvailableSlotUpdate()
       .subscribe(response => {
-        console.log('response available slots update', response);
         // use respone to update available slot: so that ayone on the page is aware of the updates
         const slots = this.slots.filter(x => x.serviceId !== response.serviceId);
         const mappedResponse = {
@@ -80,7 +77,6 @@ export class RegistrationComponent implements OnInit {
     });
   }
   onTimeChange(slot: Slots) {
-    console.log('slot selected', slot);
     this.canShowRegistrant$.next(true);
     this.selectedSlot$.next(slot);
   }
@@ -127,7 +123,6 @@ export class RegistrationComponent implements OnInit {
 
   removeRegistrant(i: number) {
     this.members.removeAt(i);
-    console.log(this._members.value);
   }
 
   isValid() {

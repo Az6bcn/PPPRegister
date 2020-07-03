@@ -82,7 +82,6 @@ export class SignalRService {
    */
   UpdateSlotsAvailable() {
     this.hubConnection.on('ReceivedBookingsUpdateAsync', (availableSlotsUpdate) => {
-      console.log(availableSlotsUpdate);
       this.availableSlotsSub$.next(availableSlotsUpdate);
     });
   }
