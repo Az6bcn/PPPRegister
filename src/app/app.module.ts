@@ -15,6 +15,7 @@ import { RegistrationComponent } from './registration/registration.component';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
+import { CancellationComponent } from './cancellation/cancellation.component';
 
 
 
@@ -26,7 +27,8 @@ import { FormsModule } from '@angular/forms';
     CheckedinListComponent,
     CheckedinReportComponent,
     LoaderComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    CancellationComponent
   ],
   imports: [
     ReactiveFormsModule,
