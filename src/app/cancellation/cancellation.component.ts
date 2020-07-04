@@ -12,27 +12,30 @@ import { CancellationService } from '../services/cancellation.service';
 })
 export class CancellationComponent implements OnInit {
 
-  booking: ICancelledBooking = { id: 0, email: '', name: '', surname: ''};
+  booking: ICancelledBooking = { id: 0, email: '', name: '', surname: '' };
   subscriptions = new Array<Subscription>();
   isLoading$ = new BehaviorSubject<boolean>(false);
-  constructor( private route: ActivatedRoute, private notifierService: NotifierService, private cancellationService: CancellationService) { }
+  isCancelled$ = new BehaviorSubject<boolean>(false);
+  constructor(
+    private route: ActivatedRoute,
+    private notifierService: NotifierService,
+    private cancellationService: CancellationService) { }
 
   ngOnInit(): void {
     this.route.queryParamMap.subscribe(params => {
-      this.booking.id = Number(params.get('id'));
+      this.booking.id = (params.get('bookingId') as unknown as number);
       this.booking.email = params.get('email');
       this.booking.name = params.get('name');
       this.booking.surname = params.get('surname');
-
-      console.log(this.booking);
     });
   }
 
-  cancelBooking(data: ICancelledBooking){
+  cancelBooking(data: ICancelledBooking) {
     this.isLoading$.next(true);
     const cancellationSub = this.cancellationService.createCancellation(data)
       .subscribe(response => {
         this.isLoading$.next(false);
+        this.isCancelled$.next(true);
         this.notifierService.notify('success', 'Booking Cancelled successfully');
       },
         error => {

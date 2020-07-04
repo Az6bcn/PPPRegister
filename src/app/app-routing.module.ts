@@ -8,12 +8,12 @@ import { CancellationComponent } from './cancellation/cancellation.component';
 
 
 const routes: Routes = [
-  { path: '', component: CheckInComponent },
+  { path: '', component: RegistrationComponent },
   { path: 'checkin-members/live', component: CheckedinListComponent },
   { path: 'checkedin-members', component: CheckedinReportComponent },
   { path: 'check-in', component: CheckInComponent },
-  { path: 'registration', component: RegistrationComponent},
-  { path: 'cancellation', component: CancellationComponent},
+  { path: 'registration', component: RegistrationComponent },
+  { path: 'cancellation', component: CancellationComponent },
   { path: '**', component: CheckInComponent }
 ];
 
