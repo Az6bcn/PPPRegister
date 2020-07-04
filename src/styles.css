@@ -12,8 +12,22 @@
 /* @import '~@fortawesome/fontawesome-free/css/all.css'; */
 
 @import "~@ng-select/ng-select/themes/default.theme.css";
-body {
+
+/* body {
     background-image: url('assets/images/bg.jpg');
     background-size: cover;
     background-color: white;
+} */
+
+@media (min-width: 576px) {
+    .jumbotron {
+        padding: 1.5rem 1.5rem;
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
+    }
+}
+
+img {
+    height: 100px;
+    width: 100px
 }
