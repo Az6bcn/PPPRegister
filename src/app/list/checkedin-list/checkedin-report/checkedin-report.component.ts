@@ -119,9 +119,9 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
   }
 
   mapServiceName(serviceId: number) {
-    if (serviceId === 1) { return 'First Service'; }
-    if (serviceId === 2) { return 'Second Service'; }
-    return 'Workers Meeting';
+    if (serviceId === 1) { return 'Service'; }
+    if (serviceId === 2) { return 'Service'; }
+    return 'Service';
   }
 
   signIn(data: CheckedinMember) {

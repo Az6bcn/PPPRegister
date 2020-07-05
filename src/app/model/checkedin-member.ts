@@ -9,4 +9,5 @@ export interface CheckedinMember {
   time: string;
   date: string;
   serviceName: string;
+  pickUp: boolean;
 }
