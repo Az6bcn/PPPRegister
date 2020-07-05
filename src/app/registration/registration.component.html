@@ -1,12 +1,12 @@
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-12 mx-auto mt-5 p-5 border bg-white border-dark text-dark rounded">
+    <div class="row register">
+        <div class="col-12 col-sm-7 mx-auto mt-5 p-5 border bg-white border-dark text-dark rounded">
             <form [formGroup]="registrationFG" (ngSubmit)="register(registrationFG.value)">
                 <h3>Registration</h3>
                 <hr>
                 <br>
                 <br>
-                <p>Please select the service for Sunday 5/07/2020</p>
+                <p>Please select the service for {{sundayDate.toDateString()}}</p>
                 <div class="row d-flex justify-content-between service-radio">
                     <div *ngFor="let slot of slots, let i = index" class="col-3 p-0 form-group">
                         <input type="radio" value="{{slot.time}}" id="service{{i}}" formControlName="time" (click)='onTimeChange(slot)'>

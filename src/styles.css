@@ -19,6 +19,10 @@
     background-color: white;
 } */
 
+body {
+    background-image: url(../src/assets/images/bg.jpg);
+}
+
 .jumbotron {
     padding: 1.5rem 1.5rem;
     border-top-left-radius: 0px;

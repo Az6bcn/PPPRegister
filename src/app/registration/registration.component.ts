@@ -23,6 +23,7 @@ export class RegistrationComponent implements OnInit {
   canShowRegistrant$ = new BehaviorSubject<boolean>(false);
   selectedSlot$ = new BehaviorSubject<Slots>(void 0);
   registrant: IRegistrant;
+  sundayDate: Date;
   constructor(
     private fb: FormBuilder,
     private registrationService: RegistrationService,
@@ -32,8 +33,9 @@ export class RegistrationComponent implements OnInit {
 
   ngOnInit() {
     this.registrationFG = this.buildRegistrationForm(this.fb);
+    this.sundayDate = this.getNextSunday();
     this.isLoading$.next(true);
-    const slotsSub = this.registrationService.getSlotsAvailable('2020-07-05')
+    const slotsSub = this.registrationService.getSlotsAvailable(this.sundayDate.toISOString())
       .subscribe(response => {
         this.isLoading$.next(false);
         this.slots = response;
@@ -127,6 +129,13 @@ export class RegistrationComponent implements OnInit {
 
   isValid() {
     return this.registrationFG.invalid;
+  }
+
+  getNextSunday(){
+    var date = new Date();
+    date.setDate(date.getDate() + (7 - date.getDay()));
+
+    return date
   }
 
   ngOnDestroy() {
