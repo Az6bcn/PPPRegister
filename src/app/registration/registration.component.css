@@ -2,6 +2,10 @@
     margin-left: 0px;
 }
 
+.register {
+    margin-left: -15px !important;
+}
+
 .details .col {
     padding-left: 0px;
 }
