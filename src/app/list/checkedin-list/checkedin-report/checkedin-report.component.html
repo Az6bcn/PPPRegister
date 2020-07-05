@@ -67,6 +67,7 @@
                 <th scope="col">Date</th>
                 <th scope="col">Service</th>
                 <th scope="col">SignIn</th>
+                <th scope="col">Pick Up</th>
                 <!-- <th scope="col">SignOut</th> -->
               </tr>
             </thead>
@@ -75,7 +76,7 @@
                 <tr *ngFor="let member of checkedInMembersPaginated">
                   <td>{{member.name}} {{member.surname}}</td>
                   <td>{{member.mobile}}</td>
-                  <td>{{member.date |  date:'d MMM y, h:mm:ss aaa'}}</td>
+                  <td>{{member.date |  date:'d MMM y'}}</td>
                   <td>{{member.serviceName}} {{(member.time)}}</td>
                   <td>
                     <ng-container *ngIf="member.signedIn">
@@ -89,7 +90,7 @@
                       >Sign In</button>
                     </ng-container>
                   </td>
-                  <td>
+                  <td>{{member.pickUp}}</td>
                 </tr>
               </ng-container>
             </tbody>
