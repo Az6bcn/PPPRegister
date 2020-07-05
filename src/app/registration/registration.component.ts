@@ -84,7 +84,8 @@ export class RegistrationComponent implements OnInit {
   }
   register(data: IRegistrant) {
     data.serviceId = this.selectedSlot$.getValue().serviceId;
-    data.date = 'July 5, 2020';
+    console.log(data);
+    data.date = this.sundayDate.toISOString();
     if (data.members.length > 1) { data.isGroupBooking = true; } else { data.member = data.members[0]; }
     this.isLoading$.next(true);
     const registrationSub = this.registrationService.createRegistration(data)
@@ -105,7 +106,9 @@ export class RegistrationComponent implements OnInit {
     return this.fb.group({
       name: ['', Validators.required],
       surname: ['', Validators.required],
-      gender: ['', Validators.required]
+      gender: ['', Validators.required],
+      category: ['', Validators.required],
+      isPickUp: false
     });
   }
 
