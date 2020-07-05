@@ -27,6 +27,14 @@ export class CancellationService {
       );
   }
 
+  findBooking(bookingId: number) {
+    const url = `${this.baseUrl}/booking/cancellable/${bookingId}`;
+    return this.http.get<any>(url)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
