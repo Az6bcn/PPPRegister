@@ -1,25 +1,19 @@
-<div
-  class="jumbotron bg-dark"
-  *ngIf="canShowLogo$ | async"
->
-  <div class="row justify-content-between">
-    <div class="col-2"></div>
-    <div class="col d-flex justify-content-center col-5">
-      <h2 class="text-center text-light">Precious People Parish Service Registration</h2>
+<div class="jumbotron bg-dark" *ngIf="canShowLogo$ | async">
+    <div class="row justify-content-between">
+        <div class="col d-flex justify-content-center col-3 col-sm-2">
+            <img src="../../assets/images/ppplogo.png" alt="PPP logo">
+        </div>
+        <div class="col d-flex justify-content-center col-6">
+            <h2 class="text-center text-light">Precious People Parish Service</h2>
+        </div>
+        <div class="col d-flex justify-content-center col-3 col-sm-2">
+            <img src="../../assets/images/rccg-logo.png" alt="RCCG logo">
+        </div>
     </div>
-    <div class="col d-flex justify-content-end col-2">
-      <img
-        src="../../assets/images/rccg-logo.png"
-        height="300px"
-        width="300px"
-        alt="rccg ppp"
-      >
-    </div>
-  </div>
 </div>
 <div class="container-fluid">
 
-  <router-outlet></router-outlet>
+    <router-outlet></router-outlet>
 
-  <notifier-container></notifier-container>
+    <notifier-container></notifier-container>
 </div>

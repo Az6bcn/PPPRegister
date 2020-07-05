@@ -19,11 +19,19 @@
     background-color: white;
 } */
 
-@media (min-width: 576px) {
-    .jumbotron {
-        padding: 1.5rem 1.5rem;
-        border-top-left-radius: 0px;
-        border-top-right-radius: 0px;
+.jumbotron {
+    padding: 1.5rem 1.5rem;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+}
+
+@media (max-width: 616px) {
+    .jumbotron h2 {
+        font-size: 1.2rem;
+    }
+    img {
+        height: 70px !important;
+        width: 70px !important;
     }
 }
 

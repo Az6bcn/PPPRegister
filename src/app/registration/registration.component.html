@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="row">
-        <div class="col-7 mx-auto mt-5 p-5 border bg-white border-dark text-dark rounded">
+        <div class="col-12 mx-auto mt-5 p-5 border bg-white border-dark text-dark rounded">
             <form [formGroup]="registrationFG" (ngSubmit)="register(registrationFG.value)">
                 <h3>Registration</h3>
                 <hr>
@@ -8,7 +8,7 @@
                 <br>
                 <p>Please select the service for Sunday 5/07/2020</p>
                 <div class="row d-flex justify-content-between service-radio">
-                    <div *ngFor="let slot of slots, let i = index" class="col-3 form-group">
+                    <div *ngFor="let slot of slots, let i = index" class="col-3 p-0 form-group">
                         <input type="radio" value="{{slot.time}}" id="service{{i}}" formControlName="time" (click)='onTimeChange(slot)'>
                         <label for="service{{i}}">{{slot.time}}</label>
                         <br>
@@ -24,12 +24,12 @@
                     </div>
                 </div>
                 <div *ngIf="(canShowRegistrant$ | async)">
-                    <button type="button" class="col-4 form-control btn-dark mb-4" (click)="addRegistrant()">Add
+                    <button type="button" class="col-8 col-sm-4 form-control btn-dark mb-4" (click)="addRegistrant()">Add
             Registrant</button>
                     <section formArrayName="members" *ngFor="let member of memberControl, let i = index">
                         <div [formGroupName]="i">
                             <div class="row details justify-content-between">
-                                <div class="col-6 form-group">
+                                <div class="col col-12 col-sm-6 form-group">
                                     <label for="name">First Name
                     <!-- Control Errors -->
                     <span
@@ -43,7 +43,7 @@
                   </label>
                                     <input type="text" class="form-control" formControlName="name">
                                 </div>
-                                <div class="col-6 form-group">
+                                <div class="col col-12 col-sm-6 form-group">
                                     <label for="surname">Last Name
                     <!-- Control Errors -->
                     <span
@@ -60,15 +60,15 @@
                             </div>
                             <div class="row d-flex gender-radio justify-content-between">
                                 <p>Gender:</p>
-                                <div class="col-4 form-group">
+                                <div class="col-4 col-sm-2 form-group">
                                     <input type="radio" value="female" id="female {{i}}" formControlName="gender">
                                     <label for="female {{i}}">Female</label>
                                 </div>
-                                <div class="col-4 form-group">
+                                <div class="col-4 col-sm-2 form-group">
                                     <input type="radio" value="male" id="male {{i}}" formControlName="gender">
                                     <label for="male {{i}}">Male</label>
                                 </div>
-                                <button class="col-2 form-control btn-danger" (click)="removeRegistrant(i)">Delete
+                                <button class="col-6 col-sm-3 form-control btn-danger mb-2" (click)="removeRegistrant(i)">Delete
                   Entry</button>
                             </div>
                             <!-- Control Errors -->
@@ -84,7 +84,7 @@
                     <br>
                     <br>
                     <div class="row details">
-                        <div class=" col-6 form-group">
+                        <div class="col col-12 col-sm-6 form-group">
                             <label class="mb-2" for="emailAddress">Email Address
                 <!-- Control Errors -->
                 <span *ngIf="(_emailAddress.touched || _emailAddress.dirty) && _emailAddress.invalid"
@@ -98,7 +98,7 @@
               </label>
                             <input type="text" class="form-control mb-3" formControlName="emailAddress">
                         </div>
-                        <div class="col-6 form-group">
+                        <div class="col col-12 col-sm-6 form-group">
                             <label class="mb-2" for="mobile">Phone Number
                 <!-- Control Errors -->
                 <span *ngIf="(_mobile.touched || _mobile.dirty) && _mobile.invalid" class="text-danger ml-5">
@@ -116,8 +116,8 @@
                     </div>
                 </div>
                 <div class="row justify-content-end mt-5">
-                    <button type="button" class="col-3 btn btn-light" ng-click="cancel()">Cancel</button>
-                    <button type="submit" class="ml-3 col-3 btn btn-dark" [disabled]="isValid()">Submit</button>
+                    <button type="button" class="col-5 col-sm-3 btn btn-light" ng-click="cancel()">Cancel</button>
+                    <button type="submit" class="ml-3 col-5 col-sm-3 btn btn-dark" [disabled]="isValid()">Submit</button>
                 </div>
             </form>
         </div>

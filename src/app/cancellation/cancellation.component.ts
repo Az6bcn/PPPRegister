@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ICancelledBooking } from '../model/cancelled-booking';
 import { NotifierService } from 'angular-notifier';
