@@ -12,9 +12,18 @@
                         <input type="radio" value="{{slot.time}}" id="service{{i}}" formControlName="time" (click)='onTimeChange(slot)'>
                         <label for="service{{i}}">{{slot.time}}</label>
                         <br>
-                        <small class="text-danger"><i> <strong style="font-size: 30px;">{{slot.availableSlots}}</strong>
-                                slots
-                                available</i></small>
+                        <p><small class="text-danger"><i> <strong
+                                        style="font-size: 20px;">{{slot.adultsAvailableSlots}}</strong>
+                                    adult slots
+                                    available</i></small></p>
+                        <p><small class="text-danger"><i> <strong
+                                        style="font-size: 20px;">{{slot.kidsAvailableSlots}}</strong>
+                                    children (ages 7-12) slots
+                                    available</i></small></p>
+                        <p><small class="text-danger"><i> <strong
+                                        style="font-size: 20px;">{{slot.toddlersAvailableSlots}}</strong>
+                                    children (ages 3-6) slots
+                                    available</i></small></p>
                     </div>
                     <div class="row col-12 mb-3 justify-content-center">
                         <!-- Control Errors -->
@@ -62,53 +71,54 @@
 
                             </div>
                             <div class="row d-flex gender-radio justify-content-between">
-                                <div class="pl-0 col-12 col-sm-6 row justify-content-between">
-                                    <p>Gender:</p>
-                                    <div class="col-4 col-sm-3 form-group">
-                                        <input type="radio" value="female" id="female {{i}}" formControlName="gender">
-                                        <label for="female {{i}}">Female</label>
-                                    </div>
-                                    <div class="col-4 col-sm-3 form-group">
-                                        <input type="radio" value="male" id="male {{i}}" formControlName="gender">
-                                        <label for="male {{i}}">Male</label>
-                                    </div>
+                                <div class="pl-0 col-12 col-sm-6 row">
+                                    <p>Gender</p>
                                     <!-- Control Errors -->
-                                    <span *ngIf="(membersDet.controls[i].get( 'gender').touched || membersDet.controls[i].get( 'gender').dirty) && membersDet.controls[i].get( 'gender').invalid" class="text-danger ml-5">
+                                    <span *ngIf="(membersDet.controls[i].get('gender').touched || membersDet.controls[i].get('gender').dirty) && membersDet.controls[i].get('gender').invalid" class="text-danger ml-5">
                                         <!-- Control Required Errors -->
-                                        <span *ngIf="membersDet.controls[i].get( 'gender').errors?.required"><i><small>*This
+                                        <span *ngIf="membersDet.controls[i].get('gender').errors?.required"><i><small>*This
                                                     field is
                                                     required</small></i></span>
                                     </span>
+                                    <div class="pl-0 col-12 row">
+                                        <div class="pl-0 col-4 col-sm-3 form-group">
+                                            <input type="radio" value="female" id="female {{i}}" formControlName="gender">
+                                            <label for="female {{i}}">Female</label>
+                                        </div>
+                                        <div class="col-4 col-sm-3 form-group">
+                                            <input type="radio" value="male" id="male {{i}}" formControlName="gender">
+                                            <label for="male {{i}}">Male</label>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="pl-0 col-12 col-sm-6 form-group">
-                                    <label>Would you like to be picked up: &nbsp;</label>
-                                    <input type="checkbox" formControlName="isPickUp">
+                                    <label>Would you like to be picked up &nbsp;</label>
+                                    <input type="checkbox" formControlName="pickUp">
                                 </div>
                             </div>
                             <div class=" row d-flex justify-content-between">
                                 <div class="pl-0 col-12 col-sm-6 row">
-                                    <p>Category:</p>
-                                    <div class="col col-7 col-sm-6">
-                                        <div class="input-group mb-3">
-                                            <select class="custom-select" id="categorySelector" formControlName="category">
-                                                <option selected disabled>Choose...</option>
-                                                <option value="1">Adult</option>
-                                                <option value="2">Children (Ages 7-12)</option>
-                                                <option value="3">Children (Ages 3-6)</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
+                                    <label for="category">Category
                                         <!-- Control Errors -->
-                                        <span *ngIf="(membersDet.controls[i].get( 'category').touched || membersDet.controls[i].get( 'category').dirty) && membersDet.controls[i].get( 'category').invalid" class="text-danger ml-5">
+                                        <span
+                                            *ngIf="(membersDet.controls[i].get('categoryId').touched || membersDet.controls[i].get('categoryId').dirty) && membersDet.controls[i].get('categoryId').invalid"
+                                            class="text-danger ml-5">
                                             <!-- Control Required Errors -->
-                                            <span *ngIf="membersDet.controls[i].get( 'category').errors?.required"><i><small>*This
+                                            <span *ngIf="membersDet.controls[i].get('categoryId').errors?.required"><i><small>*This
                                                         field is
                                                         required</small></i></span>
                                         </span>
+                                    </label>
+                                    <div class="input-group mb-3">
+                                        <select class="custom-select" id="categorySelector" formControlName="categoryId">
+                                            <option selected disabled>Choose...</option>
+                                            <option value="1">Adult</option>
+                                            <option value="2">Children (Ages 7-12)</option>
+                                            <option value="3">Children (Ages 3-6)</option>
+                                        </select>
                                     </div>
                                 </div>
-                                <button class="col-6 col-sm-3 form-control btn-danger mb-2" (click)="removeRegistrant(i)">Delete
+                                <button *ngIf="memberControl.length > 1" class="col-6 col-sm-3 form-control btn-danger mb-2" (click)="removeRegistrant(i)">Delete
                                     Entry</button>
                             </div>
                         </div>

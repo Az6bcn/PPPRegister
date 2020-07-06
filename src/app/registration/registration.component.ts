@@ -59,11 +59,14 @@ export class RegistrationComponent implements OnInit {
         const slots = this.slots.filter(x => x.serviceId !== response.serviceId);
         const mappedResponse = {
           total: response.total,
-          availableSlots: response.availableBookings,
+          adultsAvailableSlots: response.adultsAvailableSlots,
+          kidsAvailableSlots: response.kidsAvailableSlots,
+          toddlersAvailableSlots: response.toddlersAvailableSlots,
           serviceId: response.serviceId,
           time: response.time
         } as unknown as Slots;
         this.slots = [...slots, mappedResponse];
+        console.log(this.slots)
       });
     this.subscriptions.push(liveDataSub);
 
@@ -84,7 +87,6 @@ export class RegistrationComponent implements OnInit {
   }
   register(data: IRegistrant) {
     data.serviceId = this.selectedSlot$.getValue().serviceId;
-    console.log(data);
     data.date = this.sundayDate.toISOString();
     if (data.members.length > 1) { data.isGroupBooking = true; } else { data.member = data.members[0]; }
     this.isLoading$.next(true);
@@ -107,8 +109,8 @@ export class RegistrationComponent implements OnInit {
       name: ['', Validators.required],
       surname: ['', Validators.required],
       gender: ['', Validators.required],
-      category: ['', Validators.required],
-      isPickUp: false
+      categoryId: ['', Validators.required],
+      pickUp: false
     });
   }
 
@@ -134,7 +136,7 @@ export class RegistrationComponent implements OnInit {
     return this.registrationFG.invalid;
   }
 
-  getNextSunday(){
+  getNextSunday() {
     var date = new Date();
     date.setDate(date.getDate() + (7 - date.getDay()));
 

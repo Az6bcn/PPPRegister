@@ -1,5 +1,7 @@
 export interface Slots {
   serviceId: number;
   time: string;
-  availableslots: number;
+  adultAvailableSlots: number;
+  kidsAvailableSlots: number;
+  toddlerAvailableSlots: number;
 }

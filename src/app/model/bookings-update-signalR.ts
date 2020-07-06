@@ -1,6 +1,8 @@
 export interface BookingsUpdateSignalR {
   serviceId: number;
   total: string;
-  availableBookings: string;
+  adultsAvailableSlots: number;
+  kidsAvailableSlots: number;
+  toddlersAvailableSlots: number;
   time: string;
 }
