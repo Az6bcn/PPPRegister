@@ -152,6 +152,8 @@ export class RegistrationComponent implements OnInit {
 
   cancel() {
     this.registrationFG.reset();
+    this.members.controls.length = 1;
+    this.canShowRegistrant$.next(false);
     this.notifierService.notify('success', 'Canceled');
   }
 
