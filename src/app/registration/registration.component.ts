@@ -24,6 +24,7 @@ export class RegistrationComponent implements OnInit {
   selectedSlot$ = new BehaviorSubject<Slots>(void 0);
   registrant: IRegistrant;
   sundayDate: Date;
+  isSubmitted$ = new BehaviorSubject<boolean>(false);
   constructor(
     private fb: FormBuilder,
     private registrationService: RegistrationService,
@@ -93,8 +94,9 @@ export class RegistrationComponent implements OnInit {
     const registrationSub = this.registrationService.createRegistration(data)
       .subscribe(response => {
         this.isLoading$.next(false);
+        this.isSubmitted$.next(true);
         this.registrationFG.reset();
-        this.notifierService.notify('success', 'Checked in successfully');
+        this.notifierService.notify('success', 'Booked in successfully');
       },
         error => {
           this.isLoading$.next(false);
