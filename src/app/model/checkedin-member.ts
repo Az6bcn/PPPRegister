@@ -10,4 +10,5 @@ export interface CheckedinMember {
   date: string;
   serviceName: string;
   pickUp: boolean;
+  gender: string;
 }

@@ -1,76 +1,115 @@
 <div class="container-fluid mt-5">
-    <div style="width: 300px; margin-bottom: 20px;">
-        <h3>Select a service</h3>
-        <ng-select [items]="items" (change)="selected($event)" bindLabel="name" placeholder="No service selected">
-        </ng-select>
-    </div>
+  <div style="width: 300px; margin-bottom: 20px;">
+    <h3>Select a service</h3>
+    <ng-select
+      [items]="items"
+      (change)="selected($event)"
+      bindLabel="name"
+      placeholder="No service selected"
+    >
+    </ng-select>
+  </div>
 
-    <div class="row">
-        <div class="col-12">
-            <form [formGroup]="dateForm">
-                <div class="row">
-                    <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
-                        <input [isDisabled]="canShowFilters$ | async" type="text" class="form-control mb-3" placeholder="Datepicker" bsDatepicker formControlName="date" (bsValueChange)='dateChanged($event)' [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD/MM/YYYY' }" />
-                    </div>
-                    <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
-                        <input [isDisabled]="canShowFilters$ | async" type="text" class="form-control mb-3" placeholder="Daterangepicker" bsDaterangepicker formControlName="range" (bsValueChange)='dateRangeChanged($event)' [bsConfig]="{ isAnimated: true, rangeInputFormat: 'DD/MM/YYYY'}"
-                        />
-                    </div>
-                    <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
-                        <button type="button" class="btn btn-primary" (click)='allRecords()'>All Checked-in Members</button>
-                    </div>
-                </div>
-            </form>
+  <div class="row">
+    <div class="col-12">
+      <form [formGroup]="dateForm">
+        <div class="row">
+          <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
+            <input
+              [isDisabled]="canShowFilters$ | async"
+              type="text"
+              class="form-control mb-3"
+              placeholder="Datepicker"
+              bsDatepicker
+              formControlName="date"
+              (bsValueChange)='dateChanged($event)'
+              [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD/MM/YYYY' }"
+            />
+          </div>
+          <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
+            <input
+              [isDisabled]="canShowFilters$ | async"
+              type="text"
+              class="form-control mb-3"
+              placeholder="Daterangepicker"
+              bsDaterangepicker
+              formControlName="range"
+              (bsValueChange)='dateRangeChanged($event)'
+              [bsConfig]="{ isAnimated: true, rangeInputFormat: 'DD/MM/YYYY'}"
+            />
+          </div>
+          <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)='allRecords()'
+            >All Checked-in Members</button>
+          </div>
         </div>
+      </form>
     </div>
+  </div>
 
-    <app-loader [isLoading$]='isLoading$'></app-loader>
+  <app-loader [isLoading$]='isLoading$'></app-loader>
 
-    <div class="row" *ngIf="!(isLoading$ | async) && checkedInMembers.length > 0">
-        <div class="col-12">
-            <div class="card maxHeight">
-                <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">Member</th>
-                                <th scope="col">Mobile</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Service</th>
-                                <th scope="col">SignIn</th>
-                                <!-- <th scope="col">SignOut</th> -->
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <ng-container *ngIf='checkedInMembers && checkedInMembers.length > 0'>
-                                <tr *ngFor="let member of checkedInMembersPaginated">
-                                    <td>{{member.name}} {{member.surname}}</td>
-                                    <td>{{member.mobile}}</td>
-                                    <td>{{member.date | date:'d MMM y, h:mm:ss aaa'}}</td>
-                                    <td>{{member.serviceName}} {{(member.time)}}</td>
-                                    <td>
-                                        <ng-container *ngIf="member.signedIn">
-                                            {{member.signedIn | date:'d MMM y, h:mm:ss aaa'}}
-                                        </ng-container>
-                                        <ng-container *ngIf="member.signedIn === null">
-                                            <button type="button" class="btn btn-primary" (click)='signIn(member)'>Sign In</button>
-                                        </ng-container>
-                                    </td>
-                                    <td>
-                                </tr>
-                            </ng-container>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+  <div
+    class="row"
+    *ngIf="!(isLoading$ | async) && checkedInMembers.length > 0"
+  >
+    <div class="col-12">
+      <div class="card maxHeight">
+        <div class="card-body">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Member</th>
+                <th scope="col">Mobile</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Date</th>
+                <th scope="col">Service</th>
+                <th scope="col">SignIn</th>
+                <!-- <th scope="col">SignOut</th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngIf='checkedInMembers && checkedInMembers.length > 0'>
+                <tr *ngFor="let member of checkedInMembersPaginated">
+                  <td>{{member.name}} {{member.surname}}</td>
+                  <td>{{member.mobile}}</td>
+                  <td>{{member.gender}}</td>
+                  <td>{{member.date | date:'d MMM y, h:mm:ss aaa'}}</td>
+                  <td>{{member.serviceName}} {{(member.time)}}</td>
+                  <td>
+                    <ng-container *ngIf="member.signedIn">
+                      {{member.signedIn | date:'d MMM y, h:mm:ss aaa'}}
+                    </ng-container>
+                    <ng-container *ngIf="member.signedIn === null">
+                      <button
+                        type="button"
+                        class="btn btn-primary"
+                        (click)='signIn(member)'
+                      >Sign In</button>
+                    </ng-container>
+                  </td>
+                  <td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
         </div>
-        <div class="row mt-3">
-            <div class="col-xs-12 col-12">
-                <pagination [totalItems]="totalItems$ |async" (pageChanged)="pageChanged($event)" [itemsPerPage]="itemsPerPage"></pagination>
-                <span>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-xs-12 col-12">
+        <pagination
+          [totalItems]="totalItems$ |async"
+          (pageChanged)="pageChanged($event)"
+          [itemsPerPage]="itemsPerPage"
+        ></pagination>
+        <span>
           Total: {{checkedInMembers.length}}
         </span>
-            </div>
-        </div>
+      </div>
     </div>
+  </div>
 </div>
