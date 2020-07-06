@@ -57,7 +57,8 @@ export class RegistrationComponent implements OnInit {
     const liveDataSub = this.signalRService.ReadAvailableSlotUpdate()
       .subscribe(response => {
         // use respone to update available slot: so that ayone on the page is aware of the updates
-        const slots = this.slots.filter(x => x.serviceId !== response.serviceId);
+        const selectedIndex = this.slots.findIndex(x => x.time === response.time);
+        // const slots = this.slots.filter(x => x.serviceId !== response.serviceId);
         const mappedResponse = {
           total: response.total,
           adultsAvailableSlots: response.adultsAvailableSlots,
@@ -66,8 +67,8 @@ export class RegistrationComponent implements OnInit {
           serviceId: response.serviceId,
           time: response.time
         } as unknown as Slots;
-        this.slots = [...slots, mappedResponse];
-        console.log(this.slots)
+        this.slots.splice(selectedIndex, 1, mappedResponse);
+        this.slots = [...this.slots];
       });
     this.subscriptions.push(liveDataSub);
 
@@ -139,10 +140,10 @@ export class RegistrationComponent implements OnInit {
   }
 
   getNextSunday() {
-    var date = new Date();
+    const date = new Date();
     date.setDate(date.getDate() + (7 - date.getDay()));
 
-    return date
+    return date;
   }
 
   ngOnDestroy() {
