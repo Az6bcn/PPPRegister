@@ -1,45 +1,64 @@
 <div class="container-fluid">
-    <ng-container *ngIf="!(isLoading$ |async)">
-        <div class="row" *ngIf="!(isCancelled$ | async)">
-            <div class="col-12 col-sm-12 col-md-6 mx-auto mt-5 p-5 border bg-white border-dark text-dark rounded" *ngIf="!(isAlreadyCancelled$ | async)">
-                <h3>Booking Cancellation</h3>
-                <hr>
-                <br>
-                <br>
-                <h5>Hi, you are about to cancel your service booking.
-                    <br>For a group booking, all the bookings will be cancelled.</h5>
-                <br>
-                <div class="card" style="width: 18rem;">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">{{findBooking['serviceName']}}</li>
-                        <li class="list-group-item">{{findBooking['date'] | date:'d MMM y'}}</li>
-                        <li class="list-group-item">{{findBooking['time']}}</li>
-                    </ul>
-                </div>
-                <br>
-                <p>If you want to continue please click on the button below</p>
-                <button type="button" (click)="cancelBooking(booking)" class="btn btn-danger">Cancel Booking</button>
-            </div>
+  <ng-container *ngIf="!(isLoading$ |async)">
+    <div
+      class="row"
+      *ngIf="!(isCancelled$ | async)"
+    >
+      <div
+        class="col-12 col-sm-12 col-md-6 mx-auto mt-5 p-5 border bg-white border-dark text-dark rounded"
+        *ngIf="!(isAlreadyCancelled$ | async)"
+      >
+        <h3>Booking Cancellation</h3>
+        <hr>
+        <br>
+        <br>
+        <h5>Hi, you are about to cancel your service booking.
+          <br>For a group booking, all the bookings will be cancelled.</h5>
+        <br>
+        <div
+          class="card"
+          style="width: 18rem;"
+        >
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">{{findBooking['serviceName']}}</li>
+            <li class="list-group-item">{{findBooking['date'] | date:'d MMM y'}}</li>
+            <li class="list-group-item">{{findBooking['time']}}</li>
+          </ul>
         </div>
-        <div class="row" *ngIf="isCancelled$ | async">
-            <div class="col-12 col-sm-12 col-md-6 mx-auto mt-5 p-5 border bg-white border-dark text-dark rounded">
-                <h3>Booking Cancellation</h3>
-                <hr>
-                <br>
-                <br>
-                <h5>Your service booking has been cancelled successfully.</h5>
-            </div>
-        </div>
+        <br>
+        <p>If you want to continue please click on the button below</p>
+        <button
+          type="button"
+          (click)="cancelBooking(booking)"
+          class="btn btn-danger"
+        >Cancel Booking</button>
+      </div>
+    </div>
+    <div
+      class="row"
+      *ngIf="isCancelled$ | async"
+    >
+      <div class="col-12 col-sm-12 col-md-6 mx-auto mt-5 p-5 border bg-white border-dark text-dark rounded">
+        <h3>Booking Cancellation</h3>
+        <hr>
+        <br>
+        <br>
+        <h5>Your service booking has been cancelled successfully.</h5>
+      </div>
+    </div>
 
-        <div class="row" *ngIf="isAlreadyCancelled$ | async">
-            <div class="col-12 col-sm-12 col-md-6 mx-auto mt-5 p-5 border bg-white border-dark text-dark rounded">
-                <h3>Booking Cancellation</h3>
-                <hr>
-                <br>
-                <br>
-                <h5>Hi, your service booking has already been cancelled.</h5>
-            </div>
-        </div>
-    </ng-container>
-    <app-loader [isLoading$]='isLoading$'></app-loader>
+    <div
+      class="row"
+      *ngIf="isAlreadyCancelled$ | async"
+    >
+      <div class="col-12 col-sm-12 col-md-6 mx-auto mt-5 p-5 border bg-white border-dark text-dark rounded">
+        <h3>Booking Cancellation</h3>
+        <hr>
+        <br>
+        <br>
+        <h5>Hi, your service booking has already been cancelled.</h5>
+      </div>
+    </div>
+  </ng-container>
+  <app-loader [isLoading$]='isLoading$'></app-loader>
 </div>

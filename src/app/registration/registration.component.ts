@@ -25,6 +25,7 @@ export class RegistrationComponent implements OnInit {
   registrant: IRegistrant;
   sundayDate: Date;
   isSubmitted$ = new BehaviorSubject<boolean>(false);
+  submittedDisbaleBtn$ = new BehaviorSubject<boolean>(false);
   constructor(
     private fb: FormBuilder,
     private registrationService: RegistrationService,
@@ -88,6 +89,7 @@ export class RegistrationComponent implements OnInit {
     this.selectedSlot$.next(slot);
   }
   register(data: IRegistrant) {
+    this.submittedDisbaleBtn$.next(true);
     data.serviceId = this.selectedSlot$.getValue().serviceId;
     data.date = this.sundayDate.toISOString();
     if (data.members.length > 1) { data.isGroupBooking = true; } else { data.member = data.members[0]; }
@@ -134,7 +136,6 @@ export class RegistrationComponent implements OnInit {
   removeRegistrant(i: number) {
     this.members.removeAt(i);
   }
-
   isValid() {
     return this.registrationFG.invalid;
   }

@@ -48,14 +48,14 @@ export class CancellationComponent implements OnInit, OnDestroy {
           this.foundBooking = response.data;
 
           if (this.foundBooking.serviceId === 1) {
-            this.findBooking = { ...this.foundBooking, serviceName: 'First service' };
+            this.findBooking = { ...this.foundBooking, serviceName: 'Second service' };
             return;
           } else if (this.foundBooking.serviceId === 2) {
-            this.findBooking = { ...this.foundBooking, serviceName: 'Second service' };
+            this.findBooking = { ...this.foundBooking, serviceName: 'Third service' };
             return;
           }
 
-          this.findBooking = { ...this.foundBooking, serviceName: 'Workers Meeting' };
+          this.findBooking = { ...this.foundBooking, serviceName: 'First Meeting' };
           return;
         }
         this.isAlreadyCancelled$.next(true);
