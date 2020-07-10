@@ -19,6 +19,8 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
     private checkInService: CheckInService,
     private formBuilder: FormBuilder,
     private notifierService: NotifierService) { }
+  pickUpDatePickerSelected$ = new BehaviorSubject<any>(null);
+  pickUpBtnEnabled$ = new BehaviorSubject<boolean>(true);
 
   get _date() { return this.dateForm.get('date'); }
   get _range() { return this.dateForm.get('range'); }
@@ -163,6 +165,32 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
     const startItem = (event.page - 1) * event.itemsPerPage;
     const endItem = event.page * event.itemsPerPage;
     this.checkedInMembersPaginated = [...this.checkedInMembers.slice(startItem, endItem)];
+  }
+
+  pickUpDatePickerValueChange(date: Date) {
+    this.pickUpBtnEnabled$.next(false);
+    this.pickUpDatePickerSelected$.next(date.toISOString());
+  }
+
+  pickUpReport() {
+    const selectedDate = this.pickUpDatePickerSelected$.getValue();
+
+    if (selectedDate) {
+      const pickUpReport = this.checkInService.getPickUpReport(selectedDate)
+        .subscribe(response => {
+          this.isLoading$.next(false);
+          this.checkedInMembers = response;
+          this.checkedInMembersPaginated = response.slice(0, 10);
+          this.totalItems$.next(response.length);
+          // this.dateForm.reset();
+          this.pickUpBtnEnabled$.next(true);
+        },
+          error => {
+            this.notifierService.notify('error', error);
+            this.isLoading$.next(false);
+          });
+      this.subscriptions.push(pickUpReport);
+    }
   }
 
   getSigInOut(data: CheckedinMember) {

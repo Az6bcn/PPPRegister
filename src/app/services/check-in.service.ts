@@ -92,6 +92,13 @@ export class CheckInService {
       );
   }
 
+  getPickUpReport(selectedDate): Observable<Array<CheckedinMember>> {
+    const url = `${this.baseUrl}/CheckedInmembers/pickUpReport/${selectedDate}`;
+    return this.http.get<Array<CheckedinMember>>(url)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
 
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
