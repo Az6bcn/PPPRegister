@@ -1,19 +1,58 @@
 <div class="container-fluid mt-5">
-  <div style="width: 300px; margin-bottom: 20px;">
-    <h3>Select a service</h3>
-    <ng-select
-      [items]="items"
-      (change)="selected($event)"
-      bindLabel="name"
-      placeholder="No service selected"
-    >
-    </ng-select>
-  </div>
-
   <div class="row">
-    <div class="col-12">
+    <div class="col-12 col-sm-10 col-md-2 card mt-2 mr-3 ml-1 align-items-center">
+      <h3>Pick Up Report</h3>
+      <div class="row mt-5 d-flex flex-column align-items-center justify-content-center align-content-center">
+        <div class="form-group ">
+          <div>
+            <input
+              type="
+          text"
+              class="form-control"
+              placeholder="
+            Datepicker"
+              bsDatepicker
+              (bsValueChange)='pickUpDatePickerValueChange($event)'
+              [bsConfig]="{ isAnimated: true, dateInputFormat: 'DD/MM/YYYY' }"
+            />
+            <button
+              type="button"
+              class="btn btn-primary my-2"
+              (click)='pickUpReport()'
+              [disabled]='pickUpBtnEnabled$ | async'
+            >Run</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-10 col-md-2 mt-2 mr-3 ml-1 card align-items-center">
+      <h3>Signed-in Report</h3>
+      <div class="row mt-5 align-self-center">
+        <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)='allRecords()'
+          >Run</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-10 col-md-7 mt-2 mr-3 ml-1 align-items-center ">
       <form [formGroup]="dateForm">
-        <div class="row">
+        <div class="row card">
+          <div
+            class="col-xs-12 col-12 col-sm-6 col-md-4 form-group"
+            style="width: 300px; margin-bottom: 20px;"
+          >
+            <h3>Service Report</h3>
+            <ng-select
+              [items]="items"
+              (change)="selected($event)"
+              bindLabel="name"
+              placeholder="No service selected"
+            >
+            </ng-select>
+          </div>
           <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
             <input
               [isDisabled]="canShowFilters$ | async"
@@ -38,13 +77,7 @@
               [bsConfig]="{ isAnimated: true, rangeInputFormat: 'DD/MM/YYYY'}"
             />
           </div>
-          <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
-            <button
-              type="button"
-              class="btn btn-primary"
-              (click)='allRecords()'
-            >All Checked-in Members</button>
-          </div>
+
         </div>
       </form>
     </div>
@@ -53,7 +86,7 @@
   <app-loader [isLoading$]='isLoading$'></app-loader>
 
   <div
-    class="row"
+    class="row mt-5"
     *ngIf="!(isLoading$ | async) && checkedInMembers.length > 0"
   >
     <div class="col-12">
@@ -112,5 +145,3 @@
         </span>
       </div>
     </div>
-  </div>
-</div>
