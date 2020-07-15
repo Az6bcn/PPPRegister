@@ -1,0 +1,72 @@
+<div class="background">
+  <form
+    class="card shadow cus-mt"
+    [formGroup]=" loginFG"
+  >
+    <div class="card-body">
+      <div class="form-group col">
+        <label for="EmailInput">Email</label>
+        <input
+          formControlName="Email"
+          type="text"
+          class="form-control"
+          id="EmailInput"
+          placeholder="Email"
+        >
+        <!-- Errors-->
+        <div
+          *ngIf='(email.touched || email.dirty) && email.invalid'
+          class="alert alert-danger"
+          role="alert"
+        >
+          <ng-container *ngIf='!email.errors.email'>This field is required.</ng-container>
+          <div *ngIf='email.errors.email'>
+            Please enter a valid email address.
+          </div>
+        </div>
+      </div>
+      <div class="form-group col">
+        <label for="inputPassword">Password</label>
+        <input
+          formControlName="Password"
+          type="password"
+          class="form-control"
+          id="inputPassword"
+          placeholder="Password"
+        >
+        <!-- Errors-->
+        <div
+          *ngIf='(password.touched || password.dirty) && password.invalid'
+          class="alert alert-danger"
+          role="alert"
+        >
+          <ng-container *ngIf='!password.errors.email'>This field is required.</ng-container>
+          <div *ngIf='password.errors.password'>
+            This field is required.
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group text-center col-sm-12 col-md-6">
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            (click)='logIn(loginFG.value)'
+            [disabled]='isInValid(loginFG)'
+          >Log In</button>
+        </div>
+        <div class="form-group text-center col-sm-12 col-md-6">
+          <button
+            type="button"
+            class="btn btn-outline-secondary "
+            (click)='cancel()'
+          >Cancel</button>
+        </div>
+      </div>
+
+    </div>
+  </form>
+</div>
+
+<notifier-container></notifier-container>

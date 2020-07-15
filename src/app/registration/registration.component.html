@@ -1,4 +1,16 @@
 <div class="container-fluid">
+  <button
+    type="button"
+    class="btn btn-primary"
+    (click)='logout()'
+  >Log Out</button>
+  <li class="nav-item active">
+    <ng-container *ngIf="getLoggedInUser() !== null">
+      <span class="nav-link active">Hi, {{getLoggedInUser()}}
+      </span>
+    </ng-container>
+  </li>
+
   <div class="row register">
     <div class="col-12 mx-auto mt-5 p-5 border bg-white border-dark text-dark rounded">
       <form

@@ -1,3 +1,5 @@
+import { UsersAndLinkedUsers } from './../model/user-and-linked-users';
+import { AccountService } from './../services/account.service';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, AbstractControl, FormArray } from '@angular/forms';
 import { Subscription, BehaviorSubject } from 'rxjs';
@@ -6,6 +8,7 @@ import { IRegistrant } from 'src/app/model/registrant';
 import { RegistrationService } from '../services/registration.service';
 import { SignalRService } from '../services/SignalR.service';
 import { Slots } from '../model/slots-available';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -26,14 +29,32 @@ export class RegistrationComponent implements OnInit {
   sundayDate: Date;
   isSubmitted$ = new BehaviorSubject<boolean>(false);
   submittedDisbaleBtn$ = new BehaviorSubject<boolean>(false);
+  loggedInUser: UsersAndLinkedUsers;
   constructor(
     private fb: FormBuilder,
     private registrationService: RegistrationService,
     private signalRService: SignalRService,
-    private notifierService: NotifierService
+    private notifierService: NotifierService,
+    private authService: AccountService,
+    private router: Router
   ) { }
 
   ngOnInit() {
+
+    this.authService.isTokenExpired()
+      .subscribe(res => {
+        if (res) {
+          this.router.navigate(['../login']);
+        }
+      });
+
+    const userId = this.authService.decodetokenGetUserId();
+    this.authService.getUser(userId)
+      .subscribe(response => {
+        this.loggedInUser = response;
+      });
+
+
     this.registrationFG = this.buildRegistrationForm(this.fb);
     this.sundayDate = this.getNextSunday();
     this.isLoading$.next(true);
@@ -44,7 +65,7 @@ export class RegistrationComponent implements OnInit {
       },
         error => {
           this.isLoading$.next(false);
-          this.notifierService.notify('error', 'error loading slots available');
+          this.notifierService.notify('error', error);
         }
       );
 
@@ -89,6 +110,17 @@ export class RegistrationComponent implements OnInit {
     this.selectedSlot$.next(slot);
   }
   register(data: IRegistrant) {
+
+    this.authService.isTokenExpired()
+      .subscribe(res => {
+        if (res) {
+          this.notifierService.notify('error', 'Your session has expired, please login to complete your booking');
+          this.router.navigate(['../login']);
+          return false;
+        }
+      });
+
+
     this.submittedDisbaleBtn$.next(true);
     data.serviceId = this.selectedSlot$.getValue().serviceId;
     data.date = this.sundayDate.toISOString();
@@ -147,8 +179,9 @@ export class RegistrationComponent implements OnInit {
     return date;
   }
 
-  ngOnDestroy() {
-    this.subscriptions.forEach(x => x.unsubscribe());
+  logout() {
+    this.authService.logOut();
+    this.router.navigate(['/home']);
   }
 
   cancel() {
@@ -156,6 +189,13 @@ export class RegistrationComponent implements OnInit {
     this.members.controls.length = 1;
     this.canShowRegistrant$.next(false);
     this.notifierService.notify('success', 'Canceled');
+  }
+
+  getLoggedInUser() {
+    return this.authService.currentUser();
+  }
+  ngOnDestroy() {
+    this.subscriptions.forEach(x => x.unsubscribe());
   }
 
   get _time(): AbstractControl { return this.registrationFG.get('time'); }

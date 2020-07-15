@@ -1,3 +1,4 @@
+import { JwtModule, JwtInterceptor } from '@auth0/angular-jwt';
 import { CheckedinListComponent } from './list/checkedin-list-live/checkedin-list.component';
 import { CheckInComponent } from './check-in/check-in/check-in.component';
 import { BrowserModule } from '@angular/platform-browser';
@@ -5,7 +6,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NotifierModule } from 'angular-notifier';
 import { CheckedinReportComponent } from './list/checkedin-list/checkedin-report/checkedin-report.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
@@ -16,6 +17,10 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import { CancellationComponent } from './cancellation/cancellation.component';
+import { HomeComponent } from './home/home.component';
+import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
+import { TokenGetter } from './helper/jwt-getter';
 
 
 
@@ -28,7 +33,10 @@ import { CancellationComponent } from './cancellation/cancellation.component';
     CheckedinReportComponent,
     LoaderComponent,
     RegistrationComponent,
-    CancellationComponent
+    CancellationComponent,
+    HomeComponent,
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -40,9 +48,23 @@ import { CancellationComponent } from './cancellation/cancellation.component';
     BrowserAnimationsModule,
     PaginationModule.forRoot(),
     NgSelectModule,
-    FormsModule
+    FormsModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: TokenGetter,
+        // allowedDomains: ['https://localhost:5001'],
+        skipWhenExpired: true,
+        throwNoTokenError: true,
+        headerName: 'Authorization',
+        authScheme: 'Bearer '
+      }
+    }),
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
+  ],
+  bootstrap: [
+    AppComponent
+  ]
 })
 export class AppModule { }
