@@ -1,3 +1,4 @@
+import { Attendance } from './../../../model/attendance';
 import { SignInOut } from './../../../model/sigin-in-out';
 import { Component, OnInit, OnDestroy, ɵConsole } from '@angular/core';
 import { Subscription, BehaviorSubject } from 'rxjs';
@@ -36,7 +37,20 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
   selectedService$ = new BehaviorSubject<number>(0);
   items = new Array<Service>();
 
+  attendance: Attendance;
   ngOnInit(): void {
+
+    const today = new Date();
+    const date = today.toISOString();
+    this.checkInService.getAttendance(date)
+      .subscribe(response => {
+        response.groupedResult.map(d => {
+          d.serviceName = this.mapServiceName(d.serviceId);
+          return d;
+        });
+        this.attendance = response;
+      });
+
     this.dateForm = this.buildDateForm(this.formBuilder);
 
     const serviceSub = this.checkInService.getServices()
@@ -52,6 +66,7 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
     if (date) {
       this.isLoading$.next(true);
       const isoDate = date.toISOString();
+      this.getServiceAttendanceForDate(isoDate);
       const selectedServiceId = this.selectedService$.getValue();
       const specifiedDateSub = this.checkInService.getCheckedInRecordsUpToSpecifiedDate(isoDate, selectedServiceId)
         .pipe(
@@ -210,6 +225,17 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
     this.selectedService$.next(value.id);
   }
 
+  getServiceAttendanceForDate(date: string) {
+    this.checkInService.getAttendance(date)
+      .subscribe(response => {
+        response.groupedResult.map(d => {
+          d.serviceName = this.mapServiceName(d.serviceId);
+          return d;
+        });
+        this.attendance = { ...response };
+      });
+
+  }
 
   ngOnDestroy() {
     this.subscriptions.forEach(x => x.unsubscribe());
