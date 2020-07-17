@@ -1,6 +1,6 @@
 import { Attendance } from './../../../model/attendance';
 import { SignInOut } from './../../../model/sigin-in-out';
-import { Component, OnInit, OnDestroy, ɵConsole } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription, BehaviorSubject } from 'rxjs';
 import { CheckedinMember } from 'src/app/model/checkedin-member';
 import { CheckInService } from 'src/app/services/check-in.service';
