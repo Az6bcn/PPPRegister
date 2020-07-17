@@ -1,3 +1,4 @@
+import { SignalRService } from 'src/app/services/SignalR.service';
 import { Attendance } from './../../../model/attendance';
 import { SignInOut } from './../../../model/sigin-in-out';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -19,7 +20,9 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
   constructor(
     private checkInService: CheckInService,
     private formBuilder: FormBuilder,
-    private notifierService: NotifierService) { }
+    private notifierService: NotifierService,
+    private signalRService: SignalRService
+  ) { }
   pickUpDatePickerSelected$ = new BehaviorSubject<any>(null);
   pickUpBtnEnabled$ = new BehaviorSubject<boolean>(true);
 
@@ -36,7 +39,6 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
   canShowFilters$ = new BehaviorSubject<boolean>(true);
   selectedService$ = new BehaviorSubject<number>(0);
   items = new Array<Service>();
-
   attendance: Attendance;
   ngOnInit(): void {
 
@@ -58,6 +60,19 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
         this.items = response;
       });
     this.subscriptions.push(serviceSub);
+
+    this.signalRService.buildSignalRConnection();
+    this.signalRService.BookingsAfterSignin();
+    this.signalRService.connectSignalR();
+
+    // live data
+    const liveDataSub = this.signalRService.ReadBookingsAfterSigninpdate()
+      .subscribe(response => {
+        this.checkedInMembers = [...response];
+        this.checkedInMembersPaginated = [...response.slice(0, 10)];
+        this.totalItems$.next(response.length);
+      });
+    this.subscriptions.push(liveDataSub);
   }
 
   dateChanged(date: Date) {
@@ -145,10 +160,10 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
     const signInData = this.getSigInOut(data);
     this.checkInService.siginIn(signInData)
       .subscribe(response => {
-        const member = this.checkedInMembers.find(x => x.id === response.id);
-        member.signedIn = response.date;
+        // const member = this.checkedInMembers.find(x => x.id === response.id);
+        // member.signedIn = response.date;
 
-        this.checkedInMembers === [...this.checkedInMembers];
+        // this.checkedInMembers === [...this.checkedInMembers];
 
         this.notifierService.notify('success', 'Signed-in successfully');
       },

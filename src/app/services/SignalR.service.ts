@@ -17,6 +17,7 @@ export class SignalRService {
   connectionError$ = new BehaviorSubject<string>(null);
   private checkedInUserSub$ = new Subject<CheckedinMember>();
   private availableSlotsSub$ = new Subject<BookingsUpdateSignalR>();
+  private bookingsAfterSignInSub$ = new Subject<Array<CheckedinMember>>();
   constructor() { }
 
   buildSignalRConnection() {
@@ -72,7 +73,6 @@ export class SignalRService {
     });
   }
 
-
   ReadLiveCheckedInMember(): Observable<CheckedinMember> {
     return this.checkedInUserSub$.asObservable();
   }
@@ -88,6 +88,19 @@ export class SignalRService {
 
   ReadAvailableSlotUpdate(): Observable<BookingsUpdateSignalR> {
     return this.availableSlotsSub$.asObservable();
+  }
+
+  /**
+  * Client method called from hub, i.e receives updates from hub
+  */
+  BookingsAfterSignin() {
+    this.hubConnection.on('ReceivedBookingsToSignInUpdateAsync', (bookings) => {
+      this.bookingsAfterSignInSub$.next(bookings);
+    });
+  }
+
+  ReadBookingsAfterSigninpdate(): Observable<Array<CheckedinMember>> {
+    return this.bookingsAfterSignInSub$.asObservable();
   }
 
 }
