@@ -63,11 +63,11 @@ export class RegisterComponent implements OnInit {
     return builder.group({
       name: ['', Validators.required],
       surname: ['', [Validators.required]],
-      mobile: ['', [Validators.required]],
-      gender: ['', [Validators.required]],
-      categoryId: ['', [Validators.required]],
+      mobile: ['', [Validators.required, , Validators.pattern('[0-9]{11}')]],
+      gender: ['', Validators.required],
+      category: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]],
     }, { validator: PasswordMatchValidator });
   }
