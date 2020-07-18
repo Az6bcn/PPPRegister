@@ -16,7 +16,7 @@ export class RegisterComponent implements OnInit {
   get password(): AbstractControl { return this.registerFG.get('password'); }
   get confirmPassword(): AbstractControl { return this.registerFG.get('confirmPassword'); }
   get name(): AbstractControl { return this.registerFG.get('name'); }
-  get category(): AbstractControl { return this.registerFG.get('category'); }
+  get category(): AbstractControl { return this.registerFG.get('categoryId'); }
   get gender(): AbstractControl { return this.registerFG.get('gender'); }
   get surname(): AbstractControl { return this.registerFG.get('surname'); }
   get mobile(): AbstractControl { return this.registerFG.get('mobile'); }
@@ -40,6 +40,8 @@ export class RegisterComponent implements OnInit {
     ];
   }
   register(data: Register) {
+
+    data.categoryId = data.categoryId as unknown as number;
 
     this.authService.register(data)
       .subscribe(response => {
@@ -65,7 +67,7 @@ export class RegisterComponent implements OnInit {
       surname: ['', [Validators.required]],
       mobile: ['', [Validators.required, , Validators.pattern('[0-9]{11}')]],
       gender: ['', Validators.required],
-      category: ['', [Validators.required]],
+      categoryId: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]],
