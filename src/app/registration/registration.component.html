@@ -1,12 +1,13 @@
 <div class="container-fluid">
-    <button type="button" class="btn btn-primary" (click)='logout()'>Log Out</button>
-    <li class="nav-item active">
+    <div class="row justify-content-between">
         <ng-container *ngIf="getLoggedInUser() !== null">
-            <span class="nav-link active">Hi, {{getLoggedInUser()}}
-      </span>
+            <h1 class="pl-0">Hi, {{getLoggedInUser()}}
+            </h1>
         </ng-container>
-    </li>
-
+        <div class="col-3 flex-column d-flex justify-content-end">
+            <button type="button" class="btn btn-primary" (click)='logout()'>Log Out</button>
+        </div>
+    </div>
     <div class="row register">
         <div class="col-12 mx-auto mt-5 p-5 border bg-white border-dark text-dark rounded">
             <mat-tab-group animationDuration="0ms" mat-align-tabs="start">
@@ -21,25 +22,48 @@
                                 <label for="service{{i}}">{{slot.time}}</label>
                                 <br>
                                 <p><small class="text-danger"><i> <strong
-                        style="font-size: 20px;">{{slot.adultsAvailableSlots}}</strong>
-                      adult slots
-                      available</i></small></p>
-                                <p><small class="text-danger"><i> <strong style="font-size: 20px;">{{slot.kidsAvailableSlots}}</strong>
-                      children (ages 7-12) slots
-                      available</i></small></p>
+                                                style="font-size: 20px;">{{slot.adultsAvailableSlots}}</strong>
+                                            adult slots
+                                            available</i></small></p>
                                 <p><small class="text-danger"><i> <strong
-                        style="font-size: 20px;">{{slot.toddlersAvailableSlots}}</strong>
-                      children (ages 3-6) slots
-                      available</i></small></p>
+                                                style="font-size: 20px;">{{slot.kidsAvailableSlots}}</strong>
+                                            children (ages 7-12) slots
+                                            available</i></small></p>
+                                <p><small class="text-danger"><i> <strong
+                                                style="font-size: 20px;">{{slot.toddlersAvailableSlots}}</strong>
+                                            children (ages 3-6) slots
+                                            available</i></small></p>
                             </div>
                             <div class="row col-12 mb-3 justify-content-center">
                                 <!-- Control Errors -->
                                 <span *ngIf="(_time.touched || _time.dirty) && _time.invalid" class="text-danger ml-5">
-                  <!-- Control Required Errors -->
-                  <span *ngIf='_time.errors.required'><i><small>*Please select a service time to
-                        attend</small></i></span>
+                                    <!-- Control Required Errors -->
+                                    <span *ngIf='_time.errors.required'><i><small>*Please select a service time to
+                                                attend</small></i></span>
                                 </span>
                             </div>
+                        </div>
+
+                        <!--This is a table to display the members of the group and to select if they will attending the service also if they need pick up-->
+                        <!--It is not visible cos there is no data for now-->
+                        <div *ngIf="(canShowRegistrant$ | async)">
+                            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                                <ng-container matColumnDef="Attending">
+                                    <th mat-header-cell *matHeaderCellDef> Attending Service </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="Name">
+                                    <th mat-header-cell *matHeaderCellDef> Name </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="Pickup">
+                                    <th mat-header-cell *matHeaderCellDef> Require Pickup </th>
+                                    <td mat-cell *matCellDef="let element"><input type="checkbox" formControlName="pickUp"></td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            </table>
+
                         </div>
                     </form>
                 </mat-tab>
@@ -52,30 +76,30 @@
                                 <div class="row details justify-content-between">
                                     <div class="col col-12 col-sm-6 form-group">
                                         <label for="name">First Name
-                      <!-- Control Errors -->
-                      <span
-                        *ngIf="(membersDet.controls[i].get('name').touched || membersDet.controls[i].get('name').dirty) && membersDet.controls[i].get('name').invalid"
-                        class="text-danger ml-5">
-                        <!-- Control Required Errors -->
-                        <span *ngIf="membersDet.controls[i].get('name').errors?.required"><i><small>*This
-                              field is
-                              required</small></i></span>
-                      </span>
-                    </label>
+                                            <!-- Control Errors -->
+                                            <span
+                                                *ngIf="(membersDet.controls[i].get('name').touched || membersDet.controls[i].get('name').dirty) && membersDet.controls[i].get('name').invalid"
+                                                class="text-danger ml-5">
+                                                <!-- Control Required Errors -->
+                                                <span *ngIf="membersDet.controls[i].get('name').errors?.required"><i><small>*This
+                                                            field is
+                                                            required</small></i></span>
+                                            </span>
+                                        </label>
                                         <input type="text" class="form-control" formControlName="name">
                                     </div>
                                     <div class="col col-12 col-sm-6 form-group">
                                         <label for="surname">Last Name
-                      <!-- Control Errors -->
-                      <span
-                        *ngIf="(membersDet.controls[i].get('surname').touched || membersDet.controls[i].get('surname').dirty) && membersDet.controls[i].get('surname').invalid"
-                        class="text-danger ml-5">
-                        <!-- Control Required Errors -->
-                        <span *ngIf="membersDet.controls[i].get('surname').errors?.required"><i><small>*This
-                              field is
-                              required</small></i></span>
-                      </span>
-                    </label>
+                                            <!-- Control Errors -->
+                                            <span
+                                                *ngIf="(membersDet.controls[i].get('surname').touched || membersDet.controls[i].get('surname').dirty) && membersDet.controls[i].get('surname').invalid"
+                                                class="text-danger ml-5">
+                                                <!-- Control Required Errors -->
+                                                <span *ngIf="membersDet.controls[i].get('surname').errors?.required"><i><small>*This
+                                                            field is
+                                                            required</small></i></span>
+                                            </span>
+                                        </label>
                                         <input type="text" class="form-control" formControlName="surname">
                                     </div>
                                 </div>
@@ -84,10 +108,10 @@
                                         <p>Gender (for attendance)</p>
                                         <!-- Control Errors -->
                                         <span *ngIf="(membersDet.controls[i].get('gender').touched || membersDet.controls[i].get('gender').dirty) && membersDet.controls[i].get('gender').invalid" class="text-danger ml-5">
-                      <!-- Control Required Errors -->
-                      <span *ngIf="membersDet.controls[i].get('gender').errors?.required"><i><small>*This
-                            field is
-                            required</small></i></span>
+                                            <!-- Control Required Errors -->
+                                            <span *ngIf="membersDet.controls[i].get('gender').errors?.required"><i><small>*This
+                                                        field is
+                                                        required</small></i></span>
                                         </span>
                                         <div class="pl-0 col-12 row">
                                             <div class="pl-0 col-4 col-sm-3 form-group">
@@ -102,34 +126,35 @@
                                     </div>
                                     <div class="pl-0 col-12 col-sm-6">
                                         <label for="category">Category
-                      <!-- Control Errors -->
-                      <span
-                        *ngIf="(membersDet.controls[i].get('categoryId').touched || membersDet.controls[i].get('categoryId').dirty) && membersDet.controls[i].get('categoryId').invalid"
-                        class="text-danger ml-5">
-                        <!-- Control Required Errors -->
-                        <span *ngIf="membersDet.controls[i].get('categoryId').errors?.required"><i><small>*This
-                              field is
-                              required</small></i></span>
-                      </span>
-                    </label>
+                                            <!-- Control Errors -->
+                                            <span
+                                                *ngIf="(membersDet.controls[i].get('categoryId').touched || membersDet.controls[i].get('categoryId').dirty) && membersDet.controls[i].get('categoryId').invalid"
+                                                class="text-danger ml-5">
+                                                <!-- Control Required Errors -->
+                                                <span
+                                                    *ngIf="membersDet.controls[i].get('categoryId').errors?.required"><i><small>*This
+                                                            field is
+                                                            required</small></i></span>
+                                            </span>
+                                        </label>
                                         <div class="input-group mb-3">
                                             <select class="custom-select" id="categorySelector" formControlName="categoryId">
-                        <option selected disabled>Choose...</option>
-                        <option value="1">Adult</option>
-                        <option value="2">Children (Ages 7-12)</option>
-                        <option value="3">Children (Ages 3-6)</option>
-                      </select>
+                                                <option selected disabled>Choose...</option>
+                                                <option value="1">Adult</option>
+                                                <option value="2">Children (Ages 7-12)</option>
+                                                <option value="3">Children (Ages 3-6)</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class=" row d-flex justify-content-between">
                                     <button *ngIf="memberControl.length > 1" class="col-6 col-sm-3 form-control btn-danger mb-2" (click)="removeRegistrant(i)">Delete
-                    Entry</button>
+                                        Entry</button>
                                 </div>
                             </div>
                         </section>
                         <button type="button" class="col-8 col-sm-3 form-control btn-dark mb-4" (click)="addRegistrant()">Add
-              Registrant</button>
+                            Registrant</button>
                         <br>
                         <br>
                         <div class="row justify-content-end mt-5">

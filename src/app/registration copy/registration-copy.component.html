@@ -3,7 +3,7 @@
     <li class="nav-item active">
         <ng-container *ngIf="getLoggedInUser() !== null">
             <span class="nav-link active">Hi, {{getLoggedInUser()}}
-      </span>
+            </span>
         </ng-container>
     </li>
 
@@ -21,23 +21,25 @@
                             <input type="radio" value="{{slot.time}}" id="service{{i}}" formControlName="time" (click)='onTimeChange(slot)'>
                             <label for="service{{i}}">{{slot.time}}</label>
                             <br>
-                            <p><small class="text-danger"><i> <strong style="font-size: 20px;">{{slot.adultsAvailableSlots}}</strong>
-                    adult slots
-                    available</i></small></p>
-                            <p><small class="text-danger"><i> <strong style="font-size: 20px;">{{slot.kidsAvailableSlots}}</strong>
-                    children (ages 7-12) slots
-                    available</i></small></p>
                             <p><small class="text-danger"><i> <strong
-                      style="font-size: 20px;">{{slot.toddlersAvailableSlots}}</strong>
-                    children (ages 3-6) slots
-                    available</i></small></p>
+                                            style="font-size: 20px;">{{slot.adultsAvailableSlots}}</strong>
+                                        adult slots
+                                        available</i></small></p>
+                            <p><small class="text-danger"><i> <strong
+                                            style="font-size: 20px;">{{slot.kidsAvailableSlots}}</strong>
+                                        children (ages 7-12) slots
+                                        available</i></small></p>
+                            <p><small class="text-danger"><i> <strong
+                                            style="font-size: 20px;">{{slot.toddlersAvailableSlots}}</strong>
+                                        children (ages 3-6) slots
+                                        available</i></small></p>
                         </div>
                         <div class="row col-12 mb-3 justify-content-center">
                             <!-- Control Errors -->
                             <span *ngIf="(_time.touched || _time.dirty) && _time.invalid" class="text-danger ml-5">
-                <!-- Control Required Errors -->
-                <span *ngIf='_time.errors.required'><i><small>*Please select a service time to
-                      attend</small></i></span>
+                                <!-- Control Required Errors -->
+                                <span *ngIf='_time.errors.required'><i><small>*Please select a service time to
+                                            attend</small></i></span>
                             </span>
                         </div>
                     </div>
@@ -47,32 +49,30 @@
                                 <div class="row details justify-content-between">
                                     <div class="col col-12 col-sm-6 form-group">
                                         <label for="name">First Name
-                      <!-- Control Errors -->
-                      <span
-                        *ngIf="(membersDet.controls[i].get('name').touched || membersDet.controls[i].get('name').dirty) && membersDet.controls[i].get('name').invalid"
-                        class="text-danger ml-5"
-                      >
-                        <!-- Control Required Errors -->
-                        <span *ngIf="membersDet.controls[i].get('name').errors?.required"><i><small>*This
-                              field is
-                              required</small></i></span>
-                      </span>
-                    </label>
+                                            <!-- Control Errors -->
+                                            <span
+                                                *ngIf="(membersDet.controls[i].get('name').touched || membersDet.controls[i].get('name').dirty) && membersDet.controls[i].get('name').invalid"
+                                                class="text-danger ml-5">
+                                                <!-- Control Required Errors -->
+                                                <span *ngIf="membersDet.controls[i].get('name').errors?.required"><i><small>*This
+                                                            field is
+                                                            required</small></i></span>
+                                            </span>
+                                        </label>
                                         <input type="text" class="form-control" formControlName="name">
                                     </div>
                                     <div class="col col-12 col-sm-6 form-group">
                                         <label for="surname">Last Name
-                      <!-- Control Errors -->
-                      <span
-                        *ngIf="(membersDet.controls[i].get('surname').touched || membersDet.controls[i].get('surname').dirty) && membersDet.controls[i].get('surname').invalid"
-                        class="text-danger ml-5"
-                      >
-                        <!-- Control Required Errors -->
-                        <span *ngIf="membersDet.controls[i].get('surname').errors?.required"><i><small>*This
-                              field is
-                              required</small></i></span>
-                      </span>
-                    </label>
+                                            <!-- Control Errors -->
+                                            <span
+                                                *ngIf="(membersDet.controls[i].get('surname').touched || membersDet.controls[i].get('surname').dirty) && membersDet.controls[i].get('surname').invalid"
+                                                class="text-danger ml-5">
+                                                <!-- Control Required Errors -->
+                                                <span *ngIf="membersDet.controls[i].get('surname').errors?.required"><i><small>*This
+                                                            field is
+                                                            required</small></i></span>
+                                            </span>
+                                        </label>
                                         <input type="text" class="form-control" formControlName="surname">
                                     </div>
                                 </div>
@@ -84,10 +84,10 @@
                                         <p>Gender (for attendance)</p>
                                         <!-- Control Errors -->
                                         <span *ngIf="(membersDet.controls[i].get('gender').touched || membersDet.controls[i].get('gender').dirty) && membersDet.controls[i].get('gender').invalid" class="text-danger ml-5">
-                      <!-- Control Required Errors -->
-                      <span *ngIf="membersDet.controls[i].get('gender').errors?.required"><i><small>*This
-                            field is
-                            required</small></i></span>
+                                            <!-- Control Required Errors -->
+                                            <span *ngIf="membersDet.controls[i].get('gender').errors?.required"><i><small>*This
+                                                        field is
+                                                        required</small></i></span>
                                         </span>
                                         <div class="pl-0 col-12 row">
                                             <div class="pl-0 col-4 col-sm-3 form-group">
@@ -108,67 +108,61 @@
                                 <div class=" row d-flex justify-content-between">
                                     <div class="pl-0 col-12 col-sm-6 row">
                                         <label for="category">Category
-                      <!-- Control Errors -->
-                      <span
-                        *ngIf="(membersDet.controls[i].get('categoryId').touched || membersDet.controls[i].get('categoryId').dirty) && membersDet.controls[i].get('categoryId').invalid"
-                        class="text-danger ml-5"
-                      >
-                        <!-- Control Required Errors -->
-                        <span *ngIf="membersDet.controls[i].get('categoryId').errors?.required"><i><small>*This
-                              field is
-                              required</small></i></span>
-                      </span>
-                    </label>
+                                            <!-- Control Errors -->
+                                            <span
+                                                *ngIf="(membersDet.controls[i].get('categoryId').touched || membersDet.controls[i].get('categoryId').dirty) && membersDet.controls[i].get('categoryId').invalid"
+                                                class="text-danger ml-5">
+                                                <!-- Control Required Errors -->
+                                                <span
+                                                    *ngIf="membersDet.controls[i].get('categoryId').errors?.required"><i><small>*This
+                                                            field is
+                                                            required</small></i></span>
+                                            </span>
+                                        </label>
                                         <div class="input-group mb-3">
                                             <select class="custom-select" id="categorySelector" formControlName="categoryId">
-                        <option
-                          selected
-                          disabled
-                        >Choose...</option>
-                        <option value="1">Adult</option>
-                        <option value="2">Children (Ages 7-12)</option>
-                        <option value="3">Children (Ages 3-6)</option>
-                      </select>
+                                                <option selected disabled>Choose...</option>
+                                                <option value="1">Adult</option>
+                                                <option value="2">Children (Ages 7-12)</option>
+                                                <option value="3">Children (Ages 3-6)</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <button *ngIf="memberControl.length > 1" class="col-6 col-sm-3 form-control btn-danger mb-2" (click)="removeRegistrant(i)">Delete
-                    Entry</button>
+                                        Entry</button>
                                 </div>
                             </div>
                         </section>
                         <button type="button" class="col-8 col-sm-4 form-control btn-dark mb-4" (click)="addRegistrant()">Add
-              Registrant</button>
+                            Registrant</button>
                         <br>
                         <br>
                         <br>
                         <div class="row details">
                             <div class="col col-12 col-sm-6 form-group">
                                 <label class="mb-2" for="emailAddress">Email Address
-                  <!-- Control Errors -->
-                  <span
-                    *ngIf="(_emailAddress.touched || _emailAddress.dirty) && _emailAddress.invalid"
-                    class="text-danger ml-5"
-                  >
-                    <!-- Control Required Errors -->
-                    <span *ngIf='_emailAddress.errors.required'><i><small>*This field is
-                          required</small></i></span>
-                    <span *ngIf='_emailAddress.errors.email'><i><small>*Input is
-                          invalid</small></i></span>
-                  </span>
-                </label>
+                                    <!-- Control Errors -->
+                                    <span
+                                        *ngIf="(_emailAddress.touched || _emailAddress.dirty) && _emailAddress.invalid"
+                                        class="text-danger ml-5">
+                                        <!-- Control Required Errors -->
+                                        <span *ngIf='_emailAddress.errors.required'><i><small>*This field is
+                                                    required</small></i></span>
+                                        <span *ngIf='_emailAddress.errors.email'><i><small>*Input is
+                                                    invalid</small></i></span>
+                                    </span>
+                                </label>
                                 <input type="text" class="form-control mb-3" formControlName="emailAddress">
                             </div>
                             <div class="col col-12 col-sm-6 form-group">
                                 <label class="mb-2" for="mobile">Phone Number
-                  <!-- Control Errors -->
-                  <span
-                    *ngIf="(_mobile.touched || _mobile.dirty) && _mobile.invalid"
-                    class="text-danger ml-5"
-                  >
-                    <span *ngIf='_mobile.errors.pattern'><i><small>*Input is
-                          invalid</small></i></span>
-                  </span>
-                </label>
+                                    <!-- Control Errors -->
+                                    <span *ngIf="(_mobile.touched || _mobile.dirty) && _mobile.invalid"
+                                        class="text-danger ml-5">
+                                        <span *ngIf='_mobile.errors.pattern'><i><small>*Input is
+                                                    invalid</small></i></span>
+                                    </span>
+                                </label>
                                 <input type="tel" class="form-control mb-3" formControlName="mobile">
                             </div>
                         </div>
