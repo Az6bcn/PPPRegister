@@ -1,5 +1,5 @@
-import { UsersAndLinkedUsers } from './../model/user-and-linked-users';
-import { AccountService } from './../services/account.service';
+import { UsersAndLinkedUsers } from '../model/user-and-linked-users';
+import { AccountService } from '../services/account.service';
 import { Component, OnInit, NgModule } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, AbstractControl, FormArray } from '@angular/forms';
 import { Subscription, BehaviorSubject } from 'rxjs';
@@ -55,7 +55,7 @@ export class RegistrationComponent implements OnInit {
         this.loggedInUser = response;
       });
 
-    this.bookingFG = this.buildBookingForm(this.fb);
+
     this.registrationFG = this.buildRegistrationForm(this.fb);
     this.sundayDate = this.getNextSunday();
     this.isLoading$.next(true);
@@ -100,20 +100,12 @@ export class RegistrationComponent implements OnInit {
   buildRegistrationForm(fb: FormBuilder) {
 
     return fb.group({
+      time: ['', Validators.required],
       members: this.fb.array([this.createRegistrant()]),
       emailAddress: ['', [Validators.required, Validators.email]],
       mobile: ['', [Validators.required, Validators.pattern('[0-9]{11}')]],
     });
   }
-
-  buildBookingForm(fb: FormBuilder) {
-
-    return fb.group({
-      time: ['', Validators.required],
-      members: this.fb.array([]),
-    });
-  }
-  
   onTimeChange(slot: Slots) {
     this.canShowRegistrant$.next(true);
     this.selectedSlot$.next(slot);
@@ -207,8 +199,7 @@ export class RegistrationComponent implements OnInit {
     this.subscriptions.forEach(x => x.unsubscribe());
   }
 
-  get _time(): AbstractControl { return this.bookingFG.get('time'); }
-
+  get _time(): AbstractControl { return this.registrationFG.get('time'); }
   get _emailAddress(): AbstractControl { return this.registrationFG.get('emailAddress'); }
   get _mobile(): AbstractControl { return this.registrationFG.get('mobile'); }
   get _members(): AbstractControl { return this.registrationFG.get('members'); }
