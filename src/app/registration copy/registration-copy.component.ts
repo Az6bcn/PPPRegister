@@ -1,5 +1,5 @@
-import { UsersAndLinkedUsers } from './../model/user-and-linked-users';
-import { AccountService } from './../services/account.service';
+import { UsersAndLinkedUsers } from '../model/user-and-linked-users';
+import { AccountService } from '../services/account.service';
 import { Component, OnInit, NgModule } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, AbstractControl, FormArray } from '@angular/forms';
 import { Subscription, BehaviorSubject } from 'rxjs';

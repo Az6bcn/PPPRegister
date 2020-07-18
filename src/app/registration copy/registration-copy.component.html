@@ -9,44 +9,39 @@
 
     <div class="row register">
         <div class="col-12 mx-auto mt-5 p-5 border bg-white border-dark text-dark rounded">
-            <mat-tab-group animationDuration="0ms" mat-align-tabs="start">
-                <mat-tab label="Registration">
-                    <form [formGroup]="bookingFG" (ngSubmit)="register(registrationFG.value)">
-                        <br>
-                        <br>
-                        <p>Please select the service for {{sundayDate.toDateString()}}</p>
-                        <div class="row d-flex justify-content-between service-radio">
-                            <div *ngFor="let slot of slots, let i = index" class="col-3 p-0 form-group">
-                                <input type="radio" value="{{slot.time}}" id="service{{i}}" formControlName="time" (click)='onTimeChange(slot)'>
-                                <label for="service{{i}}">{{slot.time}}</label>
-                                <br>
-                                <p><small class="text-danger"><i> <strong
-                        style="font-size: 20px;">{{slot.adultsAvailableSlots}}</strong>
-                      adult slots
-                      available</i></small></p>
-                                <p><small class="text-danger"><i> <strong style="font-size: 20px;">{{slot.kidsAvailableSlots}}</strong>
-                      children (ages 7-12) slots
-                      available</i></small></p>
-                                <p><small class="text-danger"><i> <strong
-                        style="font-size: 20px;">{{slot.toddlersAvailableSlots}}</strong>
-                      children (ages 3-6) slots
-                      available</i></small></p>
-                            </div>
-                            <div class="row col-12 mb-3 justify-content-center">
-                                <!-- Control Errors -->
-                                <span *ngIf="(_time.touched || _time.dirty) && _time.invalid" class="text-danger ml-5">
-                  <!-- Control Required Errors -->
-                  <span *ngIf='_time.errors.required'><i><small>*Please select a service time to
-                        attend</small></i></span>
-                                </span>
-                            </div>
+            <form [formGroup]="registrationFG" (ngSubmit)="register(registrationFG.value)">
+                <h3>Registration</h3>
+                <hr>
+                <br>
+                <br>
+                <div *ngIf="!(isSubmitted$ | async)">
+                    <p>Please select the service for {{sundayDate.toDateString()}}</p>
+                    <div class="row d-flex justify-content-between service-radio">
+                        <div *ngFor="let slot of slots, let i = index" class="col-3 p-0 form-group">
+                            <input type="radio" value="{{slot.time}}" id="service{{i}}" formControlName="time" (click)='onTimeChange(slot)'>
+                            <label for="service{{i}}">{{slot.time}}</label>
+                            <br>
+                            <p><small class="text-danger"><i> <strong style="font-size: 20px;">{{slot.adultsAvailableSlots}}</strong>
+                    adult slots
+                    available</i></small></p>
+                            <p><small class="text-danger"><i> <strong style="font-size: 20px;">{{slot.kidsAvailableSlots}}</strong>
+                    children (ages 7-12) slots
+                    available</i></small></p>
+                            <p><small class="text-danger"><i> <strong
+                      style="font-size: 20px;">{{slot.toddlersAvailableSlots}}</strong>
+                    children (ages 3-6) slots
+                    available</i></small></p>
                         </div>
-                    </form>
-                </mat-tab>
-                <mat-tab label="Add registrant">
-                    <form [formGroup]="registrationFG">
-                        <br>
-                        <br>
+                        <div class="row col-12 mb-3 justify-content-center">
+                            <!-- Control Errors -->
+                            <span *ngIf="(_time.touched || _time.dirty) && _time.invalid" class="text-danger ml-5">
+                <!-- Control Required Errors -->
+                <span *ngIf='_time.errors.required'><i><small>*Please select a service time to
+                      attend</small></i></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div *ngIf="(canShowRegistrant$ | async)">
                         <section formArrayName="members" *ngFor="let member of memberControl, let i = index">
                             <div [formGroupName]="i">
                                 <div class="row details justify-content-between">
@@ -55,7 +50,8 @@
                       <!-- Control Errors -->
                       <span
                         *ngIf="(membersDet.controls[i].get('name').touched || membersDet.controls[i].get('name').dirty) && membersDet.controls[i].get('name').invalid"
-                        class="text-danger ml-5">
+                        class="text-danger ml-5"
+                      >
                         <!-- Control Required Errors -->
                         <span *ngIf="membersDet.controls[i].get('name').errors?.required"><i><small>*This
                               field is
@@ -69,7 +65,8 @@
                       <!-- Control Errors -->
                       <span
                         *ngIf="(membersDet.controls[i].get('surname').touched || membersDet.controls[i].get('surname').dirty) && membersDet.controls[i].get('surname').invalid"
-                        class="text-danger ml-5">
+                        class="text-danger ml-5"
+                      >
                         <!-- Control Required Errors -->
                         <span *ngIf="membersDet.controls[i].get('surname').errors?.required"><i><small>*This
                               field is
@@ -79,8 +76,11 @@
                                         <input type="text" class="form-control" formControlName="surname">
                                     </div>
                                 </div>
-                                <div class="row d-flex justify-content-between">
-                                    <div class="gender-radio pl-0 col-12 col-sm-6 row">
+                                <div class="row d-flex">
+
+                                </div>
+                                <div class="row d-flex gender-radio justify-content-between">
+                                    <div class="pl-0 col-12 col-sm-6 row">
                                         <p>Gender (for attendance)</p>
                                         <!-- Control Errors -->
                                         <span *ngIf="(membersDet.controls[i].get('gender').touched || membersDet.controls[i].get('gender').dirty) && membersDet.controls[i].get('gender').invalid" class="text-danger ml-5">
@@ -100,12 +100,19 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="pl-0 col-12 col-sm-6">
+                                    <div class="pl-0 col-12 col-sm-6 form-group">
+                                        <label>Would you like to be picked up &nbsp;</label>
+                                        <input type="checkbox" formControlName="pickUp">
+                                    </div>
+                                </div>
+                                <div class=" row d-flex justify-content-between">
+                                    <div class="pl-0 col-12 col-sm-6 row">
                                         <label for="category">Category
                       <!-- Control Errors -->
                       <span
                         *ngIf="(membersDet.controls[i].get('categoryId').touched || membersDet.controls[i].get('categoryId').dirty) && membersDet.controls[i].get('categoryId').invalid"
-                        class="text-danger ml-5">
+                        class="text-danger ml-5"
+                      >
                         <!-- Control Required Errors -->
                         <span *ngIf="membersDet.controls[i].get('categoryId').errors?.required"><i><small>*This
                               field is
@@ -114,31 +121,67 @@
                     </label>
                                         <div class="input-group mb-3">
                                             <select class="custom-select" id="categorySelector" formControlName="categoryId">
-                        <option selected disabled>Choose...</option>
+                        <option
+                          selected
+                          disabled
+                        >Choose...</option>
                         <option value="1">Adult</option>
                         <option value="2">Children (Ages 7-12)</option>
                         <option value="3">Children (Ages 3-6)</option>
                       </select>
                                         </div>
                                     </div>
-                                </div>
-                                <div class=" row d-flex justify-content-between">
                                     <button *ngIf="memberControl.length > 1" class="col-6 col-sm-3 form-control btn-danger mb-2" (click)="removeRegistrant(i)">Delete
                     Entry</button>
                                 </div>
                             </div>
                         </section>
-                        <button type="button" class="col-8 col-sm-3 form-control btn-dark mb-4" (click)="addRegistrant()">Add
+                        <button type="button" class="col-8 col-sm-4 form-control btn-dark mb-4" (click)="addRegistrant()">Add
               Registrant</button>
                         <br>
                         <br>
-                        <div class="row justify-content-end mt-5">
-                            <button type="button" class="col-5 col-sm-2 btn btn-light" (click)="cancel()">Cancel</button>
-                            <button type="submit" class="ml-3 col-5 col-sm-2 btn btn-dark mr-3" [disabled]="isValid() || (submittedDisbaleBtn$ | async)">Submit</button>
+                        <br>
+                        <div class="row details">
+                            <div class="col col-12 col-sm-6 form-group">
+                                <label class="mb-2" for="emailAddress">Email Address
+                  <!-- Control Errors -->
+                  <span
+                    *ngIf="(_emailAddress.touched || _emailAddress.dirty) && _emailAddress.invalid"
+                    class="text-danger ml-5"
+                  >
+                    <!-- Control Required Errors -->
+                    <span *ngIf='_emailAddress.errors.required'><i><small>*This field is
+                          required</small></i></span>
+                    <span *ngIf='_emailAddress.errors.email'><i><small>*Input is
+                          invalid</small></i></span>
+                  </span>
+                </label>
+                                <input type="text" class="form-control mb-3" formControlName="emailAddress">
+                            </div>
+                            <div class="col col-12 col-sm-6 form-group">
+                                <label class="mb-2" for="mobile">Phone Number
+                  <!-- Control Errors -->
+                  <span
+                    *ngIf="(_mobile.touched || _mobile.dirty) && _mobile.invalid"
+                    class="text-danger ml-5"
+                  >
+                    <span *ngIf='_mobile.errors.pattern'><i><small>*Input is
+                          invalid</small></i></span>
+                  </span>
+                </label>
+                                <input type="tel" class="form-control mb-3" formControlName="mobile">
+                            </div>
                         </div>
-                    </form>
-                </mat-tab>
-            </mat-tab-group>
+                    </div>
+                    <div class="row justify-content-end mt-5">
+                        <button type="button" class="col-5 col-sm-3 btn btn-light" (click)="cancel()">Cancel</button>
+                        <button type="submit" class="ml-3 col-5 col-sm-3 btn btn-dark" [disabled]="isValid() || (submittedDisbaleBtn$ | async)">Submit</button>
+                    </div>
+                </div>
+                <div *ngIf="isSubmitted$ | async">
+                    <h5>Thank you for registering</h5>
+                </div>
+            </form>
         </div>
     </div>
 </div>

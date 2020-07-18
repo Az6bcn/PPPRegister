@@ -21,6 +21,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { TokenGetter } from './helper/jwt-getter';
+import { MatTabsModule } from '@angular/material/tabs';
 
 
 
@@ -48,6 +49,7 @@ import { TokenGetter } from './helper/jwt-getter';
     BrowserAnimationsModule,
     PaginationModule.forRoot(),
     NgSelectModule,
+    MatTabsModule,
     FormsModule,
     JwtModule.forRoot({
       config: {
