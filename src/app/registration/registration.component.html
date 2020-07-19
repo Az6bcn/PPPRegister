@@ -74,6 +74,11 @@
                   (click)=mainUserPickUpOnChecked(mainUserPickUpCheckBox)
                 >
               </div>
+
+              <hr>
+              <div>
+                <h2>Which family members do you want to include in the booking?</h2>
+              </div>
               <table
                 class="table table-hover table-striped w-50 head-dark"
                 *ngIf="loggedInUser && loggedInUser.linkedUsers && loggedInUser.linkedUsers.length > 0"
