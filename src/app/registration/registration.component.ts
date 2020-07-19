@@ -222,7 +222,7 @@ export class RegistrationComponent implements OnInit {
     data.emailAddress = this.loggedInUser.mainUser.emailAddress;
     data.time = slot.time;
 
-    if (this.loggedInUser.linkedUsers.length > 0) {
+    if (this.loggedInUser.linkedUsers.filter(x => x.includeInBooking).length > 0) {
       data.isGroupBooking = true;
       data.members = [...this.loggedInUser.linkedUsers.filter(x => x.includeInBooking), this.loggedInUser.mainUser];
     } else { data.member = this.loggedInUser.mainUser; }
@@ -237,7 +237,7 @@ export class RegistrationComponent implements OnInit {
 
         setTimeout(() => {
           window.location.reload();
-        }, 3000); // 3s
+        }, 2000); // 2s
       },
         error => {
           this.isLoading$.next(false);
