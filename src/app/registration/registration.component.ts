@@ -227,7 +227,7 @@ export class RegistrationComponent implements OnInit {
 
     if (this.loggedInUser.linkedUsers.length > 0) {
       data.isGroupBooking = true;
-      data.members = [...this.loggedInUser.linkedUsers, this.loggedInUser.mainUser];
+      data.members = [...this.loggedInUser.linkedUsers.filter(x => x.includeInBooking), this.loggedInUser.mainUser];
     } else { data.member = this.loggedInUser.mainUser; }
 
     console.log('data to send for booking', data);
@@ -268,8 +268,18 @@ export class RegistrationComponent implements OnInit {
     }
     this.loggedInUser.mainUser.pickUp = false;
   }
-  get _time(): AbstractControl { return this.bookingFG.get('time'); }
 
+  includeInBookingOnChecked(linkedUser: CheckedinMember, value: HTMLInputElement) {
+    const checkedLinkedUser = this.loggedInUser.linkedUsers.find(x => x.id === linkedUser.id);
+    if (checkedLinkedUser && value.checked) {
+      checkedLinkedUser.includeInBooking = true;
+      return;
+    }
+    checkedLinkedUser.includeInBooking = false;
+  }
+
+
+  get _time(): AbstractControl { return this.bookingFG.get('time'); }
   get _emailAddress(): AbstractControl { return this.registrationFG.get('emailAddress'); }
   get _mobile(): AbstractControl { return this.registrationFG.get('mobile'); }
   get _members(): AbstractControl { return this.registrationFG.get('members'); }

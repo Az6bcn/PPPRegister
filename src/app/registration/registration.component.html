@@ -74,38 +74,42 @@
                   (click)=mainUserPickUpOnChecked(mainUserPickUpCheckBox)
                 >
               </div>
-              <div class="d-flex border-purple  justify-content-center">
-
-                <table
-                  class="table table-hover table-striped w-50 head-dark"
-                  *ngIf="loggedInUser && loggedInUser.linkedUsers && loggedInUser.linkedUsers.length > 0"
-                >
-                  <thead>
+              <table
+                class="table table-hover table-striped w-50 head-dark"
+                *ngIf="loggedInUser && loggedInUser.linkedUsers && loggedInUser.linkedUsers.length > 0"
+              >
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>PickUp</th>
+                    <th>Include</th>
+                    <th>Category</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let linkedUser of (loggedInUser$ | async).linkedUsers">
                     <tr>
-                      <th>Name</th>
-                      <th>Pickup</th>
-                      <th>Category</th>
+                      <td>{{linkedUser.name}} {{linkedUser.surname}}</td>
+                      <td>
+                        <!-- {{linkedUser.pickUp}} -->
+                        <input
+                          #linkedUserPickUpCheckBox
+                          type="checkbox"
+                          (click)=linkedUsersPickUpOnChecked(linkedUser,linkedUserPickUpCheckBox)
+                        >
+                      </td>
+                      <td>
+                        <input
+                          #includeInBookingCheckBox
+                          type="checkbox"
+                          (click)=includeInBookingOnChecked(linkedUser,includeInBookingCheckBox)
+                        >
+                      </td>
+                      <td>{{mapCategory(linkedUser.categoryId)}}</td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    <ng-container *ngFor="let linkedUser of (loggedInUser$ | async).linkedUsers">
-                      <tr>
-                        <td>{{linkedUser.name}} {{linkedUser.surname}}</td>
-                        <td>
-                          <!-- {{linkedUser.pickUp}} -->
-                          <input
-                            #linkedUserPickUpCheckBox
-                            type="checkbox"
-                            (click)=linkedUsersPickUpOnChecked(linkedUser,linkedUserPickUpCheckBox)
-                          >
-                        </td>
-                        <td>{{mapCategory(linkedUser.categoryId)}}</td>
-                      </tr>
-                    </ng-container>
-                  </tbody>
-                </table>
-
-              </div>
+                  </ng-container>
+                </tbody>
+              </table>
               <div class="row justify-content-end mt-5">
                 <!-- <button
                   type="button"

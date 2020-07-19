@@ -13,4 +13,5 @@ export interface CheckedinMember {
   gender: string;
   categoryId: number;
   emailAddress: string;
+  includeInBooking: boolean;
 }
