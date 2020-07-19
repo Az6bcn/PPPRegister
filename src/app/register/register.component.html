@@ -1,87 +1,135 @@
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-12 mx-auto mt-5 p-5 border bg-white border-dark text-dark rounded">
-            <form [formGroup]='registerFG'>
-                <h3>Registration</h3>
-                <hr>
-                <br>
-                <br>
-                <p><small>Want to login? <a routerLink="/login">Click Here</a></small></p>
-                <p>Please enter your full first name and surname</p>
-                <div class="row details justify-content-between">
-                    <div class="form-group col-12 col-sm-6">
-                        <label for="name">Name
+  <div class="row">
+    <div class="col-12 mx-auto mt-5 p-5 border bg-white border-dark text-dark rounded">
+      <form [formGroup]='registerFG'>
+        <h3>Registration</h3>
+        <hr>
+        <br>
+        <br>
+        <p><small>Want to login? <a routerLink="/login">Click Here</a></small></p>
+        <p>Please enter your full first name and surname</p>
+        <div class="row details justify-content-between">
+          <div class="form-group col-12 col-sm-6">
+            <label for="name">Name
               <!-- Control Errors -->
-              <span *ngIf="(name.touched || name.dirty) && name.invalid" class="text-danger ml-5">
+              <span
+                *ngIf="(name.touched || name.dirty) && name.invalid"
+                class="text-danger ml-5"
+              >
                 <!-- Control Required Errors -->
                 <span *ngIf="name.errors?.required"><i><small>*This
                       field is
                       required</small></i></span>
               </span>
             </label>
-                        <input required formControlName="name" type="text" class="form-control" id="name" placeholder="Chukwuma">
-                    </div>
-                    <div class="form-group col-12 col-sm-6">
-                        <label for="surname">Surname
+            <input
+              required
+              formControlName="name"
+              type="text"
+              class="form-control"
+              id="name"
+              placeholder="Chukwuma"
+            >
+          </div>
+          <div class="form-group col-12 col-sm-6">
+            <label for="surname">Surname
               <!-- Control Errors -->
-              <span *ngIf="(surname.touched || surname.dirty) && surname.invalid" class="text-danger ml-5">
+              <span
+                *ngIf="(surname.touched || surname.dirty) && surname.invalid"
+                class="text-danger ml-5"
+              >
                 <!-- Control Required Errors -->
                 <span *ngIf="surname.errors?.required"><i><small>*This
                       field is
                       required</small></i></span>
               </span>
             </label>
-                        <input formControlName="surname" type="text" class="form-control" id="surname" placeholder="Adekunle">
-                    </div>
-                </div>
-                <div class="row details justify-content-between">
-                    <div class="gender-radio col-12 col-sm-6">
-                        <p>Gender (for attendance)
-                            <!-- Control Errors -->
-                            <span *ngIf="(gender.touched || gender.dirty) && gender.invalid" class="text-danger ml-5">
+            <input
+              formControlName="surname"
+              type="text"
+              class="form-control"
+              id="surname"
+              placeholder="Adekunle"
+            >
+          </div>
+        </div>
+        <div class="row details justify-content-between">
+          <div class="gender-radio col-12 col-sm-6">
+            <p>Gender (for attendance)
+              <!-- Control Errors -->
+              <span
+                *ngIf="(gender.touched || gender.dirty) && gender.invalid"
+                class="text-danger ml-5"
+              >
                 <!-- Control Required Errors -->
                 <span *ngIf="gender.errors?.required"><i><small>*This
                       field is
                       required</small></i></span>
-                            </span>
-                        </p>
+              </span>
+            </p>
 
-                        <div class="col-12 row">
-                            <div class="pl-0 col-4 col-sm-3 form-group">
-                                <input type="radio" value="female" id="female" formControlName="gender">
-                                <label for="female">Female</label>
-                            </div>
-                            <div class="col-4 col-sm-3 form-group">
-                                <input type="radio" value="male" id="male" formControlName="gender">
-                                <label for="male">Male</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6">
-                        <label for="category">Category
+            <div class="col-12 row">
+              <div class="pl-0 col-4 col-sm-3 form-group">
+                <input
+                  type="radio"
+                  value="female"
+                  id="female"
+                  formControlName="gender"
+                >
+                <label for="female">Female</label>
+              </div>
+              <div class="col-4 col-sm-3 form-group">
+                <input
+                  type="radio"
+                  value="male"
+                  id="male"
+                  formControlName="gender"
+                >
+                <label for="male">Male</label>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6">
+            <label for="category">Category
               <!-- Control Errors -->
-              <span *ngIf="(category.touched || category.dirty) && category.invalid" class="text-danger ml-5">
+              <span
+                *ngIf="(category.touched || category.dirty) && category.invalid"
+                class="text-danger ml-5"
+              >
                 <!-- Control Required Errors -->
                 <span *ngIf="category.errors?.required"><i><small>*This
                       field is
                       required</small></i></span>
               </span>
             </label>
-                        <div class="input-group mb-3">
-                            <select class="custom-select" id="categorySelector" formControlName="category">
-                <option selected disabled>Choose...</option>
+            <div class="input-group mb-3">
+              <select
+                class="custom-select"
+                id="categorySelector"
+                formControlName="categoryId"
+              >
+                <option
+                  selected
+                  disabled
+                >Choose...</option>
                 <option value="1">Adult</option>
                 <option value="2">Children (Ages 7-12)</option>
                 <option value="3">Children (Ages 3-6)</option>
               </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row details justify-content-between">
-                    <div class="col col-12 col-sm-6 form-group">
-                        <label class="mb-2" for="email">Email Address
+            </div>
+          </div>
+        </div>
+        <div class="row details justify-content-between">
+          <div class="col col-12 col-sm-6 form-group">
+            <label
+              class="mb-2"
+              for="email"
+            >Email Address
               <!-- Control Errors -->
-              <span *ngIf="(email.touched || email.dirty) && email.invalid" class="text-danger ml-5">
+              <span
+                *ngIf="(email.touched || email.dirty) && email.invalid"
+                class="text-danger ml-5"
+              >
                 <!-- Control Required Errors -->
                 <span *ngIf='email.errors.required'><i><small>*This field is
                       required</small></i></span>
@@ -89,66 +137,112 @@
                       invalid</small></i></span>
               </span>
             </label>
-                        <input type="text" class="form-control mb-3" formControlName="email" placeholder="john.doe@example.com">
-                    </div>
-                    <div class="col col-12 col-sm-6 form-group">
-                        <label class="mb-2" for="mobile">Phone Number
+            <input
+              type="email"
+              class="form-control mb-3"
+              formControlName="email"
+              placeholder="john.doe@example.com"
+            >
+          </div>
+          <div class="col col-12 col-sm-6 form-group">
+            <label
+              class="mb-2"
+              for="mobile"
+            >Phone Number
               <!-- Control Errors -->
-              <span *ngIf="(mobile.touched || mobile.dirty) && mobile.invalid" class="text-danger ml-5">
+              <span
+                *ngIf="(mobile.touched || mobile.dirty) && mobile.invalid"
+                class="text-danger ml-5"
+              >
                 <span *ngIf='mobile.errors.pattern'><i><small>*Input is
                       invalid</small></i></span>
                 <span *ngIf='mobile.errors.required'><i><small>*This field is
                       required</small></i></span>
               </span>
             </label>
-                        <input type="tel" class="form-control mb-3" formControlName="mobile" placeholder="07123456789">
-                    </div>
-                </div>
-                <div class="row details justify-content-between">
-                    <div class="form-group col-12 col-sm-6">
-                        <label for="inputPassword">Password
-              <span *ngIf="(password.touched || password.dirty) && password.invalid" class="text-danger ml-5">
+            <input
+              type="tel"
+              class="form-control mb-3"
+              formControlName="mobile"
+              placeholder="07123456789"
+            >
+          </div>
+        </div>
+        <div class="row details justify-content-between">
+          <div class="form-group col-12 col-sm-6">
+            <label for="inputPassword">Password
+              <span
+                *ngIf="(password.touched || password.dirty) && password.invalid"
+                class="text-danger ml-5"
+              >
                 <span *ngIf='password.errors.required'><i><small>*This field is
                       required</small></i></span>
               </span>
             </label>
-                        <input formControlName="password" type="password" class="form-control" id="inputPassword" placeholder="Password">
-                        <p><small class="text-secondary">Must have at least 8 characters</small></p>
-                    </div>
-                    <div class="form-group col-12 col-sm-6">
-                        <label for=" inputPassword2"> Confirm Password
-              <span *ngIf="(confirmPassword.touched || confirmPassword.dirty) && confirmPassword.invalid"
-                class="text-danger ml-5">
+            <input
+              formControlName="password"
+              type="password"
+              class="form-control"
+              id="inputPassword"
+              placeholder="Password"
+            >
+            <p><small class="text-secondary">Must have at least 8 characters</small></p>
+          </div>
+          <div class="form-group col-12 col-sm-6">
+            <label for=" inputPassword2"> Confirm Password
+              <span
+                *ngIf="(confirmPassword.touched || confirmPassword.dirty) && confirmPassword.invalid"
+                class="text-danger ml-5"
+              >
                 <span *ngIf='confirmPassword.errors.required'><i><small>*This field is
                       required</small></i></span>
                 <span
                   *ngIf='registerFG.errors?.passwordMatchError !== null'><i><small>{{registerFG.errors.passwordMatchError}}</small></i></span>
               </span>
             </label>
-                        <input formControlName="confirmPassword" type="password" class="form-control" id="inputPassword2" placeholder="Confirm Password">
-                        <!-- Errors Confirm Password-->
-                        <!-- <div *ngIf='(confirmPassword.touched || confirmPassword.dirty) && confirmPassword.invalid' class="alert alert-danger" role="alert">
+            <input
+              formControlName="confirmPassword"
+              type="password"
+              class="form-control"
+              id="inputPassword2"
+              placeholder="Confirm Password"
+            >
+            <!-- Errors Confirm Password-->
+            <!-- <div *ngIf='(confirmPassword.touched || confirmPassword.dirty) && confirmPassword.invalid' class="alert alert-danger" role="alert">
                             <div *ngIf='confirmPassword.errors.required'>
                                 Please confirm password.
                             </div>
                         </div> -->
-                        <!-- Errors Confirm Password Custom Validator Error-->
-                        <div *ngIf='registerFG.errors?.passwordMatchError !== null' class="alert alert-danger" role="alert">
-                            {{registerFG.errors.passwordMatchError}}
-                        </div>
-                    </div>
-                </div>
-
-
-
-                <div class="row justify-content-end">
-                    <button type="button" class="btn btn-outline-primary col-5 col-sm-2" (click)='register(registerFG.value)' [disabled]='isInValid(registerFG)'>
-            Register</button>
-                    <button type="button" class="ml-3 mr-3 btn btn-outline-secondary col-5 col-sm-2" (click)='cancel()'>Cancel</button>
-                </div>
-            </form>
+            <!-- Errors Confirm Password Custom Validator Error-->
+            <div
+              *ngIf='registerFG.errors?.passwordMatchError !== null'
+              class="alert alert-danger"
+              role="alert"
+            >
+              {{registerFG.errors.passwordMatchError}}
+            </div>
+          </div>
         </div>
+
+
+
+        <div class="row justify-content-end">
+          <button
+            type="button"
+            class="btn btn-outline-primary col-5 col-sm-2"
+            (click)='register(registerFG.value)'
+            [disabled]='isInValid(registerFG)'
+          >
+            Register</button>
+          <button
+            type="button"
+            class="ml-3 mr-3 btn btn-outline-secondary col-5 col-sm-2"
+            (click)='cancel()'
+          >Cancel</button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
 
 <notifier-container></notifier-container>

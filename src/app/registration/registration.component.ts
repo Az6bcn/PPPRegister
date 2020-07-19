@@ -239,6 +239,10 @@ export class RegistrationComponent implements OnInit {
         this.isSubmitted$.next(true);
         this.registrationFG.reset();
         this.notifierService.notify('success', 'Booked in successfully');
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000); // 3s
       },
         error => {
           this.isLoading$.next(false);

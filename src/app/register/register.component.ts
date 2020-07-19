@@ -46,7 +46,7 @@ export class RegisterComponent implements OnInit {
     this.authService.register(data)
       .subscribe(response => {
         if (response.success) {
-          this.notifierService.notify('success', 'Please, log in to book your slot');
+          this.notifierService.notify('success', 'Please login to book your slot');
           this.router.navigate(['/login']);
         }
       },
