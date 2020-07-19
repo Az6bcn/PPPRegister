@@ -1,10 +1,10 @@
 <div class="container-fluid mt-5">
   <div class="row">
-    <div class="col-12 col-sm-10 col-md-2 card mt-2 mr-3 ml-1 align-items-center">
+    <div class="col-12 col-sm-10 col-md-2 card mt-2 mr-3 ml-1 align-items-center ">
       <h3>Pick Up Report</h3>
-      <div class="row mt-5 d-flex flex-column align-items-center justify-content-center align-content-center">
+      <div class="row mt-2 d-flex flex-column align-items-center justify-content-center align-content-center">
         <div class="form-group ">
-          <div>
+          <div class="d-flex flex-column">
             <input
               type="
           text"
@@ -23,23 +23,43 @@
             >Run</button>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="col-12 col-sm-10 col-md-2 mt-2 mr-3 ml-1 card align-items-center">
-      <h3>Signed-in Report</h3>
-      <div class="row mt-5 align-self-center">
-        <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)='allRecords()'
-          >Run</button>
+        <hr>
+        <div class="form-group d-flex flex-column">
+          <h3>Signed-in Report</h3>
+          <div class="row mt-1 align-self-center">
+            <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group">
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)='allRecords()'
+              >Run</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="col-12 col-sm-10 col-md-7 mt-2 mr-3 ml-1 align-items-center ">
+    <div class="col-12 col-sm-10 col-md-4 mt-2 mr-3 ml-1 card align-items-center">
+      <ng-container *ngIf="attendance">
+        <div
+          class="mt-3"
+          *ngFor="let item of attendance.groupedResult"
+        >
+          <h3 class="badge badge-pill badge-primary">
+            {{item.serviceName}}: {{item.attended}} members attended.
+          </h3>
+        </div>
+        <h3 class="badge badge-pill badge-danger">
+          Total slots for the day: {{attendance.total.totalSlots}}
+        </h3>
+        <h3 class="badge badge-pill badge-success">
+          Total slots Booked: {{attendance.total.totalSlotsBooked}}, Total Attendance:
+          {{attendance.total.totalAttended}}
+        </h3>
+      </ng-container>
+    </div>
+    <div class="col-12 col-sm-10 col-md-5 mt-2 mr-3 ml-1 align-items-center">
       <form [formGroup]="dateForm">
-        <div class="row card">
+        <div class="row d-flex flex-column">
           <div
             class="col-xs-12 col-12 col-sm-6 col-md-4 form-group"
             style="width: 300px; margin-bottom: 20px;"
@@ -77,7 +97,22 @@
               [bsConfig]="{ isAnimated: true, rangeInputFormat: 'DD/MM/YYYY'}"
             />
           </div>
-
+          <!-- <div class="col-xs-12 col-12 col-sm-6 col-md-4 form-group flex-row flex-wrap">
+            <ng-container *ngIf="attendance">
+              <div *ngFor="let item of attendance.groupedResult">
+                <h3 class="badge badge-pill badge-primary">
+                  {{item.serviceName}}: {{item.attended}} members attended.
+                </h3>
+              </div>
+              <h3 class="badge badge-pill badge-danger">
+                Total slots for the day: {{attendance.total.totalSlots}}
+              </h3>
+              <h3 class="badge badge-pill badge-success">
+                Total slots Booked: {{attendance.total.totalSlotsBooked}}, Total Attendance:
+                {{attendance.total.totalAttended}}
+              </h3>
+            </ng-container>
+          </div> -->
         </div>
       </form>
     </div>
@@ -96,11 +131,11 @@
             <thead>
               <tr>
                 <th scope="col">Member</th>
+                <th scope="col">SignIn</th>
                 <th scope="col">Mobile</th>
                 <th scope="col">Gender</th>
                 <th scope="col">Date</th>
                 <th scope="col">Service</th>
-                <th scope="col">SignIn</th>
                 <th scope="col">Pick Up</th>
                 <!-- <th scope="col">SignOut</th> -->
               </tr>
@@ -109,10 +144,6 @@
               <ng-container *ngIf='checkedInMembers && checkedInMembers.length > 0'>
                 <tr *ngFor="let member of checkedInMembersPaginated">
                   <td>{{member.name}} {{member.surname}}</td>
-                  <td>{{member.mobile}}</td>
-                  <td>{{member.gender}}</td>
-                  <td>{{member.date | date:'d MMM y, h:mm:ss aaa'}}</td>
-                  <td>{{member.serviceName}} {{(member.time)}}</td>
                   <td>
                     <ng-container *ngIf="member.signedIn">
                       {{member.signedIn | date:'d MMM y, h:mm:ss aaa'}}
@@ -125,6 +156,10 @@
                       >Sign In</button>
                     </ng-container>
                   </td>
+                  <td>{{member.mobile}}</td>
+                  <td>{{member.gender}}</td>
+                  <td>{{member.date | date:'d MMM y, h:mm:ss aaa'}}</td>
+                  <td>{{member.serviceName}} {{(member.time)}}</td>
                   <td>{{member.pickUp}}</td>
                 </tr>
               </ng-container>

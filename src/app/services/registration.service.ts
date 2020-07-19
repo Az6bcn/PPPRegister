@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { IRegistrant } from '../model/registrant';
 import { Slots } from '../model/slots-available';
 import { environment } from './../../environments/environment';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
+import { LocalstorageService } from './localstorage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,16 @@ export class RegistrationService {
 
   private baseUrl = environment.baseUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private localStoreageService: LocalstorageService) { }
+
+  private httpOptions = {
+    headers: new HttpHeaders({
+      // 'Content-Type':  'application/json', // in Angular 7 : content type by default is application/json
+      Authorization: 'Bearer ' + this.localStoreageService.getToken()
+    })
+  };
 
   /**
    * Checks-in a user
@@ -21,7 +31,7 @@ export class RegistrationService {
    */
   createRegistration(data: IRegistrant) {
     const url = `${this.baseUrl}/booking`;
-    return this.http.post<any>(url, data)
+    return this.http.post<any>(url, data, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );
@@ -33,16 +43,21 @@ export class RegistrationService {
    */
   getSlotsAvailable(date: string): Observable<Array<Slots>> {
     const url = `${this.baseUrl}/booking/${date}`;
-    return this.http.get<Array<Slots>>(url)
+    return this.http.get<Array<Slots>>(url, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );
   }
 
   private handleError(error: HttpErrorResponse) {
+
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
       console.error('An error occurred:', error.error.message);
+    } else if (error.error instanceof HttpErrorResponse) {
+      if (error.error.status === 401) {
+        return throwError('Your session has expired, please login to continue');
+      }
     } else {
       // The backend returned an unsuccessful response code.
       // The response body may contain clues as to what went wrong,

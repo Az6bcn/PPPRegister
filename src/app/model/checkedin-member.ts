@@ -11,4 +11,7 @@ export interface CheckedinMember {
   serviceName: string;
   pickUp: boolean;
   gender: string;
+  categoryId: number;
+  emailAddress: string;
+  includeInBooking: boolean;
 }

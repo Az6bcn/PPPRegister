@@ -7,6 +7,7 @@ import { catchError } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
 import { CheckedinMember } from '../model/checkedin-member';
 import { Service } from '../model/service';
+import { Attendance } from '../model/attendance';
 
 @Injectable({
   providedIn: 'root'
@@ -99,6 +100,15 @@ export class CheckInService {
         catchError(this.handleError)
       );
   }
+
+  getAttendance(date: string = null): Observable<Attendance> {
+    const url = `${this.baseUrl}/CheckedInmembers/attendance/${date}`;
+    return this.http.get<Attendance>(url)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
 
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
