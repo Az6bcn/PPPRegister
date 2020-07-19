@@ -116,13 +116,10 @@ export class RegistrationComponent implements OnInit {
   }
 
   onTimeChange(slot: Slots) {
-    console.log('timeChanghe', slot);
     this.canShowRegistrant$.next(true);
     this.selectedSlot$.next(slot);
   }
   register(data: IRegistrant) {
-
-    console.log('registration data', data);
 
     this.authService.isTokenExpired()
       .subscribe(res => {
@@ -229,8 +226,6 @@ export class RegistrationComponent implements OnInit {
       data.isGroupBooking = true;
       data.members = [...this.loggedInUser.linkedUsers.filter(x => x.includeInBooking), this.loggedInUser.mainUser];
     } else { data.member = this.loggedInUser.mainUser; }
-
-    console.log('data to send for booking', data);
 
     this.isLoading$.next(true);
     const registrationSub = this.registrationService.createRegistration(data)
