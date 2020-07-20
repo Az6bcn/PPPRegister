@@ -284,6 +284,49 @@
             </div>
           </form>
         </mat-tab>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <p>
+              <span class="badge badge-primary">{{activeBooking?.totalNumberBookings}}</span>
+            </p>
+            Active Booking
+          </ng-template>
+          <div class="container-fluid">
+            <div
+              class="row"
+              *ngIf="activeBooking"
+            >
+              <div class="col-12 col-sm-12 col-md-6 mx-auto mt-5 p-5 border bg-white border-dark text-dark rounded">
+                <h3>Active Booking</h3>
+                <hr>
+                <h5>Hi {{loggedInUser?.mainUser.emailAddress}},
+                  <div *ngIf="activeBooking?.totalNumberBookings === 1">
+                    <br>You have one {{activeBooking?.totalNumberBookings}} active booking.
+                  </div>
+                  <div *ngIf="activeBooking?.totalNumberBookings > 1">
+                    <br>You have a total of {{activeBooking?.totalNumberBookings}} bookings for you and your family
+                    members.
+                  </div>
+                  <div *ngIf="activeBooking?.totalNumberBookings === 0">
+                    <br>You don not have any active booking at the moment.
+                  </div>
+                </h5>
+                <div
+                  class="card"
+                  style="width: 10rem;"
+                  *ngIf="activeBooking?.totalNumberBookings > 0"
+                >
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item">{{activeBooking['serviceName']}}</li>
+                    <li class="list-group-item">{{activeBooking['date'] | date:'d MMM y'}}</li>
+                    <li class="list-group-item">{{activeBooking['time']}}</li>
+                    <li class="list-group-item">{{activeBooking['totalNumberBookings']}} booking(s)</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
       </mat-tab-group>
     </div>
   </div>

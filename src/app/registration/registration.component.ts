@@ -32,6 +32,7 @@ export class RegistrationComponent implements OnInit {
   submittedDisbaleBtn$ = new BehaviorSubject<boolean>(false);
   loggedInUser$ = new BehaviorSubject<UsersAndLinkedUsers>(void 0);
   loggedInUser: UsersAndLinkedUsers;
+  activeBooking: any;
   constructor(
     private fb: FormBuilder,
     private registrationService: RegistrationService,
@@ -96,6 +97,22 @@ export class RegistrationComponent implements OnInit {
       });
     this.subscriptions.push(liveDataSub);
 
+    this.registrationService.findActiveBooking(userId, this.sundayDate.toISOString())
+      .subscribe(response => {
+        if (response.hasBooking) {
+          this.activeBooking = response.data;
+          if (this.activeBooking.serviceId === 1) {
+            this.activeBooking = { ...this.activeBooking, serviceName: 'Second service' };
+            return;
+          } else if (this.activeBooking.serviceId === 2) {
+            this.activeBooking = { ...this.activeBooking, serviceName: 'Third service' };
+            return;
+          }
+
+          this.activeBooking = { ...this.activeBooking, serviceName: 'First Service' };
+          return;
+        }
+      });
   }
 
   buildRegistrationForm(fb: FormBuilder) {
@@ -233,7 +250,7 @@ export class RegistrationComponent implements OnInit {
         this.isLoading$.next(false);
         this.isSubmitted$.next(true);
         this.registrationFG.reset();
-        this.notifierService.notify('success', 'Booked in successfully');
+        this.notifierService.notify('success', 'Booked Successfully');
 
         setTimeout(() => {
           window.location.reload();
@@ -271,6 +288,15 @@ export class RegistrationComponent implements OnInit {
       return;
     }
     checkedLinkedUser.includeInBooking = false;
+  }
+
+  getUserActiveBooking(userId: string, date: string) {
+    this.registrationService.findActiveBooking(userId, date)
+      .subscribe(response => {
+        if (response.hasBooking) {
+          this.activeBooking = response.data;
+        }
+      });
   }
 
 

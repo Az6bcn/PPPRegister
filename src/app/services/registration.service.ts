@@ -49,6 +49,14 @@ export class RegistrationService {
       );
   }
 
+  findActiveBooking(userId: string, date: string) {
+    const url = `${this.baseUrl}/booking/user/${userId}/${date}`;
+    return this.http.get<any>(url, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   private handleError(error: HttpErrorResponse) {
 
     if (error.error instanceof ErrorEvent) {
