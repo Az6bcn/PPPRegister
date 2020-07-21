@@ -1,4 +1,7 @@
-<div class="container-fluid">
+<div
+  class="container-fluid"
+  *ngIf="!(isLoading$ | async)"
+>
   <div class="row justify-content-between">
     <ng-container *ngIf="getLoggedInUser() !== null">
       <h1 class="pl-0">Hi, {{getLoggedInUser()}}
@@ -76,7 +79,7 @@
               </div>
 
               <hr>
-              <div>
+              <div *ngIf="loggedInUser && loggedInUser.linkedUsers && loggedInUser.linkedUsers.length > 0">
                 <h2>Which family members do you want to include in the booking?</h2>
               </div>
               <table
@@ -331,3 +334,4 @@
     </div>
   </div>
 </div>
+<app-loader [isLoading$]='isLoading$'></app-loader>

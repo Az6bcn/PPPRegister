@@ -23,7 +23,7 @@ export class RegistrationComponent implements OnInit {
   members: FormArray;
   slots = new Array<Slots>();
   subscriptions = new Array<Subscription>();
-  isLoading$ = new BehaviorSubject<boolean>(false);
+  isLoading$ = new BehaviorSubject<boolean>(true);
   canShowRegistrant$ = new BehaviorSubject<boolean>(false);
   selectedSlot$ = new BehaviorSubject<Slots>(void 0);
   registrant: IRegistrant;
@@ -60,7 +60,7 @@ export class RegistrationComponent implements OnInit {
     this.bookingFG = this.buildBookingForm(this.fb);
     this.registrationFG = this.buildRegistrationForm(this.fb);
     this.sundayDate = this.getNextSunday();
-    this.isLoading$.next(true);
+
     const slotsSub = this.registrationService.getSlotsAvailable(this.sundayDate.toISOString())
       .subscribe(response => {
         this.isLoading$.next(false);
@@ -251,10 +251,12 @@ export class RegistrationComponent implements OnInit {
         this.isSubmitted$.next(true);
         this.registrationFG.reset();
         this.notifierService.notify('success', 'Booked Successfully');
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000); // 2s
+        this._time.reset();
+        this.submittedDisbaleBtn$.next(false);
+        this.canShowRegistrant$.next(false);
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 500); // 0.5s
       },
         error => {
           this.isLoading$.next(false);
