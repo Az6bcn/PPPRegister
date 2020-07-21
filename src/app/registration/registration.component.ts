@@ -33,6 +33,7 @@ export class RegistrationComponent implements OnInit {
   loggedInUser$ = new BehaviorSubject<UsersAndLinkedUsers>(void 0);
   loggedInUser: UsersAndLinkedUsers;
   activeBooking: any;
+  userId: any;
   constructor(
     private fb: FormBuilder,
     private registrationService: RegistrationService,
@@ -50,8 +51,8 @@ export class RegistrationComponent implements OnInit {
         }
       });
 
-    const userId = this.authService.decodetokenGetUserId();
-    this.authService.getUser(userId)
+    this.userId = this.authService.decodetokenGetUserId();
+    this.authService.getUser(this.userId)
       .subscribe(response => {
         this.loggedInUser = response;
         this.loggedInUser$.next(response);
@@ -97,22 +98,7 @@ export class RegistrationComponent implements OnInit {
       });
     this.subscriptions.push(liveDataSub);
 
-    this.registrationService.findActiveBooking(userId, this.sundayDate.toISOString())
-      .subscribe(response => {
-        if (response.hasBooking) {
-          this.activeBooking = response.data;
-          if (this.activeBooking.serviceId === 1) {
-            this.activeBooking = { ...this.activeBooking, serviceName: 'Second service' };
-            return;
-          } else if (this.activeBooking.serviceId === 2) {
-            this.activeBooking = { ...this.activeBooking, serviceName: 'Third service' };
-            return;
-          }
-
-          this.activeBooking = { ...this.activeBooking, serviceName: 'First Service' };
-          return;
-        }
-      });
+    this.getUserActiveBookings(this.userId);
   }
 
   buildRegistrationForm(fb: FormBuilder) {
@@ -211,9 +197,10 @@ export class RegistrationComponent implements OnInit {
   }
 
   mapCategory(categoryId: number) {
-    if (categoryId === 0) { return 'None'; }
-    if (categoryId === 1) { return 'Adult'; }
-    if (categoryId === 2) { return 'Children (Ages 7-12)'; }
+
+    if (categoryId as unknown as number === 0) { return 'None'; }
+    if (categoryId as unknown as number === 1) { return 'Adult'; }
+    if (categoryId as unknown as number === 2) { return 'Children (Ages 7-12)'; }
     return 'Children(Ages 3 - 6)';
   }
 
@@ -247,6 +234,7 @@ export class RegistrationComponent implements OnInit {
     this.isLoading$.next(true);
     const registrationSub = this.registrationService.createRegistration(data)
       .subscribe(() => {
+        this.getUserActiveBookings(this.userId);
         this.isLoading$.next(false);
         this.isSubmitted$.next(true);
         this.registrationFG.reset();
@@ -292,15 +280,24 @@ export class RegistrationComponent implements OnInit {
     checkedLinkedUser.includeInBooking = false;
   }
 
-  getUserActiveBooking(userId: string, date: string) {
-    this.registrationService.findActiveBooking(userId, date)
+  getUserActiveBookings(userId: string) {
+    this.registrationService.findActiveBooking(userId, this.sundayDate.toISOString())
       .subscribe(response => {
         if (response.hasBooking) {
-          this.activeBooking = response.data;
+          const total = (response.data as Array<any>).reduce((accumulator, current) => {
+            return accumulator + current.total;
+          }, 0);
+          this.activeBooking = { ...response, total };
+          return;
         }
+        this.activeBooking = { ...response, total: 0 };
       });
   }
 
+  getServiceName(serviceId: number) {
+    if (serviceId === 1) { return 'Second service'; } else if (serviceId === 2) { return 'Third service'; }
+    return 'First Service';
+  }
 
   get _time(): AbstractControl { return this.bookingFG.get('time'); }
   get _emailAddress(): AbstractControl { return this.registrationFG.get('emailAddress'); }

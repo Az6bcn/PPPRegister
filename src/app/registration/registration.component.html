@@ -290,7 +290,7 @@
         <mat-tab>
           <ng-template mat-tab-label>
             <p>
-              <span class="badge badge-primary">{{activeBooking?.totalNumberBookings}}</span>
+              <span class="badge badge-primary">{{activeBooking?.total}}</span>
             </p>
             Active Booking
           </ng-template>
@@ -303,28 +303,36 @@
                 <h3>Active Booking</h3>
                 <hr>
                 <h5>Hi {{loggedInUser?.mainUser.emailAddress}},
-                  <div *ngIf="activeBooking?.totalNumberBookings === 1">
-                    <br>You have one {{activeBooking?.totalNumberBookings}} active booking.
+                  <div *ngIf="activeBooking?.total === 1">
+                    <br>You have one {{activeBooking?.total}} active booking.
                   </div>
-                  <div *ngIf="activeBooking?.totalNumberBookings > 1">
-                    <br>You have a total of {{activeBooking?.totalNumberBookings}} bookings for you and your family
+                  <div *ngIf="activeBooking?.total > 1">
+                    <br>You have a total of {{activeBooking?.total}} bookings for you and your family
                     members.
                   </div>
-                  <div *ngIf="activeBooking?.totalNumberBookings === 0">
+                  <div *ngIf="activeBooking?.total === 0">
                     <br>You don not have any active booking at the moment.
                   </div>
                 </h5>
                 <div
-                  class="card"
-                  style="width: 10rem;"
-                  *ngIf="activeBooking?.totalNumberBookings > 0"
+                  class="card-group"
+                  *ngIf="activeBooking?.total > 0"
                 >
-                  <ul class="list-group list-group-flush">
-                    <li class="list-group-item">{{activeBooking['serviceName']}}</li>
-                    <li class="list-group-item">{{activeBooking['date'] | date:'d MMM y'}}</li>
-                    <li class="list-group-item">{{activeBooking['time']}}</li>
-                    <li class="list-group-item">{{activeBooking['totalNumberBookings']}} booking(s)</li>
-                  </ul>
+                  <ng-container *ngFor="let booking of activeBooking.data">
+                    <div
+                      class="card border-primary mt-3 mb-3 mr-3"
+                      style="width: 10rem;"
+                    >
+                      <div class="card-body">
+                        <ul class="list-group list-group-flush ">
+                          <li class="list-group-item">{{getServiceName(booking.serviceId)}}</li>
+                          <li class="list-group-item">{{booking['date'] | date:'d MMM y'}}</li>
+                          <li class="list-group-item">{{booking['time']}}</li>
+                          <li class="list-group-item">{{booking['users']}}</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </ng-container>
                 </div>
               </div>
             </div>
