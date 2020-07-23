@@ -271,13 +271,13 @@ export class RegistrationComponent implements OnInit {
     this.loggedInUser.mainUser.pickUp = false;
   }
 
-  includeInBookingOnChecked(linkedUser: CheckedinMember, value: HTMLInputElement) {
-    const checkedLinkedUser = this.loggedInUser.linkedUsers.find(x => x.id === linkedUser.id);
-    if (checkedLinkedUser && value.checked) {
-      checkedLinkedUser.includeInBooking = true;
+  includeInBookingOnChecked(User: CheckedinMember, value: HTMLInputElement) {
+    const checkedUser = User.id == this.loggedInUser.mainUser.id ?  this.loggedInUser.mainUser : this.loggedInUser.linkedUsers.find(x => x.id === User.id);
+    if (checkedUser && value.checked) {
+      checkedUser.includeInBooking = true;
       return;
     }
-    checkedLinkedUser.includeInBooking = false;
+    checkedUser.includeInBooking = false;
   }
 
   getUserActiveBookings(userId: string) {
