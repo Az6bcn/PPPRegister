@@ -5,7 +5,7 @@ export interface IRegistrant {
   time: string;
   name: string;
   surname: string;
-  member: object;
+  member: CheckedinMember;
   members: Array<CheckedinMember>;
   emailAddress: string;
   mobile: number;

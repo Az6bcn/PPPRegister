@@ -1,7 +1,7 @@
 import { CheckedinMember } from 'src/app/model/checkedin-member';
 import { UsersAndLinkedUsers } from './../model/user-and-linked-users';
 import { AccountService } from './../services/account.service';
-import { Component, OnInit, NgModule } from '@angular/core';
+import { Component, OnInit, NgModule, ViewChild, ElementRef, QueryList } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, AbstractControl, FormArray } from '@angular/forms';
 import { Subscription, BehaviorSubject } from 'rxjs';
 import { NotifierService } from 'angular-notifier';
@@ -196,11 +196,11 @@ export class RegistrationComponent implements OnInit {
     this.subscriptions.forEach(x => x.unsubscribe());
   }
 
-  mapCategory(categoryId: number) {
+  mapCategory(categoryId: string) {
 
-    if (categoryId as unknown as number === 0) { return 'None'; }
-    if (categoryId as unknown as number === 1) { return 'Adult'; }
-    if (categoryId as unknown as number === 2) { return 'Children (Ages 7-12)'; }
+    if (categoryId === '0') { return 'None'; }
+    if (categoryId === '1') { return 'Adult'; }
+    if (categoryId === '2') { return 'Children (Ages 7-12)'; }
     return 'Children(Ages 3 - 6)';
   }
 
@@ -228,7 +228,11 @@ export class RegistrationComponent implements OnInit {
 
     if (this.loggedInUser.linkedUsers.filter(x => x.includeInBooking).length > 0) {
       data.isGroupBooking = true;
-      data.members = [...this.loggedInUser.linkedUsers.filter(x => x.includeInBooking), this.loggedInUser.mainUser];
+      data.members = [...this.loggedInUser.linkedUsers.filter(x => x.includeInBooking)];
+      // include main user
+      if (this.loggedInUser.mainUser.includeInBooking) {
+        data.members.push(this.loggedInUser.mainUser);
+      }
     } else { data.member = this.loggedInUser.mainUser; }
 
     this.isLoading$.next(true);
@@ -245,17 +249,25 @@ export class RegistrationComponent implements OnInit {
         // setTimeout(() => {
         //   window.location.reload();
         // }, 500); // 0.5s
+
+        // unmark user to include by default:
+        this.loggedInUser.linkedUsers.forEach(x => {
+          x.includeInBooking = false;
+          x.pickUp = false;
+        });
       },
         error => {
           this.isLoading$.next(false);
-          this.notifierService.notify('error', error);
+          this.notifierService.notify('error', 'We could not process your booking at the moment, please try again.');
+          this.submittedDisbaleBtn$.next(false);
+          this.canShowRegistrant$.next(false);
         }
       );
     this.subscriptions.push(registrationSub);
   }
 
   linkedUsersPickUpOnChecked(linkedUser: CheckedinMember, value: HTMLInputElement) {
-    const checkedLinkedUser = this.loggedInUser.linkedUsers.find(x => x.id === linkedUser.id);
+    const checkedLinkedUser = this.loggedInUser.linkedUsers.find(x => x.name === linkedUser.name);
     if (checkedLinkedUser && value.checked) {
       checkedLinkedUser.pickUp = true;
       return;
@@ -272,7 +284,19 @@ export class RegistrationComponent implements OnInit {
   }
 
   includeInBookingOnChecked(User: CheckedinMember, value: HTMLInputElement) {
-    const checkedUser = User.id == this.loggedInUser.mainUser.id ?  this.loggedInUser.mainUser : this.loggedInUser.linkedUsers.find(x => x.id === User.id);
+
+    let checkedUser;
+    if (User.id === this.loggedInUser.mainUser.id) {
+      checkedUser = User;
+    } else {
+      const foundUser = this.loggedInUser.linkedUsers.find(x => x.name === User.name);
+      if (foundUser) {
+        checkedUser = foundUser;
+      } else {
+        checkedUser = User;
+      }
+    }
+
     if (checkedUser && value.checked) {
       checkedUser.includeInBooking = true;
       return;

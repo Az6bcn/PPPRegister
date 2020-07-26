@@ -69,7 +69,10 @@
             <!--It is not visible cos there is no data for now-->
             <div *ngIf="(canShowRegistrant$ | async)">
 
-              <div *ngIf="loggedInUser && loggedInUser.linkedUsers && loggedInUser.linkedUsers.length <= 0" class="pl-0 col-12 col-sm-6 form-group">
+              <div
+                *ngIf="loggedInUser && loggedInUser.linkedUsers && loggedInUser.linkedUsers.length <= 0"
+                class="pl-0 col-12 col-sm-6 form-group"
+              >
                 <label>Would you like to be picked up &nbsp;</label>
                 <input
                   #mainUserPickUpCheckBox
@@ -95,25 +98,26 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <ng-container *ngFor="let linkedUser of (loggedInUser$ | async).linkedUsers">
-                    <tr>
-                      <td>{{loggedInUser.mainUser.name}} {{loggedInUser.mainUser.surname}}</td>
-                      <td>
-                        <input
-                          #mainUserPickUpCheckBox
-                          type="checkbox"
-                          (click)=mainUserPickUpOnChecked(mainUserPickUpCheckBox)
-                        >
-                      </td>
-                      <td>
-                        <input
-                          #includeInBookingCheckBox
-                          type="checkbox"
-                          (click)=includeInBookingOnChecked(loggedInUser.mainUser,includeInBookingCheckBox)
-                        >
-                      </td>
-                      <td>{{mapCategory(loggedInUser.mainUser.categoryId)}}</td>
-                    </tr>
+                  <tr>
+                    <td>{{loggedInUser.mainUser.name}} {{loggedInUser.mainUser.surname}}</td>
+                    <td>
+                      <input
+                        #mainUserPickUpCheckBox
+                        type="checkbox"
+                        (click)=mainUserPickUpOnChecked(mainUserPickUpCheckBox)
+                      >
+                    </td>
+                    <td>
+                      <input
+                        #includeInBookingCheckBoxMainuser
+                        type="checkbox"
+                        (click)=includeInBookingOnChecked(loggedInUser.mainUser,includeInBookingCheckBoxMainuser)
+                      >
+                    </td>
+                    <td>{{mapCategory(loggedInUser.mainUser.categoryId.toString())}}</td>
+                  </tr>
+                  <ng-container *ngFor="let linkedUser of (loggedInUser$ | async).linkedUsers; let i = index">
+
                     <tr>
                       <td>{{linkedUser.name}} {{linkedUser.surname}}</td>
                       <td>
@@ -131,7 +135,7 @@
                           (click)=includeInBookingOnChecked(linkedUser,includeInBookingCheckBox)
                         >
                       </td>
-                      <td>{{mapCategory(linkedUser.categoryId)}}</td>
+                      <td>{{mapCategory(linkedUser.categoryId.toString())}}</td>
                     </tr>
                   </ng-container>
                 </tbody>
