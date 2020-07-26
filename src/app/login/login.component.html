@@ -1,0 +1,39 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-sm-7 mx-auto mt-5 p-5 border bg-white border-dark text-dark rounded">
+            <form [formGroup]=" loginFG">
+                <h3>Login</h3>
+                <hr>
+                <br>
+                <div class="form-group">
+                    <label for="EmailInput">Email
+            <!-- Control Errors -->
+            <span *ngIf="(email.touched || email.dirty) && email.invalid" class="text-danger ml-5">
+              <!-- Control Required Errors -->
+              <span *ngIf='email.errors.required'><i><small>*This field is
+                    required</small></i></span>
+              <span *ngIf='email.errors.email'><i><small>*Input is
+                    invalid</small></i></span>
+            </span>
+          </label>
+                    <input formControlName="Email" type="text" class="form-control" id="EmailInput" placeholder="john.doe@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword">Password
+            <span *ngIf="(password.touched || password.dirty) && password.invalid" class="text-danger ml-3">
+              <span *ngIf='password.errors.required'><i><small>*This field is
+                    required</small></i></span>
+            </span>
+          </label>
+                    <input formControlName="Password" type="password" class="form-control" id="inputPassword" placeholder="Password">
+                </div>
+
+                <p><small>Want to register? <a routerLink="/register">Click Here</a></small></p>
+                <button type="button" class="btn btn-outline-primary col-12 mb-3" (click)='logIn(loginFG.value)' [disabled]='isInValid(loginFG)'>Log In</button>
+                <button type="button" class="btn btn-outline-secondary col-12" (click)='cancel()'>Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<notifier-container></notifier-container>

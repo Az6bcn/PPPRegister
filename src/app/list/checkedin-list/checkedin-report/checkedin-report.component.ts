@@ -1,5 +1,7 @@
+import { SignalRService } from 'src/app/services/SignalR.service';
+import { Attendance } from './../../../model/attendance';
 import { SignInOut } from './../../../model/sigin-in-out';
-import { Component, OnInit, OnDestroy, ɵConsole } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription, BehaviorSubject } from 'rxjs';
 import { CheckedinMember } from 'src/app/model/checkedin-member';
 import { CheckInService } from 'src/app/services/check-in.service';
@@ -18,7 +20,9 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
   constructor(
     private checkInService: CheckInService,
     private formBuilder: FormBuilder,
-    private notifierService: NotifierService) { }
+    private notifierService: NotifierService,
+    private signalRService: SignalRService
+  ) { }
   pickUpDatePickerSelected$ = new BehaviorSubject<any>(null);
   pickUpBtnEnabled$ = new BehaviorSubject<boolean>(true);
 
@@ -35,8 +39,20 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
   canShowFilters$ = new BehaviorSubject<boolean>(true);
   selectedService$ = new BehaviorSubject<number>(0);
   items = new Array<Service>();
-
+  attendance: Attendance;
   ngOnInit(): void {
+
+    const today = new Date();
+    const date = today.toISOString();
+    this.checkInService.getAttendance(date)
+      .subscribe(response => {
+        response.groupedResult.map(d => {
+          d.serviceName = this.mapServiceName(d.serviceId);
+          return d;
+        });
+        this.attendance = response;
+      });
+
     this.dateForm = this.buildDateForm(this.formBuilder);
 
     const serviceSub = this.checkInService.getServices()
@@ -44,6 +60,19 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
         this.items = response;
       });
     this.subscriptions.push(serviceSub);
+
+    this.signalRService.buildSignalRConnection();
+    this.signalRService.BookingsAfterSignin();
+    this.signalRService.connectSignalR();
+
+    // live data
+    const liveDataSub = this.signalRService.ReadBookingsAfterSigninpdate()
+      .subscribe(response => {
+        this.checkedInMembers = [...response];
+        this.checkedInMembersPaginated = [...response.slice(0, 10)];
+        this.totalItems$.next(response.length);
+      });
+    this.subscriptions.push(liveDataSub);
   }
 
   dateChanged(date: Date) {
@@ -52,6 +81,7 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
     if (date) {
       this.isLoading$.next(true);
       const isoDate = date.toISOString();
+      this.getServiceAttendanceForDate(isoDate);
       const selectedServiceId = this.selectedService$.getValue();
       const specifiedDateSub = this.checkInService.getCheckedInRecordsUpToSpecifiedDate(isoDate, selectedServiceId)
         .pipe(
@@ -130,10 +160,10 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
     const signInData = this.getSigInOut(data);
     this.checkInService.siginIn(signInData)
       .subscribe(response => {
-        const member = this.checkedInMembers.find(x => x.id === response.id);
-        member.signedIn = response.date;
+        // const member = this.checkedInMembers.find(x => x.id === response.id);
+        // member.signedIn = response.date;
 
-        this.checkedInMembers === [...this.checkedInMembers];
+        // this.checkedInMembers === [...this.checkedInMembers];
 
         this.notifierService.notify('success', 'Signed-in successfully');
       },
@@ -210,6 +240,17 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
     this.selectedService$.next(value.id);
   }
 
+  getServiceAttendanceForDate(date: string) {
+    this.checkInService.getAttendance(date)
+      .subscribe(response => {
+        response.groupedResult.map(d => {
+          d.serviceName = this.mapServiceName(d.serviceId);
+          return d;
+        });
+        this.attendance = { ...response };
+      });
+
+  }
 
   ngOnDestroy() {
     this.subscriptions.forEach(x => x.unsubscribe());
