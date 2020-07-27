@@ -129,7 +129,7 @@ export class RegistrationComponent implements OnInit {
     // this.loggedInUser$.next(this.loggedInUser);
     this.notifierService.notify('success', 'Registrant(s) added, use the booking tab to complete your booking');
     this.registrationFG.reset();
-    if (this.members.controls.length > 1) {
+    if (this.members && this.members.controls && this.members.controls.length > 1) {
       this.members.controls.length = 1;
     }
   }
