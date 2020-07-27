@@ -54,16 +54,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     JwtModule.forRoot({
       config: {
         tokenGetter: TokenGetter,
-        // allowedDomains: ['https://localhost:5001'],
-        skipWhenExpired: true,
-        throwNoTokenError: true,
-        headerName: 'Authorization',
-        authScheme: 'Bearer '
       }
     }),
-  ],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
   ],
   bootstrap: [
     AppComponent
