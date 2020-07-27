@@ -55,7 +55,7 @@ export class RegistrationComponent implements OnInit {
     this.authService.getUser(this.userId)
       .subscribe(response => {
         this.loggedInUser = response;
-        this.loggedInUser$.next(response);
+        // this.loggedInUser$.next(response);
       });
 
     this.bookingFG = this.buildBookingForm(this.fb);
@@ -124,19 +124,14 @@ export class RegistrationComponent implements OnInit {
   }
   register(data: IRegistrant) {
 
-    this.authService.isTokenExpired()
-      .subscribe(res => {
-        if (res) {
-          this.notifierService.notify('error', 'Your session has expired, please login to complete your booking');
-          this.router.navigate(['../login']);
-          return false;
-        }
-      });
-
     this.loggedInUser.linkedUsers = [...this.loggedInUser.linkedUsers, ...data.members];
     // add it to linkedMembers and redirect to the first tab page
-    this.loggedInUser$.next(this.loggedInUser);
+    // this.loggedInUser$.next(this.loggedInUser);
     this.notifierService.notify('success', 'Registrant(s) added, use the booking tab to complete your booking');
+    this.registrationFG.reset();
+    if (this.members.controls.length > 1) {
+      this.members.controls.length = 1;
+    }
   }
 
   createRegistrant(): FormGroup {
@@ -145,7 +140,8 @@ export class RegistrationComponent implements OnInit {
       surname: ['', Validators.required],
       gender: ['', Validators.required],
       categoryId: ['', Validators.required],
-      pickUp: false
+      pickUp: false,
+      justAddedLinkedUsers: true
     });
   }
 
@@ -321,6 +317,19 @@ export class RegistrationComponent implements OnInit {
   getServiceName(serviceId: number) {
     if (serviceId === 1) { return 'Second service'; } else if (serviceId === 2) { return 'Third service'; }
     return 'First Service';
+  }
+
+  Remove(user: CheckedinMember) {
+    const index = this.loggedInUser.linkedUsers.findIndex(x => x.name === user.name);
+
+    if (index === -1) {
+      this.notifierService.notify('error', 'You cannot remove the main user');
+      return;
+    }
+
+    this.loggedInUser.linkedUsers.splice(index, 1);
+    this.loggedInUser.linkedUsers = [...this.loggedInUser.linkedUsers];
+    return;
   }
 
   get _time(): AbstractControl { return this.bookingFG.get('time'); }

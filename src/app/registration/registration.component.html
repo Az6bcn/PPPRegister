@@ -95,6 +95,7 @@
                     <th>PickUp</th>
                     <th>Include</th>
                     <th>Category</th>
+                    <th>Remove</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -115,8 +116,16 @@
                       >
                     </td>
                     <td>{{mapCategory(loggedInUser.mainUser.categoryId.toString())}}</td>
+                    <td>
+                      <button
+                        type="button"
+                        class="btn btn-light"
+                        (click)="Remove(loggedInUser.mainUser)"
+                        [disabled]='!loggedInUser.mainUser.justAddedLinkedUsers'
+                      >Remove</button>
+                    </td>
                   </tr>
-                  <ng-container *ngFor="let linkedUser of (loggedInUser$ | async).linkedUsers; let i = index">
+                  <ng-container *ngFor="let linkedUser of loggedInUser.linkedUsers; let i = index">
 
                     <tr>
                       <td>{{linkedUser.name}} {{linkedUser.surname}}</td>
@@ -136,7 +145,16 @@
                         >
                       </td>
                       <td>{{mapCategory(linkedUser.categoryId.toString())}}</td>
+                      <td>
+                        <button
+                          type="button"
+                          class="btn btn-primary"
+                          (click)="Remove(linkedUser)"
+                          [disabled]='!linkedUser.justAddedLinkedUsers'
+                        >Remove</button>
+                      </td>
                     </tr>
+
                   </ng-container>
                 </tbody>
               </table>
