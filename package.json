@@ -27,6 +27,7 @@
     "angular-jwt": "^0.1.11",
     "angular-notifier": "^6.0.1",
     "bootstrap": "^4.5.0",
+    "moment": "^2.27.0",
     "ng2-select": "^2.0.0",
     "ngx-bootstrap": "^5.6.1",
     "rxjs": "~6.5.4",
