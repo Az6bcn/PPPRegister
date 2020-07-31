@@ -10,6 +10,7 @@ import { RegistrationService } from '../services/registration.service';
 import { SignalRService } from '../services/SignalR.service';
 import { Slots } from '../model/slots-available';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
@@ -55,7 +56,6 @@ export class RegistrationComponent implements OnInit {
     this.authService.getUser(this.userId)
       .subscribe(response => {
         this.loggedInUser = response;
-        // this.loggedInUser$.next(response);
       });
 
     this.bookingFG = this.buildBookingForm(this.fb);
@@ -123,6 +123,14 @@ export class RegistrationComponent implements OnInit {
     this.selectedSlot$.next(slot);
   }
   register(data: IRegistrant) {
+
+    if (data.members) {
+      data.members.forEach(member => {
+        if (member.justAddedLinkedUsers === null) {
+          member.justAddedLinkedUsers = true;
+        }
+      });
+    }
 
     this.loggedInUser.linkedUsers = [...this.loggedInUser.linkedUsers, ...data.members];
     // add it to linkedMembers and redirect to the first tab page
@@ -235,6 +243,7 @@ export class RegistrationComponent implements OnInit {
     const registrationSub = this.registrationService.createRegistration(data)
       .subscribe(() => {
         this.getUserActiveBookings(this.userId);
+        this.getLoggedInUserAnlinkedUsers();
         this.isLoading$.next(false);
         this.isSubmitted$.next(true);
         this.registrationFG.reset();
@@ -242,17 +251,27 @@ export class RegistrationComponent implements OnInit {
         this._time.reset();
         this.submittedDisbaleBtn$.next(false);
         this.canShowRegistrant$.next(false);
-        // setTimeout(() => {
-        //   window.location.reload();
-        // }, 500); // 0.5s
 
-        // unmark user to include by default:
+        // don't include users nor pick up by default:
         this.loggedInUser.linkedUsers.forEach(x => {
           x.includeInBooking = false;
           x.pickUp = false;
         });
+
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 200); // 0.2s
       },
         error => {
+          if (error instanceof HttpErrorResponse) {
+            if (error.status === 400) {
+              this.isLoading$.next(false);
+              this.notifierService.notify('error', error.error);
+              this.submittedDisbaleBtn$.next(false);
+              this.canShowRegistrant$.next(false);
+              return;
+            }
+          }
           this.isLoading$.next(false);
           this.notifierService.notify('error', 'We could not process your booking at the moment, please try again.');
           this.submittedDisbaleBtn$.next(false);
@@ -314,13 +333,20 @@ export class RegistrationComponent implements OnInit {
       });
   }
 
+  getLoggedInUserAnlinkedUsers() {
+    this.authService.getUser(this.userId)
+      .subscribe(response => {
+        this.loggedInUser = { ...response };
+      });
+  }
+
   getServiceName(serviceId: number) {
     if (serviceId === 1) { return 'Second service'; } else if (serviceId === 2) { return 'Third service'; }
     return 'First Service';
   }
 
   Remove(user: CheckedinMember) {
-    const index = this.loggedInUser.linkedUsers.findIndex(x => x.name === user.name);
+    const index = this.loggedInUser.linkedUsers.findIndex(x => x.name === user.name && x.justAddedLinkedUsers);
 
     if (index === -1) {
       this.notifierService.notify('error', 'You cannot remove the main user');

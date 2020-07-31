@@ -37,7 +37,7 @@ export class AccountService {
     return this.http.post(`${this.baseUrl}/account/login`, loginDto)
       .pipe(
         map(response => {
-          if (response.hasOwnProperty('accesToken')) {
+          if (response['accesToken']) {
             // tslint:disable-next-line:no-string-literal
             this.localStoreageService.save('access_token', response['accesToken']);
             this.isLoggedIn$.next(true);

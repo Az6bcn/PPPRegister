@@ -62,19 +62,16 @@ export class RegistrationService {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
       console.error('An error occurred:', error.error.message);
-    } else if (error.error instanceof HttpErrorResponse) {
-      if (error.error.status === 401) {
+    } else if (error instanceof HttpErrorResponse) {
+      if (error.status === 401) {
         return throwError('Your session has expired, please login to continue');
       }
-    } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong,
-      console.error(
-        `Backend returned code ${error.status}, ` +
-        `body was: ${error.error}`);
+      if (error.status === 400) {
+        return throwError(error);
+      }
     }
     // return an observable with a user-facing error message
     return throwError(
-      'Something bad happened; please try again later.');
+      `Something bad happened: ${error.error}`);
   }
 }
