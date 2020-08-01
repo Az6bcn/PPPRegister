@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { NotifierService } from 'angular-notifier';
 import { map } from 'rxjs/operators';
 import { Service } from 'src/app/model/service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-checkedin-report',
@@ -43,7 +44,9 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     const today = new Date();
-    const date = today.toISOString();
+    const momentDate = moment(today, 'DD/MM/YYYY');
+    const date = momentDate.format();
+
     this.checkInService.getAttendance(date)
       .subscribe(response => {
         response.groupedResult.map(d => {
@@ -80,7 +83,10 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
     this.checkedInMembers = [];
     if (date) {
       this.isLoading$.next(true);
-      const isoDate = date.toISOString();
+
+      const momentDate = moment(date, 'DD/MM/YYYY');
+      const isoDate = momentDate.format();
+
       this.getServiceAttendanceForDate(isoDate);
       const selectedServiceId = this.selectedService$.getValue();
       const specifiedDateSub = this.checkInService.getCheckedInRecordsUpToSpecifiedDate(isoDate, selectedServiceId)
@@ -112,8 +118,11 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
     this.checkedInMembers = [];
     if (date) {
       this.isLoading$.next(true);
-      const isoFromDate = date[0].toISOString();
-      const isoToDate = date[1].toISOString();
+      const momentFromDate = moment(date[0], 'DD/MM/YYYY');
+      const momentToDate = moment(date[1], 'DD/MM/YYYY');
+      const isoFromDate = momentFromDate.format();
+      const isoToDate = momentToDate.format();
+
       const selectedServiceId = this.selectedService$.getValue();
       const dateRangeSub = this.checkInService.getCheckedInRecordsForDateRange(isoFromDate, isoToDate, selectedServiceId)
         .subscribe(response => {
@@ -199,7 +208,11 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
 
   pickUpDatePickerValueChange(date: Date) {
     this.pickUpBtnEnabled$.next(false);
-    this.pickUpDatePickerSelected$.next(date.toISOString());
+
+    const momentDate = moment(date, 'DD/MM/YYYY');
+    const isoDate = momentDate.format();
+
+    this.pickUpDatePickerSelected$.next(isoDate);
   }
 
   pickUpReport() {

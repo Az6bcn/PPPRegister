@@ -14,4 +14,5 @@ export interface CheckedinMember {
   categoryId: number;
   emailAddress: string;
   includeInBooking: boolean;
+  justAddedLinkedUsers: boolean;
 }
