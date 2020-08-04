@@ -9,8 +9,7 @@
 @import "~angular-notifier/styles/types/type-warning.css";
 @import "~angular-notifier/styles/types/type-error.css";
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
-
-/* @import '~@fortawesome/fontawesome-free/css/all.css'; */
+@import '~@fortawesome/fontawesome-free/css/all.css';
 
 @import "~@ng-select/ng-select/themes/default.theme.css";
 .jumbotron {
