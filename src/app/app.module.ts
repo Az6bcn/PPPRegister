@@ -22,6 +22,8 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { TokenGetter } from './helper/jwt-getter';
 import { MatTabsModule } from '@angular/material/tabs';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 
 
@@ -37,7 +39,9 @@ import { MatTabsModule } from '@angular/material/tabs';
     CancellationComponent,
     HomeComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent
   ],
   imports: [
     ReactiveFormsModule,
