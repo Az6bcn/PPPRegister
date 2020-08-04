@@ -9,6 +9,8 @@ import { Login } from '../model/login';
 import { HttpErrorResponse, HttpClient, HttpHeaders } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { TokenGetter } from '../helper/jwt-getter';
+import { ForgotPassword } from '../model/forgot-password';
+import { ResetPassword } from '../model/reset-password';
 
 
 @Injectable({
@@ -44,6 +46,20 @@ export class AccountService {
             return true;
           }
         }),
+        catchError(this.handleError)
+      );
+  }
+
+  forgotPassword(email: string){
+    return this.http.get<any>(`${this.baseUrl}/account/passwordresettoken/${email}`)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  resetPassword(data: ResetPassword){
+    return this.http.post<any>(`${this.baseUrl}/account/passwordreset`, data)
+      .pipe(
         catchError(this.handleError)
       );
   }

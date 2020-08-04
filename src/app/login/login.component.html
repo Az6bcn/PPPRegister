@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="row">
-        <div class="col-12 col-sm-7 mx-auto mt-5 p-5 border bg-white border-dark text-dark rounded">
+        <div class="col-12 col-sm-5 mx-auto mt-3 p-5 border bg-white border-dark text-dark rounded">
             <form [formGroup]=" loginFG">
                 <h3>Login</h3>
                 <hr>
@@ -29,6 +29,7 @@
                 </div>
 
                 <p><small>Want to register? <a routerLink="/register">Click Here</a></small></p>
+                <p><small>Forgot password? <a routerLink="/forgotpassword">Click Here</a></small></p>
                 <button type="button" class="btn btn-outline-primary col-12 mb-3" (click)='logIn(loginFG.value)' [disabled]='isInValid(loginFG)'>Log In</button>
                 <button type="button" class="btn btn-outline-secondary col-12" (click)='cancel()'>Cancel</button>
             </form>
