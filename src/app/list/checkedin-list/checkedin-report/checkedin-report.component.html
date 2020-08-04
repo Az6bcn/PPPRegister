@@ -1,4 +1,4 @@
-<div class="container-fluid mt-5">
+<div class="container-fluid mt-3">
   <div class="row">
     <div class="col-12 col-sm-10 col-md-2 card mt-2 mr-3 ml-1 align-items-center ">
       <h3>Pick Up Report</h3>
@@ -121,7 +121,7 @@
   <app-loader [isLoading$]='isLoading$'></app-loader>
 
   <div
-    class="row mt-5"
+    class="row mt-3"
     *ngIf="!(isLoading$ | async) && checkedInMembers.length > 0"
   >
     <div class="col-12">
