@@ -5,6 +5,7 @@ import { AccountService } from '../services/account.service';
 import { NotifierService } from 'angular-notifier';
 import { PasswordMatchValidator } from '../helper/confirm-passwword-validator';
 import { ResetPassword } from '../model/reset-password';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-reset-password',
@@ -16,8 +17,9 @@ export class ResetPasswordComponent implements OnInit {
   get password(): AbstractControl { return this.resetPasswordFG.get('password'); }
   get confirmPassword(): AbstractControl { return this.resetPasswordFG.get('confirmPassword'); }
 
-  resetDetails: ResetPassword = { email:'', token:'', newPassword:'', confirmPassword:''}
-  resetPasswordFG: FormGroup
+  resetDetails: ResetPassword = { email: '', token: '', newPassword: '', confirmPassword: '' };
+  resetPasswordFG: FormGroup;
+  isLoading$ = new BehaviorSubject<boolean>(false);
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -27,20 +29,22 @@ export class ResetPasswordComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.resetPasswordFG = this.buildForm(this.fb)
+    this.resetPasswordFG = this.buildForm(this.fb);
     this.route.queryParamMap.subscribe(params => {
       this.resetDetails.email = params.get('email');
       this.resetDetails.token = params.get('token');
-    })
+    });
   }
 
-  submit(data){
+  submit(data) {
+    this.isLoading$.next(true);
     this.resetDetails.newPassword = data.password;
     this.resetDetails.confirmPassword = data.confirmPassword;
     this.authService.resetPassword(this.resetDetails)
       .subscribe(response => {
-        if (response) {
-        }
+        this.isLoading$.next(false);
+        this.notifierService.notify('success', 'Password reset successfully');
+        this.router.navigate(['../login']);
       },
         err => this.notifierService.notify('error', err)
       );

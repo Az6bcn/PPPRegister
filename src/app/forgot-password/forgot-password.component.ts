@@ -1,3 +1,4 @@
+import { BehaviorSubject } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -12,7 +13,8 @@ import { ForgotPassword } from '../model/forgot-password';
 })
 export class ForgotPasswordComponent implements OnInit {
 
-  forgotPasswordFG: FormGroup
+  forgotPasswordFG: FormGroup;
+  isLoading$ = new BehaviorSubject<boolean>(false);
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -20,16 +22,16 @@ export class ForgotPasswordComponent implements OnInit {
     private notifierService: NotifierService
   ) { }
 
-  ngOnInit(){
-    this.forgotPasswordFG = this.buildForm(this.fb)
+  ngOnInit() {
+    this.forgotPasswordFG = this.buildForm(this.fb);
   }
 
-  submit(data: ForgotPassword){
+  submit(data: ForgotPassword) {
+    this.isLoading$.next(true);
     this.authService.forgotPassword(data.email)
       .subscribe(response => {
-        if (response) {
-          this.notifierService.notify('success', 'Please check your email and click on the link provided to reset your password');
-        }
+        this.isLoading$.next(false);
+        this.notifierService.notify('success', 'Please check your email and click on the link provided to reset your password');
       },
         err => this.notifierService.notify('error', err)
       );
