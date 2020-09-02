@@ -1,25 +1,43 @@
-<div class="container-fluid" *ngIf="!(isLoading$ | async)">
+<div
+  class="container-fluid"
+  *ngIf="!(isLoading$ | async)"
+>
   <div class="row justify-content-between">
     <ng-container *ngIf="getLoggedInUser() !== null">
       <h1 class="pl-0">Hi, {{getLoggedInUser()}}
       </h1>
     </ng-container>
     <div class="col-3 flex-column d-flex justify-content-end">
-      <button type="button" class="btn btn-primary" (click)='logout()'>Log Out</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)='logout()'
+      >Log Out</button>
     </div>
   </div>
   <div class="row register">
     <div class="col-12 mx-auto mt-3 p-5 border bg-white border-dark text-dark rounded">
-      <mat-tab-group animationDuration="0ms" mat-align-tabs="start">
+      <mat-tab-group
+        animationDuration="0ms"
+        mat-align-tabs="start"
+      >
         <mat-tab label="Booking">
           <form [formGroup]="bookingFG">
             <br>
             <br>
             <p>Please select the service for {{sundayDate.toDateString()}}</p>
             <div class="row d-flex justify-content-between service-radio">
-              <div *ngFor="let slot of slots, let i = index" class="col-3 p-0 form-group">
-                <input type="radio" value="{{slot.time}}" id="service{{i}}" formControlName="time"
-                  (click)='onTimeChange(slot)'>
+              <div
+                *ngFor="let slot of slots, let i = index"
+                class="col-3 p-0 form-group"
+              >
+                <input
+                  type="radio"
+                  value="{{slot.time}}"
+                  id="service{{i}}"
+                  formControlName="time"
+                  (click)='onTimeChange(slot)'
+                >
                 <label for="service{{i}}">{{slot.time}}</label>
                 <br>
                 <p><small class="text-danger"><i> <strong
@@ -36,7 +54,10 @@
               </div>
               <div class="row col-12 mb-3 justify-content-center">
                 <!-- Control Errors -->
-                <span *ngIf="(_time.touched || _time.dirty) && _time.invalid" class="text-danger ml-5">
+                <span
+                  *ngIf="(_time.touched || _time.dirty) && _time.invalid"
+                  class="text-danger ml-5"
+                >
                   <!-- Control Required Errors -->
                   <span *ngIf='_time.errors.required'><i><small>*Please select a service time to
                         attend</small></i></span>
@@ -48,23 +69,31 @@
             <!--It is not visible cos there is no data for now-->
             <div *ngIf="(canShowRegistrant$ | async)">
 
-              <div *ngIf="loggedInUser && loggedInUser.linkedUsers && loggedInUser.linkedUsers.length <= 0"
-                class="pl-0 col-12 col-sm-6 form-group">
+              <div
+                *ngIf="loggedInUser && loggedInUser.linkedUsers && loggedInUser.linkedUsers.length <= 0"
+                class="pl-0 col-12 col-sm-6 form-group"
+              >
                 <label>Would you like to be picked up &nbsp;</label>
-                <input #mainUserPickUpCheckBox type="checkbox" (click)=mainUserPickUpOnChecked(mainUserPickUpCheckBox)>
+                <input
+                  #mainUserPickUpCheckBox
+                  type="checkbox"
+                  (click)=mainUserPickUpOnChecked(mainUserPickUpCheckBox)
+                >
               </div>
 
               <hr>
               <div *ngIf="loggedInUser && loggedInUser.linkedUsers && loggedInUser.linkedUsers.length > 0">
                 <h2>Which family members do you want to include in the booking?</h2>
               </div>
-              <table class="table table-hover table-striped w-50 head-dark"
-                *ngIf="loggedInUser && loggedInUser.linkedUsers && loggedInUser.linkedUsers.length > 0">
+              <table
+                class="table table-hover table-striped w-50 head-dark"
+                *ngIf="loggedInUser && loggedInUser.linkedUsers && loggedInUser.linkedUsers.length > 0"
+              >
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th>PickUp</th>
-                    <th>Include</th>
+                    <th>Transport</th>
+                    <th>Include (Seat)</th>
                     <th>Category</th>
                     <th>Remove</th>
                   </tr>
@@ -73,17 +102,27 @@
                   <tr>
                     <td>{{loggedInUser.mainUser.name}} {{loggedInUser.mainUser.surname}}</td>
                     <td>
-                      <input #mainUserPickUpCheckBox type="checkbox"
-                        (click)=mainUserPickUpOnChecked(mainUserPickUpCheckBox)>
+                      <input
+                        #mainUserPickUpCheckBox
+                        type="checkbox"
+                        (click)=mainUserPickUpOnChecked(mainUserPickUpCheckBox)
+                      >
                     </td>
                     <td>
-                      <input #includeInBookingCheckBoxMainuser type="checkbox"
-                        (click)=includeInBookingOnChecked(loggedInUser.mainUser,includeInBookingCheckBoxMainuser)>
+                      <input
+                        #includeInBookingCheckBoxMainuser
+                        type="checkbox"
+                        (click)=includeInBookingOnChecked(loggedInUser.mainUser,includeInBookingCheckBoxMainuser)
+                      >
                     </td>
                     <td>{{mapCategory(loggedInUser.mainUser.categoryId.toString())}}</td>
                     <td>
-                      <button type="button" class="btn btn-light" (click)="Remove(loggedInUser.mainUser)"
-                        [disabled]='!loggedInUser.mainUser.justAddedLinkedUsers'>Remove</button>
+                      <button
+                        type="button"
+                        class="btn btn-light"
+                        (click)="Remove(loggedInUser.mainUser)"
+                        [disabled]='!loggedInUser.mainUser.justAddedLinkedUsers'
+                      >Remove</button>
                     </td>
                   </tr>
                   <ng-container *ngFor="let linkedUser of loggedInUser.linkedUsers; let i = index">
@@ -92,17 +131,27 @@
                       <td>{{linkedUser.name}} {{linkedUser.surname}}</td>
                       <td>
                         <!-- {{linkedUser.pickUp}} -->
-                        <input #linkedUserPickUpCheckBox type="checkbox"
-                          (click)=linkedUsersPickUpOnChecked(linkedUser,linkedUserPickUpCheckBox)>
+                        <input
+                          #linkedUserPickUpCheckBox
+                          type="checkbox"
+                          (click)=linkedUsersPickUpOnChecked(linkedUser,linkedUserPickUpCheckBox)
+                        >
                       </td>
                       <td>
-                        <input #includeInBookingCheckBox type="checkbox"
-                          (click)=includeInBookingOnChecked(linkedUser,includeInBookingCheckBox)>
+                        <input
+                          #includeInBookingCheckBox
+                          type="checkbox"
+                          (click)=includeInBookingOnChecked(linkedUser,includeInBookingCheckBox)
+                        >
                       </td>
                       <td>{{mapCategory(linkedUser.categoryId.toString())}}</td>
                       <td>
-                        <button type="button" class="btn btn-primary" (click)="Remove(linkedUser)"
-                          [disabled]='!linkedUser.justAddedLinkedUsers'>Remove</button>
+                        <button
+                          type="button"
+                          class="btn btn-primary"
+                          (click)="Remove(linkedUser)"
+                          [disabled]='!linkedUser.justAddedLinkedUsers'
+                        >Remove</button>
                       </td>
                     </tr>
 
@@ -115,8 +164,12 @@
                   class="col-5 col-sm-2 btn btn-light"
                   (click)="cancel()"
                 >Cancel</button> -->
-                <button type="submit" class="ml-3 col-5 col-sm-2 btn btn-dark mr-3" (click)=book(loggedInUser)
-                  [disabled]="(submittedDisbaleBtn$ | async)">Submit</button>
+                <button
+                  type="submit"
+                  class="ml-3 col-5 col-sm-2 btn btn-dark mr-3"
+                  (click)=book(loggedInUser)
+                  [disabled]="(submittedDisbaleBtn$ | async)"
+                >Submit</button>
               </div>
             </div>
           </form>
@@ -125,7 +178,10 @@
           <form [formGroup]="registrationFG">
             <br>
             <br>
-            <section formArrayName="members" *ngFor="let member of memberControl, let i = index">
+            <section
+              formArrayName="members"
+              *ngFor="let member of memberControl, let i = index"
+            >
               <div [formGroupName]="i">
                 <div class="row details justify-content-between">
                   <div class="col col-12 col-sm-6 form-group">
@@ -133,7 +189,8 @@
                       <!-- Control Errors -->
                       <span
                         *ngIf="(membersDet.controls[i].get('name').touched || membersDet.controls[i].get('name').dirty) && membersDet.controls[i].get('name').invalid"
-                        class="text-danger ml-5">
+                        class="text-danger ml-5"
+                      >
                         <!-- Control Required Errors -->
                         <span *ngIf="membersDet.controls[i].get('name').errors?.required"><i><small>*This
                               field is
@@ -143,10 +200,17 @@
                     <div class="input-group mb-3">
                       <div class="input-group-prepend">
                         <span class="input-group-text">
-                          <i class="fa fa-user" aria-hidden="true"></i>
+                          <i
+                            class="fa fa-user"
+                            aria-hidden="true"
+                          ></i>
                         </span>
                       </div>
-                      <input type="text" class="form-control" formControlName="name">
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="name"
+                      >
                     </div>
                   </div>
                   <div class="col col-12 col-sm-6 form-group">
@@ -154,7 +218,8 @@
                       <!-- Control Errors -->
                       <span
                         *ngIf="(membersDet.controls[i].get('surname').touched || membersDet.controls[i].get('surname').dirty) && membersDet.controls[i].get('surname').invalid"
-                        class="text-danger ml-5">
+                        class="text-danger ml-5"
+                      >
                         <!-- Control Required Errors -->
                         <span *ngIf="membersDet.controls[i].get('surname').errors?.required"><i><small>*This
                               field is
@@ -164,10 +229,17 @@
                     <div class="input-group mb-3">
                       <div class="input-group-prepend">
                         <span class="input-group-text">
-                          <i class="fa fa-user" aria-hidden="true"></i>
+                          <i
+                            class="fa fa-user"
+                            aria-hidden="true"
+                          ></i>
                         </span>
                       </div>
-                      <input type="text" class="form-control" formControlName="surname">
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="surname"
+                      >
                     </div>
                   </div>
                 </div>
@@ -177,7 +249,8 @@
                     <!-- Control Errors -->
                     <span
                       *ngIf="(membersDet.controls[i].get('gender').touched || membersDet.controls[i].get('gender').dirty) && membersDet.controls[i].get('gender').invalid"
-                      class="text-danger ml-5">
+                      class="text-danger ml-5"
+                    >
                       <!-- Control Required Errors -->
                       <span *ngIf="membersDet.controls[i].get('gender').errors?.required"><i><small>*This
                             field is
@@ -185,11 +258,21 @@
                     </span>
                     <div class="pl-0 col-12 row">
                       <div class="pl-0 col-4 col-sm-3 form-group">
-                        <input type="radio" value="female" id="female {{i}}" formControlName="gender">
+                        <input
+                          type="radio"
+                          value="female"
+                          id="female {{i}}"
+                          formControlName="gender"
+                        >
                         <label for="female {{i}}">Female</label>
                       </div>
                       <div class="col-4 col-sm-3 form-group">
-                        <input type="radio" value="male" id="male {{i}}" formControlName="gender">
+                        <input
+                          type="radio"
+                          value="male"
+                          id="male {{i}}"
+                          formControlName="gender"
+                        >
                         <label for="male {{i}}">Male</label>
                       </div>
                     </div>
@@ -199,7 +282,8 @@
                       <!-- Control Errors -->
                       <span
                         *ngIf="(membersDet.controls[i].get('categoryId').touched || membersDet.controls[i].get('categoryId').dirty) && membersDet.controls[i].get('categoryId').invalid"
-                        class="text-danger ml-5">
+                        class="text-danger ml-5"
+                      >
                         <!-- Control Required Errors -->
                         <span *ngIf="membersDet.controls[i].get('categoryId').errors?.required"><i><small>*This
                               field is
@@ -207,8 +291,15 @@
                       </span>
                     </label>
                     <div class="input-group mb-3">
-                      <select class="custom-select" id="categorySelector" formControlName="categoryId">
-                        <option selected disabled>Choose...</option>
+                      <select
+                        class="custom-select"
+                        id="categorySelector"
+                        formControlName="categoryId"
+                      >
+                        <option
+                          selected
+                          disabled
+                        >Choose...</option>
                         <option value="1">Adult</option>
                         <option value="2">Children (Ages 7-12)</option>
                         <option value="3">Children (Ages 3-6)</option>
@@ -217,21 +308,35 @@
                   </div>
                 </div>
                 <div class=" row d-flex justify-content-between">
-                  <button *ngIf="memberControl.length > 1" class="col-6 col-sm-3 form-control btn-danger mb-2"
-                    (click)="removeRegistrant(i)">Delete
+                  <button
+                    *ngIf="memberControl.length > 1"
+                    class="col-6 col-sm-3 form-control btn-danger mb-2"
+                    (click)="removeRegistrant(i)"
+                  >Delete
                     Entry</button>
                 </div>
               </div>
             </section>
-            <button type="button" class="col-8 col-sm-3 form-control btn-dark mb-4" (click)="addRegistrant()">Add
+            <button
+              type="button"
+              class="col-8 col-sm-3 form-control btn-dark mb-4"
+              (click)="addRegistrant()"
+            >Add
               Registrant</button>
             <br>
             <br>
             <div class="row justify-content-end mt-5">
-              <button type="button" class="col-5 col-sm-2 btn btn-light" (click)="cancel()">Cancel</button>
-              <button type="submit" class="ml-3 col-5 col-sm-2 btn btn-dark mr-3"
+              <button
+                type="button"
+                class="col-5 col-sm-2 btn btn-light"
+                (click)="cancel()"
+              >Cancel</button>
+              <button
+                type="submit"
+                class="ml-3 col-5 col-sm-2 btn btn-dark mr-3"
                 (click)="register(registrationFG.value)"
-                [disabled]="isValid() || (submittedDisbaleBtn$ | async)">Submit</button>
+                [disabled]="isValid() || (submittedDisbaleBtn$ | async)"
+              >Submit</button>
             </div>
           </form>
         </mat-tab>
@@ -243,7 +348,10 @@
             Active Booking
           </ng-template>
           <div class="container-fluid">
-            <div class="row" *ngIf="activeBooking">
+            <div
+              class="row"
+              *ngIf="activeBooking"
+            >
               <div class="col-12 col-sm-12 col-md-6 mx-auto mt-5 p-5 border bg-white border-dark text-dark rounded">
                 <h3>Active Booking</h3>
                 <hr>
@@ -259,9 +367,15 @@
                     <br>You don not have any active booking at the moment.
                   </div>
                 </h5>
-                <div class="card-group" *ngIf="activeBooking?.total > 0">
+                <div
+                  class="card-group"
+                  *ngIf="activeBooking?.total > 0"
+                >
                   <ng-container *ngFor="let booking of activeBooking.data">
-                    <div class="card border-primary mt-3 mb-3 mr-3" style="width: 10rem;">
+                    <div
+                      class="card border-primary mt-3 mb-3 mr-3"
+                      style="width: 10rem;"
+                    >
                       <div class="card-body">
                         <ul class="list-group list-group-flush ">
                           <li class="list-group-item">{{getServiceName(booking.serviceId)}}</li>
