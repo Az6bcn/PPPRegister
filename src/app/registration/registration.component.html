@@ -92,8 +92,8 @@
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th>PickUp</th>
-                    <th>Include</th>
+                    <th>Church Seat</th>
+                    <th>Transport</th>
                     <th>Category</th>
                     <th>Remove</th>
                   </tr>
@@ -103,16 +103,16 @@
                     <td>{{loggedInUser.mainUser.name}} {{loggedInUser.mainUser.surname}}</td>
                     <td>
                       <input
-                        #mainUserPickUpCheckBox
+                        #includeInBookingCheckBoxMainuser
                         type="checkbox"
-                        (click)=mainUserPickUpOnChecked(mainUserPickUpCheckBox)
+                        (click)=includeInBookingOnChecked(loggedInUser.mainUser,includeInBookingCheckBoxMainuser)
                       >
                     </td>
                     <td>
                       <input
-                        #includeInBookingCheckBoxMainuser
+                        #mainUserPickUpCheckBox
                         type="checkbox"
-                        (click)=includeInBookingOnChecked(loggedInUser.mainUser,includeInBookingCheckBoxMainuser)
+                        (click)=mainUserPickUpOnChecked(mainUserPickUpCheckBox)
                       >
                     </td>
                     <td>{{mapCategory(loggedInUser.mainUser.categoryId.toString())}}</td>
@@ -130,18 +130,18 @@
                     <tr>
                       <td>{{linkedUser.name}} {{linkedUser.surname}}</td>
                       <td>
+                        <input
+                          #includeInBookingCheckBox
+                          type="checkbox"
+                          (click)=includeInBookingOnChecked(linkedUser,includeInBookingCheckBox)
+                        >
+                      </td>
+                      <td>
                         <!-- {{linkedUser.pickUp}} -->
                         <input
                           #linkedUserPickUpCheckBox
                           type="checkbox"
                           (click)=linkedUsersPickUpOnChecked(linkedUser,linkedUserPickUpCheckBox)
-                        >
-                      </td>
-                      <td>
-                        <input
-                          #includeInBookingCheckBox
-                          type="checkbox"
-                          (click)=includeInBookingOnChecked(linkedUser,includeInBookingCheckBox)
                         >
                       </td>
                       <td>{{mapCategory(linkedUser.categoryId.toString())}}</td>
@@ -197,11 +197,21 @@
                               required</small></i></span>
                       </span>
                     </label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      formControlName="name"
-                    >
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i
+                            class="fa fa-user"
+                            aria-hidden="true"
+                          ></i>
+                        </span>
+                      </div>
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="name"
+                      >
+                    </div>
                   </div>
                   <div class="col col-12 col-sm-6 form-group">
                     <label for="surname">Last Name
@@ -216,11 +226,21 @@
                               required</small></i></span>
                       </span>
                     </label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      formControlName="surname"
-                    >
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i
+                            class="fa fa-user"
+                            aria-hidden="true"
+                          ></i>
+                        </span>
+                      </div>
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="surname"
+                      >
+                    </div>
                   </div>
                 </div>
                 <div class="row d-flex justify-content-between">
@@ -296,13 +316,6 @@
                     Entry</button>
                 </div>
               </div>
-              <!-- <div class="pl-0 col-12 col-sm-6 form-group">
-                <label>Would you like to be picked up &nbsp;</label>
-                <input
-                  type="checkbox"
-                  formControlName="pickUp"
-                >
-              </div> -->
             </section>
             <button
               type="button"

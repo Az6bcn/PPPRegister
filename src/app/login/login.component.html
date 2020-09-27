@@ -7,30 +7,52 @@
                 <br>
                 <div class="form-group">
                     <label for="EmailInput">Email
-            <!-- Control Errors -->
-            <span *ngIf="(email.touched || email.dirty) && email.invalid" class="text-danger ml-5">
-              <!-- Control Required Errors -->
-              <span *ngIf='email.errors.required'><i><small>*This field is
-                    required</small></i></span>
-              <span *ngIf='email.errors.email'><i><small>*Input is
-                    invalid</small></i></span>
-            </span>
-          </label>
-                    <input formControlName="Email" type="text" class="form-control" id="EmailInput" placeholder="john.doe@example.com">
+                        <!-- Control Errors -->
+                        <span *ngIf="(email.touched || email.dirty) && email.invalid" class="text-danger ml-5">
+                            <!-- Control Required Errors -->
+                            <span *ngIf='email.errors.required'><i><small>*This field is
+                                        required</small></i></span>
+                            <span *ngIf='email.errors.email'><i><small>*Input is
+                                        invalid</small></i></span>
+                        </span>
+                    </label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="fa fa-envelope" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <input formControlName="Email" type="text" class="form-control" id="EmailInput"
+                            placeholder="john.doe@example.com">
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword">Password
-            <span *ngIf="(password.touched || password.dirty) && password.invalid" class="text-danger ml-3">
-              <span *ngIf='password.errors.required'><i><small>*This field is
-                    required</small></i></span>
-            </span>
-          </label>
-                    <input formControlName="Password" type="password" class="form-control" id="inputPassword" placeholder="Password">
+                        <span *ngIf="(password.touched || password.dirty) && password.invalid" class="text-danger ml-3">
+                            <span *ngIf='password.errors.required'><i><small>*This field is
+                                        required</small></i></span>
+                        </span>
+                    </label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="fa fa-lock" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        <input formControlName="Password" type="{{isVisible$ ? 'text' : 'password'}}" class="form-control" id="inputPassword"
+                            placeholder="Password">
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fa" [ngClass]="{'fa-eye-slash': isVisible$, 'fa-eye': !isVisible$ }" (click)="toggleVisibility()" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
                 <p><small>Want to register? <a routerLink="/register">Click Here</a></small></p>
                 <p><small>Forgot password? <a routerLink="/forgotpassword">Click Here</a></small></p>
-                <button type="button" class="btn btn-outline-primary col-12 mb-3" (click)='logIn(loginFG.value)' [disabled]='isInValid(loginFG)'>Log In</button>
+                <button type="button" class="btn btn-outline-primary col-12 mb-3" (click)='logIn(loginFG.value)'
+                    [disabled]='isInValid(loginFG)'>Log In</button>
                 <button type="button" class="btn btn-outline-secondary col-12" (click)='cancel()'>Cancel</button>
             </form>
         </div>

@@ -21,6 +21,8 @@ export class RegisterComponent implements OnInit {
   get surname(): AbstractControl { return this.registerFG.get('surname'); }
   get mobile(): AbstractControl { return this.registerFG.get('mobile'); }
   registerFG: FormGroup;
+  isVisible1$: boolean
+  isVisible2$: boolean
   today = new Date();
   categories: Array<{ label: string, idValue: number }>;
 
@@ -72,6 +74,11 @@ export class RegisterComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]],
     }, { validator: PasswordMatchValidator });
+  }
+
+  toggleVisibility(id) {
+    if (id == "1") {this.isVisible1$ = !this.isVisible1$;}
+    else {this.isVisible2$ = !this.isVisible2$;}
   }
 
 }

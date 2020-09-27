@@ -19,8 +19,15 @@
                       required</small></i></span>
               </span>
             </label>
-            <input required formControlName="name" type="text" class="form-control" id="name"
-              placeholder="Your Firstname">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fa fa-user" aria-hidden="true"></i>
+                </span>
+              </div>
+              <input required formControlName="name" type="text" class="form-control" id="name"
+                placeholder="Your Firstname">
+            </div>
           </div>
           <div class="form-group col-12 col-sm-6">
             <label for="surname">Surname
@@ -32,7 +39,15 @@
                       required</small></i></span>
               </span>
             </label>
-            <input formControlName="surname" type="text" class="form-control" id="surname" placeholder="Your Lastname">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fa fa-user" aria-hidden="true"></i>
+                </span>
+              </div>
+              <input formControlName="surname" type="text" class="form-control" id="surname"
+                placeholder="Your Lastname">
+            </div>
           </div>
         </div>
         <div class="row details justify-content-between">
@@ -90,7 +105,14 @@
                       invalid</small></i></span>
               </span>
             </label>
-            <input type="email" class="form-control mb-3" formControlName="email" placeholder="john.doe@example.com">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fa fa-envelope" aria-hidden="true"></i>
+                </span>
+              </div>
+              <input type="email" class="form-control" formControlName="email" placeholder="john.doe@example.com">
+            </div>
           </div>
           <div class="col col-12 col-sm-6 form-group">
             <label class="mb-2" for="mobile">Phone Number
@@ -102,7 +124,14 @@
                       required</small></i></span>
               </span>
             </label>
-            <input type="tel" class="form-control mb-3" formControlName="mobile" placeholder="07123456789">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fa fa-phone fa-flip-vertical fa-flip-horizontal" aria-hidden="true"></i>
+                </span>
+              </div>
+              <input type="tel" class="form-control" formControlName="mobile" placeholder="07123456789">
+            </div>
           </div>
         </div>
         <div class="row details justify-content-between">
@@ -113,8 +142,21 @@
                       required</small></i></span>
               </span>
             </label>
-            <input formControlName="password" type="password" class="form-control" id="inputPassword"
-              placeholder="Password">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fa fa-lock" aria-hidden="true"></i>
+                </span>
+              </div>
+              <input formControlName="password" type="{{isVisible1$ ? 'text' : 'password'}}" class="form-control"
+                id="inputPassword" placeholder="Password">
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <i class="fa" [ngClass]="{'fa-eye-slash': isVisible1$, 'fa-eye': !isVisible1$ }"
+                    (click)="toggleVisibility(1)" aria-hidden="true"></i>
+                </span>
+              </div>
+            </div>
             <p><small class="text-secondary">Must have at least 8 characters</small></p>
             <p><small class="text-secondary">Must have at least one Capital letter</small></p>
             <p><small class="text-secondary">Must have at least one symbol (e.g @%&*)</small></p>
@@ -129,23 +171,26 @@
                   *ngIf='registerFG.errors?.passwordMatchError !== null'><i><small>{{registerFG.errors.passwordMatchError}}</small></i></span>
               </span>
             </label>
-            <input formControlName="confirmPassword" type="password" class="form-control" id="inputPassword2"
-              placeholder="Confirm Password">
-            <!-- Errors Confirm Password-->
-            <!-- <div *ngIf='(confirmPassword.touched || confirmPassword.dirty) && confirmPassword.invalid' class="alert alert-danger" role="alert">
-                            <div *ngIf='confirmPassword.errors.required'>
-                                Please confirm password.
-                            </div>
-                        </div> -->
-            <!-- Errors Confirm Password Custom Validator Error-->
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fa fa-lock" aria-hidden="true"></i>
+                </span>
+              </div>
+              <input formControlName="confirmPassword" type="{{isVisible2$ ? 'text' : 'password'}}" class="form-control"
+                id="inputPassword2" placeholder="Confirm Password">
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <i class="fa" [ngClass]="{'fa-eye-slash': isVisible2$, 'fa-eye': !isVisible2$ }"
+                    (click)="toggleVisibility(2)" aria-hidden="true"></i>
+                </span>
+              </div>
+            </div>
             <div *ngIf='registerFG.errors?.passwordMatchError !== null' class="alert alert-danger" role="alert">
               {{registerFG.errors.passwordMatchError}}
             </div>
           </div>
         </div>
-
-
-
         <div class="row justify-content-end">
           <button type="button" class="btn btn-outline-primary col-5 col-sm-2" (click)='register(registerFG.value)'
             [disabled]='isInValid(registerFG)'>

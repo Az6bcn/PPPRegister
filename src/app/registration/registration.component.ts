@@ -11,6 +11,7 @@ import { SignalRService } from '../services/SignalR.service';
 import { Slots } from '../model/slots-available';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { WeekDay } from '@angular/common';
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
@@ -176,8 +177,12 @@ export class RegistrationComponent implements OnInit {
 
   getNextSunday() {
     const date = new Date();
-    date.setDate(date.getDate() + (7 - date.getDay()));
 
+    if (date.getDay() === WeekDay.Sunday && date.getHours() < 13) {
+      return date;
+    }
+
+    date.setDate(date.getDate() + (7 - date.getDay()));
     return date;
   }
 

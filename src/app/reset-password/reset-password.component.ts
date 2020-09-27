@@ -17,9 +17,11 @@ export class ResetPasswordComponent implements OnInit {
   get password(): AbstractControl { return this.resetPasswordFG.get('password'); }
   get confirmPassword(): AbstractControl { return this.resetPasswordFG.get('confirmPassword'); }
 
-  resetDetails: ResetPassword = { email: '', token: '', newPassword: '', confirmPassword: '' };
+  resetDetails: ResetPassword = { email:'', token:'', newPassword:'', confirmPassword:''}
   resetPasswordFG: FormGroup;
   isLoading$ = new BehaviorSubject<boolean>(false);
+  isVisible1$: boolean;
+  isVisible2$: boolean;
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -56,6 +58,11 @@ export class ResetPasswordComponent implements OnInit {
 
   isInValid(data: FormGroup): boolean {
     return data.invalid;
+  }
+
+  toggleVisibility(id) {
+    if (id == "1") {this.isVisible1$ = !this.isVisible1$;}
+    else {this.isVisible2$ = !this.isVisible2$;}
   }
 
   private buildForm(builder: FormBuilder): FormGroup {

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { NotifierService } from 'angular-notifier';
 import { Login } from '../model/login';
 import { AccountService } from '../services/account.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -14,6 +15,7 @@ export class LoginComponent implements OnInit {
   get email(): AbstractControl { return this.loginFG.get('Email'); }
   get password(): AbstractControl { return this.loginFG.get('Password'); }
   loginFG: FormGroup;
+  isVisible$: boolean;
   constructor(
     private authService: AccountService,
     private fb: FormBuilder,
@@ -41,6 +43,10 @@ export class LoginComponent implements OnInit {
 
   isInValid(data: FormGroup): boolean {
     return data.invalid;
+  }
+
+  toggleVisibility() {
+    this.isVisible$ = !this.isVisible$;
   }
 
   private buildForm(builder: FormBuilder): FormGroup {
