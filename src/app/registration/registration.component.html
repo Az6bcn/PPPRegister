@@ -92,8 +92,8 @@
                 <thead>
                   <tr>
                     <th>Name</th>
+                    <th>Church Seat</th>
                     <th>Transport</th>
-                    <th>Include (Seat)</th>
                     <th>Category</th>
                     <th>Remove</th>
                   </tr>
@@ -103,16 +103,16 @@
                     <td>{{loggedInUser.mainUser.name}} {{loggedInUser.mainUser.surname}}</td>
                     <td>
                       <input
-                        #mainUserPickUpCheckBox
+                        #includeInBookingCheckBoxMainuser
                         type="checkbox"
-                        (click)=mainUserPickUpOnChecked(mainUserPickUpCheckBox)
+                        (click)=includeInBookingOnChecked(loggedInUser.mainUser,includeInBookingCheckBoxMainuser)
                       >
                     </td>
                     <td>
                       <input
-                        #includeInBookingCheckBoxMainuser
+                        #mainUserPickUpCheckBox
                         type="checkbox"
-                        (click)=includeInBookingOnChecked(loggedInUser.mainUser,includeInBookingCheckBoxMainuser)
+                        (click)=mainUserPickUpOnChecked(mainUserPickUpCheckBox)
                       >
                     </td>
                     <td>{{mapCategory(loggedInUser.mainUser.categoryId.toString())}}</td>
@@ -130,18 +130,18 @@
                     <tr>
                       <td>{{linkedUser.name}} {{linkedUser.surname}}</td>
                       <td>
+                        <input
+                          #includeInBookingCheckBox
+                          type="checkbox"
+                          (click)=includeInBookingOnChecked(linkedUser,includeInBookingCheckBox)
+                        >
+                      </td>
+                      <td>
                         <!-- {{linkedUser.pickUp}} -->
                         <input
                           #linkedUserPickUpCheckBox
                           type="checkbox"
                           (click)=linkedUsersPickUpOnChecked(linkedUser,linkedUserPickUpCheckBox)
-                        >
-                      </td>
-                      <td>
-                        <input
-                          #includeInBookingCheckBox
-                          type="checkbox"
-                          (click)=includeInBookingOnChecked(linkedUser,includeInBookingCheckBox)
                         >
                       </td>
                       <td>{{mapCategory(linkedUser.categoryId.toString())}}</td>
