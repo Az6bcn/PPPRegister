@@ -12,6 +12,7 @@ import { Slots } from '../model/slots-available';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { WeekDay } from '@angular/common';
+import { MatAccordion } from '@angular/material/expansion';
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
@@ -20,22 +21,28 @@ import { WeekDay } from '@angular/common';
 
 export class RegistrationComponent implements OnInit {
 
+  panelOpenState = false;
   registrationFG: FormGroup;
   bookingFG: FormGroup;
+  specialServiceBookingFG: FormGroup;
   members: FormArray;
   slots = new Array<Slots>();
+  specialServiceSlots = new Array<Slots>();
   subscriptions = new Array<Subscription>();
   isLoading$ = new BehaviorSubject<boolean>(true);
   canShowRegistrant$ = new BehaviorSubject<boolean>(false);
+  canShowSpecialServiceRegistrant$ = new BehaviorSubject<boolean>(false);
   selectedSlot$ = new BehaviorSubject<Slots>(void 0);
   registrant: IRegistrant;
   sundayDate: Date;
+  saturdaySpecialServiceDate: Date;
   isSubmitted$ = new BehaviorSubject<boolean>(false);
   submittedDisbaleBtn$ = new BehaviorSubject<boolean>(false);
   loggedInUser$ = new BehaviorSubject<UsersAndLinkedUsers>(void 0);
   loggedInUser: UsersAndLinkedUsers;
   activeBooking: any;
   userId: any;
+  @ViewChild(MatAccordion) accordion: MatAccordion;
   constructor(
     private fb: FormBuilder,
     private registrationService: RegistrationService,
@@ -60,8 +67,11 @@ export class RegistrationComponent implements OnInit {
       });
 
     this.bookingFG = this.buildBookingForm(this.fb);
+    this.specialServiceBookingFG = this.buildBookingForm(this.fb);
     this.registrationFG = this.buildRegistrationForm(this.fb);
     this.sundayDate = this.getNextSunday();
+    this.saturdaySpecialServiceDate = this.getNextSunday();
+    this.saturdaySpecialServiceDate.setDate(this.saturdaySpecialServiceDate.getDate() - 1);
 
     const slotsSub = this.registrationService.getSlotsAvailable(this.sundayDate.toISOString())
       .subscribe(response => {
@@ -76,6 +86,19 @@ export class RegistrationComponent implements OnInit {
 
     this.subscriptions.push(slotsSub);
 
+    const specialServiceSlotsSub = this.registrationService.getSpecialServiceSlotsAvailable(this.saturdaySpecialServiceDate.toISOString())
+      .subscribe(response => {
+        this.isLoading$.next(false);
+        this.specialServiceSlots = response;
+      },
+        error => {
+          this.isLoading$.next(false);
+          this.notifierService.notify('error', error);
+        }
+      );
+
+    this.subscriptions.push(specialServiceSlotsSub);
+
     this.signalRService.buildSignalRConnection();
     this.signalRService.UpdateSlotsAvailable();
     this.signalRService.connectSignalR();
@@ -83,7 +106,7 @@ export class RegistrationComponent implements OnInit {
     // live data
     const liveDataSub = this.signalRService.ReadAvailableSlotUpdate()
       .subscribe(response => {
-        // use respone to update available slot: so that ayone on the page is aware of the updates
+        // use response to update available slot: so that ayone on the page is aware of the updates
         const selectedIndex = this.slots.findIndex(x => x.time === response.time);
         // const slots = this.slots.filter(x => x.serviceId !== response.serviceId);
         const mappedResponse = {
@@ -120,7 +143,13 @@ export class RegistrationComponent implements OnInit {
   }
 
   onTimeChange(slot: Slots) {
-    this.canShowRegistrant$.next(true);
+    if (slot.serviceId !== 4) {
+      this.canShowRegistrant$.next(true);
+    }
+    // special service
+    if (slot.serviceId === 4) {
+      this.canShowSpecialServiceRegistrant$.next(true);
+    }
     this.selectedSlot$.next(slot);
   }
   register(data: IRegistrant) {
@@ -195,6 +224,7 @@ export class RegistrationComponent implements OnInit {
     this.registrationFG.reset();
     this.members.controls.length = 1;
     this.canShowRegistrant$.next(false);
+    this.canShowSpecialServiceRegistrant$.next(false);
     this.notifierService.notify('success', 'Canceled');
   }
 
@@ -213,7 +243,7 @@ export class RegistrationComponent implements OnInit {
     return 'Children(Ages 3 - 6)';
   }
 
-  book(loggedInUser) {
+  book(loggedInUser: any) {
 
     this.authService.isTokenExpired()
       .subscribe(res => {
@@ -225,13 +255,17 @@ export class RegistrationComponent implements OnInit {
       });
 
     const data: IRegistrant = {} as IRegistrant;
-
+    data.members = [];
     this.submittedDisbaleBtn$.next(true);
 
     const slot = this.selectedSlot$.getValue();
 
     data.serviceId = slot.serviceId;
-    data.date = this.sundayDate.toISOString();
+    if (slot.serviceId === 4) {
+      data.date = slot.specialServiceDate.toString();
+    } else {
+      data.date = this.sundayDate.toISOString();
+    }
     data.emailAddress = this.loggedInUser.mainUser.emailAddress;
     data.time = slot.time;
 
@@ -256,6 +290,7 @@ export class RegistrationComponent implements OnInit {
         this._time.reset();
         this.submittedDisbaleBtn$.next(false);
         this.canShowRegistrant$.next(false);
+        this.canShowSpecialServiceRegistrant$.next(false);
 
         // don't include users nor pick up by default:
         this.loggedInUser.linkedUsers.forEach(x => {
@@ -274,6 +309,7 @@ export class RegistrationComponent implements OnInit {
               this.notifierService.notify('error', error.error);
               this.submittedDisbaleBtn$.next(false);
               this.canShowRegistrant$.next(false);
+              this.canShowSpecialServiceRegistrant$.next(false);
               return;
             }
           }
@@ -281,6 +317,7 @@ export class RegistrationComponent implements OnInit {
           this.notifierService.notify('error', 'We could not process your booking at the moment, please try again.');
           this.submittedDisbaleBtn$.next(false);
           this.canShowRegistrant$.next(false);
+          this.canShowSpecialServiceRegistrant$.next(false);
         }
       );
     this.subscriptions.push(registrationSub);
@@ -345,7 +382,11 @@ export class RegistrationComponent implements OnInit {
       });
   }
 
-  getServiceName(serviceId: number) {
+  getServiceName(booking: any) {
+    if (booking.specialServiceName) {
+      return booking.specialServiceName;
+    }
+    const serviceId = booking.serviceId;
     if (serviceId === 1) { return 'Second service'; } else if (serviceId === 2) { return 'Third service'; }
     return 'First Service';
   }
@@ -367,6 +408,8 @@ export class RegistrationComponent implements OnInit {
   get _emailAddress(): AbstractControl { return this.registrationFG.get('emailAddress'); }
   get _mobile(): AbstractControl { return this.registrationFG.get('mobile'); }
   get _members(): AbstractControl { return this.registrationFG.get('members'); }
+
+
 }
 
 

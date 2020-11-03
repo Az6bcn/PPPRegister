@@ -22,157 +22,353 @@
         mat-align-tabs="start"
       >
         <mat-tab label="Booking">
-          <form [formGroup]="bookingFG">
-            <br>
-            <br>
-            <p>Please select the service for {{sundayDate.toDateString()}}</p>
-            <div class="row d-flex justify-content-between service-radio">
-              <div
-                *ngFor="let slot of slots, let i = index"
-                class="col-3 p-0 form-group"
-              >
-                <input
-                  type="radio"
-                  value="{{slot.time}}"
-                  id="service{{i}}"
-                  formControlName="time"
-                  (click)='onTimeChange(slot)'
-                >
-                <label for="service{{i}}">{{slot.time}}</label>
-                <br>
-                <p><small class="text-danger"><i> <strong
-                        style="font-size: 20px;">{{slot.adultsAvailableSlots}}</strong>
-                      adult slots
-                      available</i></small></p>
-                <p><small class="text-danger"><i> <strong style="font-size: 20px;">{{slot.kidsAvailableSlots}}</strong>
-                      children (ages 7-12) slots
-                      available</i></small></p>
-                <p><small class="text-danger"><i> <strong
-                        style="font-size: 20px;">{{slot.toddlersAvailableSlots}}</strong>
-                      children (ages 3-6) slots
-                      available</i></small></p>
-              </div>
-              <div class="row col-12 mb-3 justify-content-center">
-                <!-- Control Errors -->
-                <span
-                  *ngIf="(_time.touched || _time.dirty) && _time.invalid"
-                  class="text-danger ml-5"
-                >
-                  <!-- Control Required Errors -->
-                  <span *ngIf='_time.errors.required'><i><small>*Please select a service time to
-                        attend</small></i></span>
-                </span>
-              </div>
-            </div>
-
-            <!--This is a table to display the members of the group and to select if they will attending the service also if they need pick up-->
-            <!--It is not visible cos there is no data for now-->
-            <div *ngIf="(canShowRegistrant$ | async)">
-
-              <div
-                *ngIf="loggedInUser && loggedInUser.linkedUsers && loggedInUser.linkedUsers.length <= 0"
-                class="pl-0 col-12 col-sm-6 form-group"
-              >
-                <label>Would you like to be picked up &nbsp;</label>
-                <input
-                  #mainUserPickUpCheckBox
-                  type="checkbox"
-                  (click)=mainUserPickUpOnChecked(mainUserPickUpCheckBox)
-                >
-              </div>
-
-              <hr>
-              <div *ngIf="loggedInUser && loggedInUser.linkedUsers && loggedInUser.linkedUsers.length > 0">
-                <h2>Which family members do you want to include in the booking?</h2>
-              </div>
-              <table
-                class="table table-hover table-striped w-50 head-dark"
-                *ngIf="loggedInUser && loggedInUser.linkedUsers && loggedInUser.linkedUsers.length > 0"
-              >
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Church Seat</th>
-                    <th>Transport</th>
-                    <th>Category</th>
-                    <th>Remove</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>{{loggedInUser.mainUser.name}} {{loggedInUser.mainUser.surname}}</td>
-                    <td>
+          <!--Accordion Buttons-->
+          <div
+            style="display: flex;"
+            class="my-5"
+          >
+            <button
+              class="btn btn-primary mr-2"
+              mat-button
+              (click)="accordion.openAll()"
+            >Expand All</button>
+            <button
+              class="btn btn-primary"
+              mat-button
+              (click)="accordion.closeAll()"
+            >Collapse All</button>
+          </div>
+          <mat-accordion
+            class="example-headers-align"
+            multi
+          >
+            <!--Special service-->
+            <div *ngFor="let slot of specialServiceSlots, let i = index">
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <p>{{slot.specialServiceDate | date :'fullDate'}}</p>
+                  </mat-panel-title>
+                  <mat-panel-description>
+                    Special service: {{slot.serviceName}}
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <!-- SPPPPPEEEEEECCCCIIIIAAAAALLLLL -->
+                <form [formGroup]="specialServiceBookingFG">
+                  <br>
+                  <br>
+                  <p>Please select the service for {{slot.specialServiceDate | date:'short'}}</p>
+                  <div class="row d-flex justify-content-between service-radio">
+                    <div class="col-3 p-0 form-group">
                       <input
-                        #includeInBookingCheckBoxMainuser
-                        type="checkbox"
-                        (click)=includeInBookingOnChecked(loggedInUser.mainUser,includeInBookingCheckBoxMainuser)
+                        type="radio"
+                        value="{{slot.time}}"
+                        id="service{{i}}{{slot.serviceId}}"
+                        formControlName="time"
+                        (click)='onTimeChange(slot)'
                       >
-                    </td>
-                    <td>
+                      <label for="service{{i}}{{slot.serviceId}}">{{slot.time}}</label>
+                      <br>
+                      <p><small class="text-danger"><i> <strong style="font-size: 20px;">{{slot.adultsAvailableSlots}}</strong>
+                            adult slots
+                            available</i></small></p>
+                      <p><small class="text-danger"><i> <strong style="font-size: 20px;">{{slot.kidsAvailableSlots}}</strong>
+                            children (ages 7-12) slots
+                            available</i></small></p>
+                      <p><small class="text-danger"><i> <strong style="font-size: 20px;">{{slot.toddlersAvailableSlots}}</strong>
+                            children (ages 3-6) slots
+                            available</i></small></p>
+                    </div>
+                    <div class="row col-12 mb-3 justify-content-center">
+                      <!-- Control Errors -->
+                      <span
+                        *ngIf="(_time.touched || _time.dirty) && _time.invalid"
+                        class="text-danger ml-5"
+                      >
+                        <!-- Control Required Errors -->
+                        <span *ngIf='_time.errors.required'><i><small>*Please select a service time to
+                              attend</small></i></span>
+                      </span>
+                    </div>
+                  </div>
+
+                  <!--This is a table to display the members of the group and to select if they will attending the service also if they need pick up-->
+                  <!--It is not visible cos there is no data for now-->
+                  <div *ngIf="(canShowSpecialServiceRegistrant$ | async)">
+
+                    <div
+                      *ngIf="loggedInUser && loggedInUser.linkedUsers && loggedInUser.linkedUsers.length <= 0"
+                      class="pl-0 col-12 col-sm-6 form-group"
+                    >
+                      <label>Would you like to be picked up &nbsp;</label>
                       <input
                         #mainUserPickUpCheckBox
                         type="checkbox"
                         (click)=mainUserPickUpOnChecked(mainUserPickUpCheckBox)
                       >
-                    </td>
-                    <td>{{mapCategory(loggedInUser.mainUser.categoryId.toString())}}</td>
-                    <td>
+                    </div>
+
+                    <hr>
+                    <div *ngIf="loggedInUser && loggedInUser.linkedUsers && loggedInUser.linkedUsers.length > 0">
+                      <h2>Which family members do you want to include in the booking?</h2>
+                    </div>
+                    <table
+                      class="table table-hover table-striped w-50 head-dark"
+                      *ngIf="loggedInUser && loggedInUser.linkedUsers && loggedInUser.linkedUsers.length > 0 "
+                    >
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Church Seat</th>
+                          <th>Transport</th>
+                          <th>Category</th>
+                          <th>Remove</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>{{loggedInUser.mainUser.name}} {{loggedInUser.mainUser.surname}}</td>
+                          <td>
+                            <input
+                              #includeInBookingCheckBoxMainuser
+                              type="checkbox"
+                              (click)=includeInBookingOnChecked(loggedInUser.mainUser,includeInBookingCheckBoxMainuser)
+                            >
+                          </td>
+                          <td>
+                            <input
+                              #mainUserPickUpCheckBox
+                              type="checkbox"
+                              (click)=mainUserPickUpOnChecked(mainUserPickUpCheckBox)
+                            >
+                          </td>
+                          <td>{{mapCategory(loggedInUser.mainUser.categoryId.toString())}}</td>
+                          <td>
+                            <button
+                              type="button"
+                              class="btn btn-light"
+                              (click)="Remove(loggedInUser.mainUser)"
+                              [disabled]='!loggedInUser.mainUser.justAddedLinkedUsers'
+                            >Remove</button>
+                          </td>
+                        </tr>
+                        <ng-container *ngFor="let linkedUser of loggedInUser.linkedUsers; let i = index">
+
+                          <tr>
+                            <td>{{linkedUser.name}} {{linkedUser.surname}}</td>
+                            <td>
+                              <input
+                                #includeInBookingCheckBox
+                                type="checkbox"
+                                (click)=includeInBookingOnChecked(linkedUser,includeInBookingCheckBox)
+                              >
+                            </td>
+                            <td>
+                              <!-- {{linkedUser.pickUp}} -->
+                              <input
+                                #linkedUserPickUpCheckBox
+                                type="checkbox"
+                                (click)=linkedUsersPickUpOnChecked(linkedUser,linkedUserPickUpCheckBox)
+                              >
+                            </td>
+                            <td>{{mapCategory(linkedUser.categoryId.toString())}}</td>
+                            <td>
+                              <button
+                                type="button"
+                                class="btn btn-primary"
+                                (click)="Remove(linkedUser)"
+                                [disabled]='!linkedUser.justAddedLinkedUsers'
+                              >Remove</button>
+                            </td>
+                          </tr>
+
+                        </ng-container>
+                      </tbody>
+                    </table>
+                    <div class="row justify-content-end mt-5">
+                      <!-- <button
+                                                                                                                                                                                                                              type="button"
+                                                                                                                                                                                                                              class="col-5 col-sm-2 btn btn-light"
+                                                                                                                                                                                                                              (click)="cancel()"
+                                                                                                                                                                                                                            >Cancel</button> -->
                       <button
-                        type="button"
-                        class="btn btn-light"
-                        (click)="Remove(loggedInUser.mainUser)"
-                        [disabled]='!loggedInUser.mainUser.justAddedLinkedUsers'
-                      >Remove</button>
-                    </td>
-                  </tr>
-                  <ng-container *ngFor="let linkedUser of loggedInUser.linkedUsers; let i = index">
-
-                    <tr>
-                      <td>{{linkedUser.name}} {{linkedUser.surname}}</td>
-                      <td>
-                        <input
-                          #includeInBookingCheckBox
-                          type="checkbox"
-                          (click)=includeInBookingOnChecked(linkedUser,includeInBookingCheckBox)
-                        >
-                      </td>
-                      <td>
-                        <!-- {{linkedUser.pickUp}} -->
-                        <input
-                          #linkedUserPickUpCheckBox
-                          type="checkbox"
-                          (click)=linkedUsersPickUpOnChecked(linkedUser,linkedUserPickUpCheckBox)
-                        >
-                      </td>
-                      <td>{{mapCategory(linkedUser.categoryId.toString())}}</td>
-                      <td>
-                        <button
-                          type="button"
-                          class="btn btn-primary"
-                          (click)="Remove(linkedUser)"
-                          [disabled]='!linkedUser.justAddedLinkedUsers'
-                        >Remove</button>
-                      </td>
-                    </tr>
-
-                  </ng-container>
-                </tbody>
-              </table>
-              <div class="row justify-content-end mt-5">
-                <!-- <button
-                  type="button"
-                  class="col-5 col-sm-2 btn btn-light"
-                  (click)="cancel()"
-                >Cancel</button> -->
-                <button
-                  type="submit"
-                  class="ml-3 col-5 col-sm-2 btn btn-dark mr-3"
-                  (click)=book(loggedInUser)
-                  [disabled]="(submittedDisbaleBtn$ | async)"
-                >Submit</button>
-              </div>
+                        type="submit"
+                        class="ml-3 col-5 col-sm-2 btn btn-dark mr-3"
+                        (click)=book(loggedInUser)
+                        [disabled]="(submittedDisbaleBtn$ | async)"
+                      >Submit</button>
+                    </div>
+                  </div>
+                </form>
+                <!-- SPPPPPEEEEEECCCCIIIIAAAAALLLLL -->
+              </mat-expansion-panel>
             </div>
-          </form>
+
+            <!--Sunday service-->
+            <mat-expansion-panel
+              (opened)="panelOpenState = true"
+              (closed)="panelOpenState = false"
+            >
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <p>{{sundayDate.toDateString() | date :'fullDate'}}</p>
+                </mat-panel-title>
+                <mat-panel-description>
+                  Sunday Service
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <form [formGroup]="bookingFG">
+                <br>
+                <br>
+                <p>Please select the service for {{sundayDate | date :'fullDate'}}</p>
+                <div class="row d-flex justify-content-between service-radio">
+                  <div
+                    *ngFor="let slot of slots, let i = index"
+                    class="col-3 p-0 form-group"
+                  >
+                    <input
+                      type="radio"
+                      value="{{slot.time}}"
+                      id="service{{i}}"
+                      formControlName="time"
+                      (click)='onTimeChange(slot)'
+                    >
+                    <label for="service{{i}}">{{slot.time}}</label>
+                    <br>
+                    <p><small class="text-danger"><i> <strong style="font-size: 20px;">{{slot.adultsAvailableSlots}}</strong>
+                          adult slots
+                          available</i></small></p>
+                    <p><small class="text-danger"><i> <strong style="font-size: 20px;">{{slot.kidsAvailableSlots}}</strong>
+                          children (ages 7-12) slots
+                          available</i></small></p>
+                    <p><small class="text-danger"><i> <strong style="font-size: 20px;">{{slot.toddlersAvailableSlots}}</strong>
+                          children (ages 3-6) slots
+                          available</i></small></p>
+                  </div>
+                  <div class="row col-12 mb-3 justify-content-center">
+                    <!-- Control Errors -->
+                    <span
+                      *ngIf="(_time.touched || _time.dirty) && _time.invalid"
+                      class="text-danger ml-5"
+                    >
+                      <!-- Control Required Errors -->
+                      <span *ngIf='_time.errors.required'><i><small>*Please select a service time to
+                            attend</small></i></span>
+                    </span>
+                  </div>
+                </div>
+
+                <!--This is a table to display the members of the group and to select if they will attending the service also if they need pick up-->
+                <!--It is not visible cos there is no data for now-->
+                <div *ngIf="(canShowRegistrant$ | async)">
+
+                  <div
+                    *ngIf="loggedInUser && loggedInUser.linkedUsers && loggedInUser.linkedUsers.length <= 0"
+                    class="pl-0 col-12 col-sm-6 form-group"
+                  >
+                    <label>Would you like to be picked up &nbsp;</label>
+                    <input
+                      #mainUserPickUpCheckBox
+                      type="checkbox"
+                      (click)=mainUserPickUpOnChecked(mainUserPickUpCheckBox)
+                    >
+                  </div>
+
+                  <hr>
+                  <div *ngIf="loggedInUser && loggedInUser.linkedUsers && loggedInUser.linkedUsers.length > 0">
+                    <h2>Which family members do you want to include in the booking?</h2>
+                  </div>
+                  <table
+                    class="table table-hover table-striped w-50 head-dark"
+                    *ngIf="loggedInUser && loggedInUser.linkedUsers && loggedInUser.linkedUsers.length > 0"
+                  >
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Church Seat</th>
+                        <th>Transport</th>
+                        <th>Category</th>
+                        <th>Remove</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>{{loggedInUser.mainUser.name}} {{loggedInUser.mainUser.surname}}</td>
+                        <td>
+                          <input
+                            #includeInBookingCheckBoxMainuser
+                            type="checkbox"
+                            (click)=includeInBookingOnChecked(loggedInUser.mainUser,includeInBookingCheckBoxMainuser)
+                          >
+                        </td>
+                        <td>
+                          <input
+                            #mainUserPickUpCheckBox
+                            type="checkbox"
+                            (click)=mainUserPickUpOnChecked(mainUserPickUpCheckBox)
+                          >
+                        </td>
+                        <td>{{mapCategory(loggedInUser.mainUser.categoryId.toString())}}</td>
+                        <td>
+                          <button
+                            type="button"
+                            class="btn btn-light"
+                            (click)="Remove(loggedInUser.mainUser)"
+                            [disabled]='!loggedInUser.mainUser.justAddedLinkedUsers'
+                          >Remove</button>
+                        </td>
+                      </tr>
+                      <ng-container *ngFor="let linkedUser of loggedInUser.linkedUsers; let i = index">
+
+                        <tr>
+                          <td>{{linkedUser.name}} {{linkedUser.surname}}</td>
+                          <td>
+                            <input
+                              #includeInBookingCheckBox
+                              type="checkbox"
+                              (click)=includeInBookingOnChecked(linkedUser,includeInBookingCheckBox)
+                            >
+                          </td>
+                          <td>
+                            <!-- {{linkedUser.pickUp}} -->
+                            <input
+                              #linkedUserPickUpCheckBox
+                              type="checkbox"
+                              (click)=linkedUsersPickUpOnChecked(linkedUser,linkedUserPickUpCheckBox)
+                            >
+                          </td>
+                          <td>{{mapCategory(linkedUser.categoryId.toString())}}</td>
+                          <td>
+                            <button
+                              type="button"
+                              class="btn btn-primary"
+                              (click)="Remove(linkedUser)"
+                              [disabled]='!linkedUser.justAddedLinkedUsers'
+                            >Remove</button>
+                          </td>
+                        </tr>
+
+                      </ng-container>
+                    </tbody>
+                  </table>
+                  <div class="row justify-content-end mt-5">
+                    <!-- <button
+                                type="button"
+                                class="col-5 col-sm-2 btn btn-light"
+                                (click)="cancel()"
+                              >Cancel</button> -->
+                    <button
+                      type="submit"
+                      class="ml-3 col-5 col-sm-2 btn btn-dark mr-3"
+                      (click)=book(loggedInUser)
+                      [disabled]="(submittedDisbaleBtn$ | async)"
+                    >Submit</button>
+                  </div>
+                </div>
+              </form>
+            </mat-expansion-panel>
+            </mat-accordion>
+
         </mat-tab>
         <mat-tab label="Add registrant">
           <form [formGroup]="registrationFG">
@@ -378,7 +574,7 @@
                     >
                       <div class="card-body">
                         <ul class="list-group list-group-flush ">
-                          <li class="list-group-item">{{getServiceName(booking.serviceId)}}</li>
+                          <li class="list-group-item">{{getServiceName(booking)}}</li>
                           <li class="list-group-item">{{booking['date'] | date:'d MMM y'}}</li>
                           <li class="list-group-item">{{booking['time']}}</li>
                           <li class="list-group-item">{{booking['users']}}</li>
@@ -396,3 +592,4 @@
   </div>
 </div>
 <app-loader [isLoading$]='isLoading$'></app-loader>
+

@@ -4,4 +4,6 @@ export interface Slots {
   adultAvailableSlots: number;
   kidsAvailableSlots: number;
   toddlerAvailableSlots: number;
+  serviceName: string;
+  specialServiceDate: Date;
 }

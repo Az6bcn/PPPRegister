@@ -24,6 +24,7 @@ import { TokenGetter } from './helper/jwt-getter';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 
@@ -60,6 +61,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
         tokenGetter: TokenGetter,
       }
     }),
+    MatExpansionModule
   ],
   bootstrap: [
     AppComponent

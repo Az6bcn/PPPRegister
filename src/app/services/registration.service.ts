@@ -49,6 +49,14 @@ export class RegistrationService {
       );
   }
 
+  getSpecialServiceSlotsAvailable(date: string): Observable<Array<Slots>> {
+    const url = `${this.baseUrl}/booking/specialservice/${date}`;
+    return this.http.get<Array<Slots>>(url, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   findActiveBooking(userId: string, date: string) {
     const url = `${this.baseUrl}/booking/user/${userId}/${date}`;
     return this.http.get<any>(url, this.httpOptions)
