@@ -137,7 +137,7 @@
                 <th scope="col">Date</th>
                 <th scope="col">Service</th>
                 <th scope="col">Pick Up</th>
-                <!-- <th scope="col">SignOut</th> -->
+                <th scope="col">Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -161,6 +161,11 @@
                   <td>{{member.date | date:'d MMM y, h:mm:ss aaa'}}</td>
                   <td>{{member.serviceName}} {{(member.time)}}</td>
                   <td>{{member.pickUp}}</td>
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)='delete(member.id)'
+                  >Delete</button>
                 </tr>
               </ng-container>
             </tbody>

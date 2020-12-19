@@ -49,6 +49,14 @@ export class RegistrationService {
       );
   }
 
+  deleteSlot(id: number): Observable<any> {
+    const url = `${this.baseUrl}/booking/${id}`;
+    return this.http.delete(url, this.httpOptions)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   getSpecialServiceSlotsAvailable(date: string): Observable<Array<Slots>> {
     const url = `${this.baseUrl}/booking/specialservice/${date}`;
     return this.http.get<Array<Slots>>(url, this.httpOptions)

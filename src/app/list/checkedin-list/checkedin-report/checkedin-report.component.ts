@@ -10,6 +10,7 @@ import { NotifierService } from 'angular-notifier';
 import { map } from 'rxjs/operators';
 import { Service } from 'src/app/model/service';
 import * as moment from 'moment';
+import { RegistrationService } from 'src/app/services/registration.service';
 
 @Component({
   selector: 'app-checkedin-report',
@@ -22,7 +23,8 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
     private checkInService: CheckInService,
     private formBuilder: FormBuilder,
     private notifierService: NotifierService,
-    private signalRService: SignalRService
+    private signalRService: SignalRService,
+    private registrationService: RegistrationService,
   ) { }
   pickUpDatePickerSelected$ = new BehaviorSubject<any>(null);
   pickUpBtnEnabled$ = new BehaviorSubject<boolean>(true);
@@ -263,6 +265,28 @@ export class CheckedinReportComponent implements OnInit, OnDestroy {
         this.attendance = { ...response };
       });
 
+  }
+
+  delete(id: number) {
+    this.registrationService.deleteSlot(id)
+      .subscribe(response => {
+        const index = this.checkedInMembers.findIndex(x => x.id === id);
+
+        this.checkedInMembers.splice(index, 1);
+        this.checkedInMembers = [...this.checkedInMembers];
+        this.checkedInMembersPaginated = this.checkedInMembers.slice(0, 10);
+        this.totalItems$.next(this.checkedInMembers.length);
+
+        this.notifierService.notify('success', 'Deleted Successfully');
+      },
+        err => {
+          if (err.error) {
+            this.notifierService.notify('error', err.error);
+            return;
+          }
+          this.notifierService.notify('error', err);
+        }
+      );
   }
 
   ngOnDestroy() {
