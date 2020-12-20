@@ -1,9 +1,14 @@
 export interface Slots {
   serviceId: number;
   time: string;
-  adultAvailableSlots: number;
+  adultsAvailableSlots: number;
   kidsAvailableSlots: number;
-  toddlerAvailableSlots: number;
+  toddlersAvailableSlots: number;
   serviceName: string;
   specialServiceDate: Date;
+  showSpecialService: boolean;
+  showSpecialServiceSlotDetails: boolean;
+  specialAnnouncement: string;
+  hasSpecialAnnouncement: boolean;
+  specialServiceYoutubeUrl: string;
 }

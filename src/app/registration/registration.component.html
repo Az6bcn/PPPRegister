@@ -211,10 +211,11 @@
           <div *ngIf="specialServiceSlots.length > 0">
             <hr>
             <hr>
-          </div>
-          <div *ngFor="let slot of specialServiceSlots, let i = index">
 
-            <mat-expansion-panel>
+          </div>
+
+          <div *ngFor="let slot of specialServiceSlots, let i = index">
+              <mat-expansion-panel *ngIf='slot.showSpecialService'>
                 <mat-expansion-panel-header>
                   <mat-panel-title>
                     <p class='serviceDate'> {{slot.specialServiceDate | date :'fullDate'}}</p>
@@ -228,8 +229,27 @@
                   <br>
                   <br>
                   <p>Please select the service for {{slot.specialServiceDate | date:'fullDate'}}</p>
+                  <div
+                    *ngIf="slot.showSpecialService && slot.hasSpecialAnnouncement && !slot.showSpecialServiceSlotDetails && slot.adultsAvailableSlots > 0"
+                  >
+                    <p class='serviceAnnouncement'> {{splitSpecialServiceAnnouncement(true, slot.specialAnnouncement)}}</p>
+                  </div>
+                  <div
+                    *ngIf="slot.showSpecialService && slot.hasSpecialAnnouncement && !slot.showSpecialServiceSlotDetails && slot.adultsAvailableSlots > 0"
+                  >
+                    <p class='serviceAnnouncement'> {{splitSpecialServiceAnnouncement(false, slot.specialAnnouncement)}}</p>
+                  </div>
+
+                  <div *ngIf="!slot.showSpecialServiceSlotDetails && slot.adultsAvailableSlots === 0">
+                    <p class='serviceAnnouncement'> No more seats. Please join online <a href={{slot.specialServiceYoutubeUrl}}> here</a>
+                    </p>
+                  </div>
                   <div class="row d-flex justify-content-between service-radio">
-                    <div class="col-3 p-0 form-group">
+                    <!-- we don't want to show special service slot details because we only have a single booking slot and all in adultslot-->
+                    <div
+                      class="col-3 p-0 form-group"
+                      *ngIf="!slot.showSpecialServiceSlotDetails && slot.adultsAvailableSlots > 0"
+                    >
                       <input
                         type="radio"
                         value="{{slot.time}}"
@@ -239,18 +259,20 @@
                       >
                       <label for="service{{i}}{{slot.serviceId}}">{{slot.time}}</label>
                       <br>
-                      <p style="display: none;"><small class="text-danger"><i> <strong
-                              style="font-size: 20px;">{{slot.adultsAvailableSlots}}</strong>
-                            adult slots
-                            available</i></small></p>
-                      <p style="display: none;"><small class="text-danger"><i> <strong
-                              style="font-size: 20px;">{{slot.kidsAvailableSlots}}</strong>
-                            children (ages 7-12) slots
-                            available</i></small></p>
-                      <p style="display: none;"><small class="text-danger"><i> <strong
-                              style="font-size: 20px;">{{slot.toddlersAvailableSlots}}</strong>
-                            children (ages 3-6) slots
-                            available</i></small></p>
+                      <div *ngIf='slot.showSpecialServiceSlotDetails'>
+                        <p><small class="text-danger"><i> <strong
+                                style="font-size: 20px;">{{slot.adultsAvailableSlots}}</strong>
+                              adult slots
+                              available</i></small></p>
+                        <p><small class="text-danger"><i> <strong
+                                style="font-size: 20px;">{{slot.kidsAvailableSlots}}</strong>
+                              children (ages 7-12) slots
+                              available</i></small></p>
+                        <p><small class="text-danger"><i> <strong
+                                style="font-size: 20px;">{{slot.toddlersAvailableSlots}}</strong>
+                              children (ages 3-6) slots
+                              available</i></small></p>
+                      </div>
                     </div>
                     <div class="row col-12 mb-3 justify-content-center">
                       <!-- Control Errors -->

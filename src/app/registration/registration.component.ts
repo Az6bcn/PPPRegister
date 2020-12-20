@@ -404,6 +404,12 @@ export class RegistrationComponent implements OnInit {
     return;
   }
 
+  splitSpecialServiceAnnouncement(wantFirstPart: boolean, message: string) {
+    const messages = message.split('.');
+
+    return wantFirstPart ? messages[0] : messages[1];
+  }
+
   get _time(): AbstractControl { return this.bookingFG.get('time'); }
   get _emailAddress(): AbstractControl { return this.registrationFG.get('emailAddress'); }
   get _mobile(): AbstractControl { return this.registrationFG.get('mobile'); }
