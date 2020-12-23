@@ -33,7 +33,15 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['../registration']);
         }
       },
-        err => this.notifierService.notify('error', err)
+        err => {
+          console.log('login error', err);
+          // happens when server is not running/responding
+          if (err instanceof ProgressEvent) {
+            this.notifierService.notify('error', 'Something went wrong logging you in. Please try again later');
+            return;
+          }
+          this.notifierService.notify('error', err);
+        }
       );
   }
 
