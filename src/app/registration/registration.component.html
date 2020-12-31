@@ -241,7 +241,16 @@
                   </div>
 
                   <div *ngIf="!slot.showSpecialServiceSlotDetails && slot.adultsAvailableSlots === 0">
-                    <p class='serviceAnnouncement'> No more seats. Please join online <a href={{slot.specialServiceYoutubeUrl}}> here</a>
+                    <p class='serviceAnnouncement text-center'> We operate strict compliance to covid-19 restrictions.
+                      <br> All seats are now taken, so kindly join us virtually on our
+                      <br> YouTube channel.
+                      <a href={{slot.specialServiceYoutubeUrl}}>
+                        <img
+                          class="live-tube"
+                          src="../../assets/images/dark_tube2.png"
+                          title="youtube live"
+                        >
+                      </a>
                     </p>
                   </div>
                   <div class="row d-flex justify-content-between service-radio">

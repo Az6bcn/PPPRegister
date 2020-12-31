@@ -154,3 +154,8 @@ input[type=number]::-webkit-outer-spin-button {
   text-align: center;
   font-size: large;
 }
+
+.live-tube{
+  height: 10%;
+  width: 12%;
+}
